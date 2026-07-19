@@ -1,0 +1,627 @@
+// Package services contains the business logic of the core module of nutrix.
+//
+// It implements the required interfaces for the core module of nutrix.
+//
+// The services in this package are used to interact with the database using the
+// models package, and to interact with the outside world using the dto package.
+package services
+
+import (
+	"context"
+	"fmt"
+	"log"
+	"sync"
+	"time"
+
+	"github.com/nutrixpos/pos/common"
+	"github.com/nutrixpos/pos/common/config"
+	"github.com/nutrixpos/pos/common/customerrors"
+	"github.com/nutrixpos/pos/common/logger"
+	"github.com/nutrixpos/pos/modules/core/dto"
+	"github.com/nutrixpos/pos/modules/core/models"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo/options"
+)
+
+// RecipeService provides methods to manage recipes, including logging and configuration.
+type RecipeService struct {
+	Logger logger.ILogger
+	Config config.Config
+}
+
+func (rs *RecipeService) Waste(product_id string, quantity float64, order_id string, reason string, is_consume bool, orderItem models.OrderItem, user_id string) (err error) {
+	client, err := common.GetDatabaseClient(rs.Logger, &rs.Config)
+	if err != nil {
+		return err
+	}
+
+	ctx := context.Background()
+
+	if is_consume {
+		filter := bson.M{"id": product_id}
+		// Define the update operation
+		update := bson.M{
+			"$dec": bson.M{
+				"ready": quantity,
+			},
+		}
+
+		_, err = client.Database(rs.Config.Databases[0].Database).Collection("recipes").UpdateOne(context.Background(), filter, update)
+		if err != nil {
+			return err
+		}
+	}
+
+	log_product_waste := models.LogProductWaste{
+		Log: models.Log{
+			Type:   "product_waste",
+			Date:   time.Now(),
+			Id:     primitive.NewObjectID().Hex(),
+			UserId: user_id,
+		},
+		Quantity:    quantity,
+		Reason:      reason,
+		ProductId:   product_id,
+		OrderId:     order_id,
+		OrderItemId: orderItem.Id,
+		Item:        orderItem,
+	}
+
+	logs_collection := client.Database(rs.Config.Databases[0].Database).Collection("logs")
+	_, err = logs_collection.InsertOne(ctx, log_product_waste)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (rs *RecipeService) Increase(product_id string, quantity float64, source string, order_id string, user_id string) (err error) {
+	client, err := common.GetDatabaseClient(rs.Logger, &rs.Config)
+	if err != nil {
+		return err
+	}
+
+	ctx := context.Background()
+
+	filter := bson.M{"id": product_id}
+	// Define the update operation
+	update := bson.M{
+		"$inc": bson.M{
+			"ready": quantity,
+		},
+	}
+
+	_, err = client.Database(rs.Config.Databases[0].Database).Collection("recipes").UpdateOne(context.Background(), filter, update)
+	if err != nil {
+		return err
+	}
+
+	log_product_increase := models.LogProductIncrease{
+		Log: models.Log{
+			Type:   "product_increase",
+			Date:   time.Now(),
+			Id:     primitive.NewObjectID().Hex(),
+			UserId: user_id,
+		},
+		Quantity: quantity,
+		Source:   source,
+		OrderId:  order_id,
+	}
+
+	logs_collection := client.Database(rs.Config.Databases[0].Database).Collection("logs")
+	_, err = logs_collection.InsertOne(ctx, log_product_increase)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (rs *RecipeService) GetProduct(product_id string) (product models.Product, err error) {
+	client, err := common.GetDatabaseClient(rs.Logger, &rs.Config)
+	if err != nil {
+		return product, err
+	}
+
+	ctx := context.Background()
+
+	collection := client.Database(rs.Config.Databases[0].Database).Collection("recipes")
+	err = collection.FindOne(ctx, bson.M{"id": product_id}).Decode(&product)
+	if err != nil {
+		return product, err
+	}
+
+	return product, nil
+}
+
+// UpdateProduct updates a product in the database.
+//
+// It takes a product and updates it in the database.
+//
+// If the product is not found, it will return an error.
+func (rs *RecipeService) UpdateProduct(product_id string, product models.Product) (err error) {
+	client, err := common.GetDatabaseClient(rs.Logger, &rs.Config)
+	if err != nil {
+		return err
+	}
+
+	ctx := context.Background()
+
+	collection := client.Database(rs.Config.Databases[0].Database).Collection("recipes")
+
+	_, err = collection.UpdateOne(
+		ctx,
+		bson.M{"id": product_id},
+		bson.M{
+			"$set": bson.M{
+				"name":                         product.Name,
+				"materials":                    product.Materials,
+				"sub_products":                 product.SubProducts,
+				"ready":                        product.Ready,
+				"recipeId":                     product.Id,
+				"price":                        product.Price,
+				"image_url":                    product.ImageURL,
+				"enable_inventory_consumption": product.EnableInventoryConsumption,
+				"enable_fixed_cost":           product.EnableFixedCost,
+				"fixed_cost":                 product.FixedCost,
+			},
+		},
+	)
+
+	return err
+}
+
+// DeleteProduct deletes a product from the database.
+//
+// It takes a product_id and deletes it from the database.
+func (rs *RecipeService) DeleteProduct(product_id string) (err error) {
+	client, err := common.GetDatabaseClient(rs.Logger, &rs.Config)
+	if err != nil {
+		return err
+	}
+
+	ctx := context.Background()
+
+	collection := client.Database(rs.Config.Databases[0].Database).Collection("recipes")
+	_, err = collection.DeleteOne(ctx, bson.M{"id": product_id})
+	if err != nil {
+		return err
+	}
+
+	return err
+
+}
+
+// InsertNew inserts a new product into the database.
+//
+// It takes a product and inserts it into the database.
+// It returns an error if the product could not be inserted.
+func (rs *RecipeService) InsertNew(product models.Product) (afterInsert models.Product, err error) {
+	client, err := common.GetDatabaseClient(rs.Logger, &rs.Config)
+	if err != nil {
+		return afterInsert, err
+	}
+
+	ctx := context.Background()
+
+	collection := client.Database(rs.Config.Databases[0].Database).Collection("recipes")
+
+	product.Id = primitive.NewObjectID().Hex()
+
+	result, err := collection.InsertOne(ctx, product)
+	if err != nil {
+		return afterInsert, err
+	}
+
+	err = collection.FindOne(ctx, bson.M{"_id": result.InsertedID}).Decode(&afterInsert)
+	if err != nil {
+		return afterInsert, err
+	}
+
+	return afterInsert, err
+}
+
+type GetProductsParams struct {
+	// PageNumber sets the first index of the record to begin with in the select transaction
+	PageNumber int
+	// PageSize sets the limit of the number of desired rows
+	PageSize int
+	// Search is a text that the function should use to search for products that has a title contains the contians string
+	Search string
+}
+
+// GetProducts retrieves a list of products from the database.
+func (rs *RecipeService) GetProducts(params GetProductsParams) (products []models.Product, totalRecords int64, err error) {
+	client, err := common.GetDatabaseClient(rs.Logger, &rs.Config)
+	if err != nil {
+		rs.Logger.Error(err.Error())
+		return products, totalRecords, err
+	}
+
+	ctx := context.Background()
+
+	collection := client.Database(rs.Config.Databases[0].Database).Collection("recipes")
+	findOptions := options.Find()
+	findOptions.SetSort(bson.M{"name": 1})
+	findOptions.SetSkip(int64((params.PageNumber - 1) * params.PageSize))
+	findOptions.SetLimit(int64(params.PageSize))
+
+	filter := bson.M{}
+	if params.Search != "" {
+		filter["name"] = bson.M{
+			"$regex": fmt.Sprintf("(?i).*%s.*", params.Search),
+		}
+	}
+
+	totalRecords, err = collection.CountDocuments(ctx, filter)
+	if err != nil {
+		rs.Logger.Error(err.Error())
+		return products, totalRecords, err
+	}
+
+	cursor, err := collection.Find(ctx, filter, findOptions)
+	if err != nil {
+		rs.Logger.Error(err.Error())
+		return products, totalRecords, err
+	}
+	defer cursor.Close(ctx)
+	for cursor.Next(context.Background()) {
+		var product models.Product
+		if err := cursor.Decode(&product); err != nil {
+			return products, totalRecords, err
+		}
+
+		for index, sub_product := range product.SubProducts {
+
+			err = collection.FindOne(ctx, bson.M{"id": sub_product.Id}, options.FindOne()).Decode(&sub_product)
+			if err != nil {
+				return products, totalRecords, err
+			}
+			product.SubProducts[index].Name = sub_product.Name
+		}
+
+		products = append(products, product)
+	}
+
+	return products, totalRecords, err
+}
+
+// ConsumeFromReady consumes a quantity from the ready stock of a product.
+func (rs *RecipeService) ConsumeFromReady(product_id string, quantity float64) error {
+	ctx := context.Background()
+	client, err := common.GetDatabaseClient(rs.Logger, &rs.Config)
+	if err != nil {
+		return err
+	}
+
+	var product models.Product
+	err = client.Database(rs.Config.Databases[0].Database).Collection("recipes").FindOne(ctx, bson.M{"id": product_id}).Decode(&product)
+	if err != nil {
+		return err
+	}
+
+	ready := product.Ready
+
+	if ready < quantity {
+		return customerrors.ErrInsufficientReady
+	}
+
+	ready -= quantity
+
+	_, err = client.Database(rs.Config.Databases[0].Database).Collection("recipes").UpdateOne(
+		context.Background(),
+		bson.M{"id": product_id},
+		bson.M{
+			"$set": bson.M{"ready": ready},
+		},
+	)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// FillRecipeDesign fills the recipe design for an order item with its product and sub products.
+func (rs *RecipeService) FillRecipeDesign(item models.OrderItem) (models.OrderItem, error) {
+
+	self_recipe, err := rs.GetRecipeTree(item.Product.Id)
+	if err != nil {
+		return item, err
+	}
+
+	item.Product = self_recipe
+
+	for i, subrecipe := range item.SubItems {
+		sub_item_recipe, err := rs.FillRecipeDesign(subrecipe)
+		if err != nil {
+			return item, err
+		}
+		item.SubItems[i] = sub_item_recipe
+	}
+
+	return item, err
+
+}
+
+// GetRecipeMaterials returns all materials for a given recipe.
+func (rs *RecipeService) GetRecipeMaterials(recipe_id string) (materials []models.Material, err error) {
+	ctx := context.Background()
+	client, err := common.GetDatabaseClient(rs.Logger, &rs.Config)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	var recipe models.Product
+
+	err = client.Database(rs.Config.Databases[0].Database).Collection("recipes").FindOne(ctx, bson.M{"id": recipe}).Decode(&recipe)
+	if err != nil {
+		return materials, err
+	}
+
+	return recipe.Materials, nil
+}
+
+// GetRecipeTree returns the recipe tree for a given recipe_id.
+func (rs *RecipeService) GetRecipeTree(recipe_id string) (tree models.Product, err error) {
+	ctx := context.Background()
+	self_materials := []models.Material{}
+
+	client, err := common.GetDatabaseClient(rs.Logger, &rs.Config)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	var recipe models.Product
+
+	err = client.Database(rs.Config.Databases[0].Database).Collection("recipes").FindOne(ctx, bson.M{"id": recipe_id}).Decode(&recipe)
+	if err != nil {
+		rs.Logger.Error("GetRecipeTree@getting recipe" + err.Error())
+		return tree, err
+	}
+
+	for _, material := range recipe.Materials {
+
+		var db_component models.Material
+		err = client.Database(rs.Config.Databases[0].Database).Collection("materials").FindOne(context.Background(), bson.M{"id": material.Id}).Decode(&db_component)
+		if err != nil {
+			return tree, err
+		}
+
+		valid_entries := []models.MaterialEntry{}
+		for _, entry := range db_component.Entries {
+			if entry.Quantity > 0 {
+				valid_entries = append(valid_entries, entry)
+			}
+		}
+
+		self_materials = append(self_materials, models.Material{
+			Id:       material.Id,
+			Name:     db_component.Name,
+			Quantity: material.Quantity,
+			Entries:  valid_entries,
+			Unit:     db_component.Unit,
+		})
+	}
+
+	for _, sub_product := range recipe.SubProducts {
+		sub_recipe, err := rs.GetRecipeTree(sub_product.Id)
+		if err != nil {
+			return tree, err
+		}
+
+		//TODO - Fix Quantity vs Ready from Product
+		sub_recipe.Quantity = float64(sub_product.Quantity)
+		tree.SubProducts = append(tree.SubProducts, sub_recipe)
+	}
+
+	tree.Materials = self_materials
+	tree.Id = recipe_id
+	tree.Name = recipe.Name
+	tree.Quantity = recipe.Quantity
+	tree.Price = recipe.Price
+	tree.Ready = recipe.Ready
+
+	return tree, nil
+}
+
+// GetReadyNumber returns the ready number of a given recipe
+func (rs *RecipeService) GetReadyNumber(recipe_id string) (ready float64, err error) {
+	ctx := context.Background()
+	client, err := common.GetDatabaseClient(rs.Logger, &rs.Config)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	var product models.Product
+	err = client.Database(rs.Config.Databases[0].Database).Collection("recipes").FindOne(ctx, bson.M{"id": recipe_id}).Decode(&product)
+	if err != nil {
+		return ready, err
+	}
+
+	ready = product.Ready
+
+	return ready, nil
+}
+
+// CheckRecipesAvailability checks the availability of a list of recipes.
+func (rs *RecipeService) CheckRecipesAvailability(recipe_ids []string) (availabilities []dto.RecipeAvailability, err error) {
+	client, err := common.GetDatabaseClient(rs.Logger, &rs.Config)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	ctx := context.Background()
+
+	coll := client.Database(rs.Config.Databases[0].Database).Collection("recipes")
+
+	availabilitiesChan := make(chan dto.RecipeAvailability)
+	errorChan := make(chan error)
+
+	var wg sync.WaitGroup
+
+	for _, recipe_id := range recipe_ids {
+
+		wg.Add(1)
+
+		go func(ch chan<- dto.RecipeAvailability, errorChan chan<- error, recipe_id string) {
+
+			defer wg.Done()
+
+			var recipe models.Product
+			err = coll.FindOne(ctx, bson.M{"id": recipe_id}).Decode(&recipe)
+			if err != nil {
+				errorChan <- err
+				return
+			}
+
+			var recipeAvailability dto.RecipeAvailability
+			recipeAvailability.ComponentRequirements = make(map[string]float64)
+
+			self_component_requirements := make(map[string]float64)
+			materials_inventory := make(map[string]float64)
+
+			var lowest_available float64
+
+			// subrecipes_components_requirements := make(map[string]float64)
+			// subrecipes_components_consumption := make(map[string]float64)
+
+			subrecipe_availability := []dto.RecipeAvailability{}
+
+			for _, material := range recipe.Materials {
+
+				self_component_requirements[material.Id] = float64(material.Quantity)
+				recipeAvailability.ComponentRequirements[material.Id] += self_component_requirements[material.Id]
+
+				materialService := MaterialService{
+					Logger: rs.Logger,
+					Config: rs.Config,
+				}
+
+				component_amount, err := materialService.GetComponentAvailability(material.Id)
+				if err != nil {
+					errorChan <- err
+					return
+				}
+
+				materials_inventory[material.Id] = float64(component_amount)
+			}
+
+			for _, product := range recipe.SubProducts {
+
+				self_component_requirements[product.Id] = float64(product.Quantity)
+				subrecipe_available, err := rs.CheckRecipesAvailability([]string{product.Id})
+
+				if err != nil {
+					errorChan <- err
+					return
+				}
+
+				subrecipe_availability = append(subrecipe_availability, dto.RecipeAvailability{
+					RecipeId:              product.Id,
+					Ready:                 subrecipe_available[0].Ready,
+					ComponentRequirements: subrecipe_available[0].ComponentRequirements,
+				})
+			}
+
+			satisfied := false
+			for _, sra := range subrecipe_availability {
+				for k, v := range sra.ComponentRequirements {
+					recipeAvailability.ComponentRequirements[k] += v * self_component_requirements[sra.RecipeId]
+				}
+			}
+
+			for !satisfied {
+				satisfied = true
+				temp_component_requirements := make(map[string]float64)
+				temp_component_inventory := make(map[string]float64)
+
+				for k, v := range recipeAvailability.ComponentRequirements {
+					temp_component_requirements[k] = v
+				}
+
+				for k, v := range materials_inventory {
+					temp_component_inventory[k] = v
+				}
+
+				for index, subrecipe := range subrecipe_availability {
+					if subrecipe.Ready > 0 {
+						satisfied = false
+
+						subrecipe_reminder := 0.0
+
+						if self_component_requirements[subrecipe.RecipeId] > subrecipe.Ready {
+							subrecipe_reminder = self_component_requirements[subrecipe.RecipeId] - subrecipe.Ready
+						}
+
+						for component_id, value := range subrecipe.ComponentRequirements {
+							if _, ok := temp_component_requirements[component_id]; ok {
+								temp_component_requirements[component_id] -= value * (self_component_requirements[subrecipe.RecipeId] - subrecipe_reminder)
+							}
+						}
+
+						subrecipe_availability[index].Ready -= self_component_requirements[subrecipe.RecipeId] - subrecipe_reminder
+					}
+				}
+
+				increase_availability := false
+				for k, v := range temp_component_requirements {
+					if temp_component_inventory[k] >= v {
+						temp_component_inventory[k] -= v
+						increase_availability = true
+					}
+				}
+
+				if increase_availability && !satisfied {
+					recipeAvailability.Available += 1
+					for k, v := range temp_component_inventory {
+						materials_inventory[k] = v
+					}
+				}
+
+			}
+
+			for index, ingredient := range recipe.Materials {
+
+				if index == 0 {
+					lowest_available = materials_inventory[ingredient.Id] / recipeAvailability.ComponentRequirements[ingredient.Id]
+				}
+
+				if materials_inventory[ingredient.Id]/recipeAvailability.ComponentRequirements[ingredient.Id] < lowest_available {
+					lowest_available = materials_inventory[ingredient.Id] / recipeAvailability.ComponentRequirements[ingredient.Id]
+				}
+			}
+
+			recipeAvailability.RecipeId = recipe_id
+			recipeAvailability.Available += lowest_available + recipe.Ready
+			recipeAvailability.Ready = recipe.Ready
+
+			availabilitiesChan <- recipeAvailability
+
+		}(availabilitiesChan, errorChan, recipe_id)
+
+	}
+
+	go func() {
+		wg.Wait()
+		close(availabilitiesChan)
+	}()
+
+	for {
+		select {
+		case availability, hasMore := <-availabilitiesChan:
+			if !hasMore {
+				return availabilities, err
+			}
+
+			availabilities = append(availabilities, availability)
+		case err := <-errorChan:
+			return availabilities, err
+		}
+	}
+}

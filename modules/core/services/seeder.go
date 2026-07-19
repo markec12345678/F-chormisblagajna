@@ -1,0 +1,483 @@
+// Package services contains the business logic of the core module of nutrix.
+//
+// The services in this package are used to interact with the models package,
+// which contains the data models of the core module of nutrix. The services
+// are used to create a RESTful API for the core module of nutrix. The API
+// endpoints are documented using the Swagger specification.
+package services
+
+import (
+	"context"
+	"log"
+
+	"github.com/nutrixpos/pos/common"
+	"github.com/nutrixpos/pos/common/config"
+	"github.com/nutrixpos/pos/common/logger"
+	"github.com/nutrixpos/pos/common/userio"
+	"github.com/nutrixpos/pos/modules/core/models"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo"
+)
+
+type Seeder struct {
+	// Logger provides logging capabilities for the seeding process.
+	Logger logger.ILogger
+	// Config holds the configuration settings needed for database connections.
+	Config config.Config
+	// Settings contains additional configuration settings used during seeding.
+	Settings models.Settings
+	// Prompter is used to interact with the user through prompts.
+	Prompter userio.Prompter
+	// IsNewOnly indicates whether only new data should be seeded, leaving existing data untouched.
+	IsNewOnly bool
+}
+
+func (s *Seeder) SeedSettings() error {
+	client, err := common.GetDatabaseClient(s.Logger, &s.Config)
+	if err != nil {
+		return err
+	}
+
+	ctx := context.Background()
+
+	db := client.Database(s.Config.Databases[0].Database)
+	collectionNames, err := db.ListCollectionNames(ctx, bson.M{"name": "settings"})
+	if err != nil {
+		return err
+	}
+
+	if len(collectionNames) == 0 {
+		err = db.CreateCollection(ctx, "settings")
+		if err != nil {
+			return err
+		}
+
+		// Insert the settings into the settings collection
+		settingsCollection := db.Collection("settings")
+		settings := models.Settings{
+			Id: primitive.NewObjectID().Hex(),
+			Inventory: models.MaterialSettings{
+				StockAlertTreshold: 1000,
+			},
+			Orders: models.OrderSettings{
+				Queues: []models.OrderQueueSettings{
+					{
+						Prefix: "A",
+						Next:   1,
+					},
+				},
+				DefaultCostCalculationMethod: "average",
+			},
+			Language: models.LanguageSettings{
+				Code:     "en",
+				Language: "English",
+			},
+			AutoOpenCashDrawer: true,
+			ClientReceiptPrinter: models.PrinterSettings{
+				Host: "192.168.123.123",
+			},
+			KitchenReceiptPrinter: models.PrinterSettings{
+				Host: "192.168.123.123",
+			},
+			PaymentSources: []models.PaymentSource{
+				{
+					Name: "Cash",
+				},
+				{
+					Name: "Card",
+				},
+			},
+		}
+		_, err = settingsCollection.InsertOne(ctx, settings)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+// SeedProducts seeds products into the database, optionally creating new products if they don't exist.
+func (s *Seeder) SeedProducts() error {
+	client, err := common.GetDatabaseClient(s.Logger, &s.Config)
+	if err != nil {
+		return err
+	}
+
+	ctx := context.Background()
+
+	// Check if the product with name "ProductSeeded" exists in the db
+	var product models.Product
+	err = client.Database(s.Config.Databases[0].Database).Collection("recipes").FindOne(ctx, bson.M{"name": bson.M{"$in": []string{"ProductSeeded 1", "ProductSeeded 2"}}}).Decode(&product)
+	if err == nil {
+		if s.IsNewOnly {
+			s.Logger.Info("product already exists, skipping seeding")
+			return nil
+		}
+
+		confirmed, err := s.Prompter.Confirmation("products already exists, do you want to insert new documents beside the current ones ?")
+		if err != nil {
+			return err
+		}
+
+		if !confirmed {
+			return nil
+		}
+	}
+
+	// Connected successfully
+	// Get the material with name Motzarilla from the DB
+	var material models.Material
+	err = client.Database(s.Config.Databases[0].Database).Collection("materials").FindOne(ctx, bson.M{"name": "MotzarillaSeeded"}).Decode(&material)
+
+	if err != nil {
+		if err == mongo.ErrNoDocuments {
+			confirmation, err := s.Prompter.Confirmation("no seeded materials found, would you like to create them?")
+			if err != nil {
+				return err
+			}
+
+			if confirmation {
+				err = s.SeedMaterials(true)
+				if err != nil {
+					return err
+				}
+
+				err = client.Database(s.Config.Databases[0].Database).Collection("materials").FindOne(ctx, bson.M{"name": "MotzarillaSeeded"}).Decode(&material)
+				if err != nil {
+					return err
+				}
+			}
+		} else {
+			return err
+		}
+	}
+
+	material.Quantity = 15
+
+	sub_product_id := primitive.NewObjectID().Hex()
+
+	sub_product := models.Product{
+		Id:    sub_product_id,
+		Name:  "ProductSeeded 1",
+		Price: 100.0,
+		Materials: []models.Material{
+			material,
+		},
+	}
+
+	products := []models.Product{
+		{
+			Id:    primitive.NewObjectID().Hex(),
+			Name:  "ProductSeeded 2",
+			Price: 100.0,
+			Materials: []models.Material{
+				material,
+			},
+			SubProducts: []models.Product{
+				{
+					Id:       sub_product_id,
+					Quantity: 1,
+				},
+			},
+		},
+	}
+
+	_, err = client.Database(s.Config.Databases[0].Database).Collection("recipes").InsertOne(ctx, sub_product)
+	if err != nil {
+		return err
+	}
+
+	newValue := make([]interface{}, len(products))
+
+	for i := range products {
+		newValue[i] = products[i]
+	}
+
+	// Insert the products
+	_, err = client.Database(s.Config.Databases[0].Database).Collection("recipes").InsertMany(ctx, newValue)
+	if err != nil {
+		return err
+	}
+
+	s.Logger.Info("products seeded successfully !")
+
+	return nil
+}
+
+// SeedCategories seeds categories into the database, optionally creating new categories if they don't exist.
+func (s *Seeder) SeedCategories() error {
+	categories := []models.Category{
+		{
+			Name:     "CategorySeeded",
+			Products: []models.Product{},
+		},
+	}
+
+	client, err := common.GetDatabaseClient(s.Logger, &s.Config)
+	if err != nil {
+		return err
+	}
+
+	ctx := context.Background()
+
+	db := client.Database(s.Config.Databases[0].Database)
+	collection := db.Collection("categories")
+
+	// Count the number of documents in the categories collection
+	count, err := collection.CountDocuments(ctx, bson.M{"name": "CategorySeeded"})
+
+	if count > 0 {
+		if s.IsNewOnly {
+			s.Logger.Info("categories already seeded, skipping..")
+			return nil
+		}
+
+		confirmed, err := s.Prompter.Confirmation("categories already exists, do you want to insert new documents beside the current ones ?")
+		if err != nil {
+			return err
+		}
+
+		if !confirmed {
+			return nil
+		}
+
+		var product models.Product
+		err = client.Database(s.Config.Databases[0].Database).Collection("recipes").FindOne(ctx, bson.M{"name": "ProductSeeded 2"}).Decode(&product)
+
+		if err == mongo.ErrNoDocuments {
+			confirm, err := s.Prompter.Confirmation("seeded products not found, would you like to create one?")
+
+			if err != nil {
+				return err
+			}
+
+			if confirm {
+				err = s.SeedProducts()
+				if err != nil {
+					return err
+				}
+
+				err = client.Database(s.Config.Databases[0].Database).Collection("recipes").FindOne(ctx, bson.M{"name": "ProductSeeded 2"}).Decode(&product)
+				if err != nil {
+					return err
+				}
+
+				for index := range categories {
+					categories[index].Products = append(categories[index].Products, models.Product{
+						Id: product.Id,
+					})
+				}
+			}
+		} else if err != nil {
+			return err
+		} else {
+			for index := range categories {
+				categories[index].Products = append(categories[index].Products, models.Product{
+					Id: product.Id,
+				})
+			}
+		}
+
+		newValue := make([]interface{}, len(categories))
+
+		for i := range categories {
+			newValue[i] = categories[i]
+		}
+
+		_, err = collection.InsertMany(ctx, newValue)
+		if err != nil {
+			return err
+		}
+
+		s.Logger.Info("categories seeded successfully!")
+
+		return nil
+	} else if err == mongo.ErrNoDocuments || err == nil {
+		var product models.Product
+		err = client.Database(s.Config.Databases[0].Database).Collection("recipes").FindOne(ctx, bson.M{"name": "ProductSeeded 2"}).Decode(&product)
+
+		if err == mongo.ErrNoDocuments {
+			confirm, err := s.Prompter.Confirmation("No seeded products found, would you like to create one?")
+
+			if err != nil {
+				return err
+			}
+
+			if confirm {
+				err = s.SeedProducts()
+				if err != nil {
+					return err
+				}
+
+				err = client.Database(s.Config.Databases[0].Database).Collection("recipes").FindOne(ctx, bson.M{"name": "ProductSeeded"}).Decode(&product)
+				if err != nil {
+					return err
+				}
+
+				for index := range categories {
+					categories[index].Products = append(categories[index].Products, models.Product{
+						Id: product.Id,
+					})
+				}
+			}
+		} else if err != nil {
+			return err
+		} else {
+			for index := range categories {
+				categories[index].Products = append(categories[index].Products, models.Product{
+					Id: product.Id,
+				})
+			}
+		}
+
+		newValue := make([]interface{}, len(categories))
+
+		for i := range categories {
+			newValue[i] = categories[i]
+		}
+
+		_, err = collection.InsertMany(ctx, newValue)
+		if err != nil {
+			return err
+		}
+	} else {
+		return err
+	}
+
+	s.Logger.Info("categories seeded successfully!")
+
+	return nil
+}
+
+// SeedMaterials seeds materials into the database, optionally creating new materials if they don't exist.
+func (s *Seeder) SeedMaterials(seedEntries bool) error {
+	entries := []models.MaterialEntry{
+		{
+			Id:               primitive.NewObjectID().Hex(),
+			Quantity:         2000,
+			PurchasePrice:    250,
+			PurchaseQuantity: 200,
+			Company:          "Test1",
+		},
+		{
+			Id:               primitive.NewObjectID().Hex(),
+			Quantity:         2000,
+			PurchasePrice:    250,
+			PurchaseQuantity: 200,
+			Company:          "Test2",
+		},
+		{
+			Id:               primitive.NewObjectID().Hex(),
+			Quantity:         2000,
+			PurchasePrice:    250,
+			PurchaseQuantity: 200,
+			Company:          "Test3",
+		},
+		{
+			Id:               primitive.NewObjectID().Hex(),
+			Quantity:         2000,
+			PurchasePrice:    250,
+			PurchaseQuantity: 200,
+			Company:          "Test4",
+		},
+		{
+			Id:               primitive.NewObjectID().Hex(),
+			Quantity:         2000,
+			PurchasePrice:    250,
+			PurchaseQuantity: 200,
+			Company:          "Test5",
+		},
+	}
+
+	materials := []models.Material{
+		{
+			Id:   primitive.NewObjectID().Hex(),
+			Name: "MotzarillaSeeded",
+			Unit: "gm",
+			Settings: models.MaterialSettings{
+				StockAlertTreshold: 1000,
+			},
+		},
+		{
+			Id:   primitive.NewObjectID().Hex(),
+			Name: "Milk (seeded)",
+			Entries: []models.MaterialEntry{
+				{
+					Id:               primitive.NewObjectID().Hex(),
+					Quantity:         2,
+					PurchasePrice:    350,
+					PurchaseQuantity: 5,
+					Company:          "Seeded milk 1",
+				},
+			},
+			Settings: models.MaterialSettings{
+				StockAlertTreshold: 2,
+			},
+			Unit: "litre",
+		},
+	}
+
+	if seedEntries {
+		materials[0].Entries = entries
+	}
+
+	client, err := common.GetDatabaseClient(s.Logger, &s.Config)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	ctx := context.Background()
+
+	collection := client.Database(s.Config.Databases[0].Database).Collection("materials")
+
+	// Find one document in the collection
+	var component models.Material
+	err = collection.FindOne(ctx, bson.M{"name": "MotzarillaSeeded"}).Decode(&component)
+	if err == mongo.ErrNoDocuments {
+		newValue := make([]interface{}, len(materials))
+
+		for i := range materials {
+			newValue[i] = materials[i]
+		}
+
+		// Insert the materials into the database
+		_, err = collection.InsertMany(ctx, newValue)
+		if err != nil {
+			return err
+		}
+		s.Logger.Info("materials seeded successfully")
+		return nil
+	} else if err != nil {
+		return err
+	}
+
+	if s.IsNewOnly {
+		s.Logger.Info("material already exists. skipping seeding materials..")
+		return nil
+	}
+
+	confirm_reseed_materials, err := s.Prompter.Confirmation("material already exists. Do you want to proceed with seeding materials?")
+
+	if err != nil {
+		return err
+	}
+
+	if confirm_reseed_materials {
+		newValue := make([]interface{}, len(materials))
+
+		for i := range materials {
+			newValue[i] = materials[i]
+		}
+
+		// Insert the materials into the database
+		_, err = collection.InsertMany(ctx, newValue)
+		if err != nil {
+			return err
+		}
+		s.Logger.Info("materials inserted successfully")
+	}
+
+	return nil
+}

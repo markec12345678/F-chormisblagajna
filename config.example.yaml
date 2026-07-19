@@ -1,0 +1,28 @@
+databases:
+  - name: core
+    type: mongo
+    host: 127.0.0.1
+    port: 27017
+    database: nutrix
+    username: ""
+    password: ""
+    tables: # this is to allow changing the following specific table names
+      sales: sales
+
+uploads_path: "./mnt/public"
+
+auth:
+  jwt_secret: ""
+  jwt_expire_hrs: 24
+  enabled: true
+
+zitadel:
+  domain: "zitadel"
+  port: 8080
+  key_path: "./mnt/zitadel-key.json" # this is the path to your zitadel key related to your root directory of backend
+  enabled: false
+
+serve_frontend: true
+  
+timezone: Africa/Cairo
+env: dev
