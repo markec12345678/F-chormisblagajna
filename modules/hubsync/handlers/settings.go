@@ -10,7 +10,7 @@ import (
 	"github.com/nutrixpos/pos/common/config"
 	"github.com/nutrixpos/pos/common/logger"
 	"github.com/nutrixpos/pos/modules/hubsync/models"
-	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/v2/bson"
 )
 
 func PatchSettings(config config.Config, logger logger.ILogger) http.HandlerFunc {

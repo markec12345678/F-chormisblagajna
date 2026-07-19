@@ -1,15 +1,14 @@
 package common
 
 import (
-	"context"
 	"fmt"
 	"sync"
 	"time"
 
 	"github.com/nutrixpos/pos/common/config"
 	"github.com/nutrixpos/pos/common/logger"
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
+	"go.mongodb.org/mongo-driver/v2/mongo"
+	"go.mongodb.org/mongo-driver/v2/mongo/options"
 )
 
 var singleDBInstance *mongo.Client
@@ -22,17 +21,20 @@ func GetDatabaseClient(logger logger.ILogger, conf *config.Config) (*mongo.Clien
 		defer lock.Unlock()
 		if singleDBInstance == nil {
 			logger.Info("Creating DB single instance now.")
-			clientOptions := options.Client().ApplyURI(fmt.Sprintf("mongodb://%s:%v", conf.Databases[0].Host, conf.Databases[0].Port))
 
-			deadline := 5 * time.Second
-			if conf.Env == "dev" {
-				deadline = 1000 * time.Second
+			uri := fmt.Sprintf("mongodb://%s:%v", conf.Databases[0].Host, conf.Databases[0].Port)
+			if conf.Databases[0].Username != "" {
+				uri = fmt.Sprintf("mongodb://%s:%s@%s:%v",
+					conf.Databases[0].Username,
+					conf.Databases[0].Password,
+					conf.Databases[0].Host,
+					conf.Databases[0].Port,
+				)
 			}
 
-			ctx, cancel := context.WithTimeout(context.Background(), deadline)
-			defer cancel()
+			opts := options.Client().ApplyURI(uri)
 
-			client, err := mongo.Connect(ctx, clientOptions)
+			client, err := mongo.Connect(opts)
 			if err != nil {
 				return nil, err
 			}

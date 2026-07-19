@@ -14,8 +14,8 @@ import (
 	"github.com/nutrixpos/pos/common/logger"
 	core_models "github.com/nutrixpos/pos/modules/core/models"
 	"github.com/nutrixpos/pos/modules/hubsync/models"
-	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/v2/bson"
+	"go.mongodb.org/mongo-driver/v2/bson/primitive"
 )
 
 type SyncerService struct {

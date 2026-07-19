@@ -16,8 +16,7 @@ require (
 	github.com/spf13/viper v1.19.0
 	github.com/zitadel/oidc/v3 v3.30.0
 	github.com/zitadel/zitadel-go/v3 v3.2.1
-	go.mongodb.org/mongo-driver v1.16.1
-	go.uber.org/zap v1.27.0
+	go.mongodb.org/mongo-driver/v2 v2.2.0
 	gopkg.in/yaml.v2 v2.4.0
 )
 

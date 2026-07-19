@@ -22,7 +22,7 @@ import (
 	"github.com/nutrixpos/pos/modules/core/models"
 	"github.com/nutrixpos/pos/modules/core/services"
 	"github.com/nutrixpos/pos/modules/hubsync"
-	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/v2/bson"
 	"gopkg.in/yaml.v2"
 
 	"github.com/gorilla/mux"
