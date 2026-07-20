@@ -53,7 +53,7 @@ Ob prvič bo Setup Wizard zagnas na `http://localhost:8000` za nastavitev MongoD
 
 **Backend:**
 ```bash
-# Potrebujete Go 1.24+ in MongoDB
+# Potrebujete Go 1.25+ in MongoDB
 cp config.example.yaml config.yaml
 go run ./cmd/pos
 ```
@@ -152,6 +152,6 @@ main.go
 
 ## Licenca
 
-MIT License - glej [LICENSE](LICENSE)
+GNU General Public License v2 - glej [LICENSE](LICENSE)
 
 > **Opozorilo:** NutrixPOS je v aktivnem razvoju. Nazaj-kompatibilnost ni zagotovljena do stabilne izdaje.

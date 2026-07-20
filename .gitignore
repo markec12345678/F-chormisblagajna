@@ -1,4 +1,3 @@
-ignore
 .DS_Store
 node_modules
 /dist
@@ -9,6 +8,7 @@ public
 .devcontainer/.env
 mnt
 config.yaml
+data/
 
 # local env files
 .env.local
