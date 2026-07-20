@@ -1,7 +1,7 @@
 # Agent Guidance for NutrixPOS
 
 ## Project Overview
-- Go 1.24 monorepo with MongoDB backend (mongodb-driver v1.16)
+- Go 1.25 monorepo with MongoDB backend (mongo-driver v2.2.0)
 - Point-of-sale system for restaurants/shops: inventory, sales, products
 - Active development - no backward compatibility guarantee
 
@@ -9,17 +9,30 @@
 ```bash
 go build ./...        # build all packages
 go run ./cmd/pos      # run the CLI
+go test ./...         # run all tests
+go vet ./...          # static analysis
 ```
 
 ## Architecture
 - `/cmd/` - CLI entrypoints
-- `/modules/` - business logic (core, hubsync modules)
-- `/common/` - shared utilities (database, config, logger)
-- No tests in this repo
+- `/modules/` - business logic (core, hubsync, auth modules)
+- `/common/` - shared utilities (database, config, logger, middlewares)
+- `/frontend/` - Vue 3 SPA (separate build)
 
 ## Database
 - Use `common.GetDatabaseClient()` singleton - never create new `mongo.Connect()` connections
 - Singleton pattern in `common/database.go` ensures single connection
+- **mongo-driver v2**: use `bson` package (NOT `bson/primitive`)
+- **v2 Connect**: `mongo.Connect(opts)` - no context parameter
+
+## Import Paths (mongo-driver v2)
+```go
+import (
+    "go.mongodb.org/mongo-driver/v2/bson"              // ObjectID, NewObjectID, NilObjectID, etc.
+    "go.mongodb.org/mongo-driver/v2/mongo"
+    "go.mongodb.org/mongo-driver/v2/mongo/options"
+)
+```
 
 ## Common Pitfalls to Avoid
 
@@ -39,17 +52,41 @@ if err != nil {
 ctx := context.Background()
 ```
 
-### 2. Imports After Refactoring
-When changing mongo.Connect to GetDatabaseClient:
-- Remove: `"go.mongodb.org/mongo-driver/mongo"`, `"go.mongodb.org/mongo-driver/mongo/options"`
-- Keep: `"go.mongodb.org/mongo-driver/mongo"` only if using `mongo.ErrNoDocuments`
-- Add: `"github.com/nutrixpos/pos/common"` if not present
+### 2. bson Package (v2)
+❌ Wrong:
+```go
+import "go.mongodb.org/mongo-driver/v2/bson/primitive"
+id := primitive.NewObjectID()
+```
+✅ Correct:
+```go
+import "go.mongodb.org/mongo-driver/v2/bson"
+id := bson.NewObjectID()
+```
+
+### 3. Update Options (v2)
+❌ Wrong: `options.Update()`
+✅ Correct: `options.UpdateOne()`
+
+❌ Wrong: `&options.FindOptions{Sort: sort}`
+✅ Correct: `options.Find().SetSort(sort)`
 
 ## Dependencies
-- `go.mongodb.org/mongo-driver` - MongoDB driver
+- `go.mongodb.org/mongo-driver/v2` - MongoDB driver v2
 - `github.com/gorilla/mux` - HTTP router
 - `github.com/spf13/cobra` + `viper` - CLI framework
-- `github.com/rs/zerolog` - logging (not used everywhere)
+- `github.com/golang-jwt/jwt/v5` - JWT authentication
+- `github.com/nutrixpos/crypt` - password hashing
+
+## Testing
+- Tests in: `common/config`, `common/middlewares`, `modules/auth/middlewares`
+- Rate limiter: `common/middlewares/ratelimit.go` with sliding window
+- Frontend tests: `frontend/src/__tests__/`
+
+## CI/CD
+- GitHub Actions: `.github/workflows/ci.yml`
+- Jobs: Go (vet+test+build+vulncheck) → Vue (typecheck+lint+test+build) → Docker
+- Docker: multi-stage build, non-root user, healthcheck
 
 ## Entities
 - `Material`, `Component` and `Inventory Item` are the same entity

@@ -30,7 +30,7 @@ Blagajniški sistem za restavracije in trgovine. Go backend (MongoDB) + Vue 3 SP
 
 | Komponenta | Tehnologija |
 |------------|-------------|
-| Backend | Go 1.24 + gorilla/mux + Cobra CLI |
+| Backend | Go 1.25 + gorilla/mux + Cobra CLI |
 | Baza | MongoDB |
 | Frontend | Vue 3 + TypeScript + PrimeVue 4 |
 | Build | Vite 6 + viteSingleFile |
