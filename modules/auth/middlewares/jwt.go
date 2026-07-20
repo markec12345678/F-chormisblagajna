@@ -6,7 +6,7 @@ import (
 
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/nutrixpos/pos/modules/auth/models"
-	"go.mongodb.org/mongo-driver/v2/bson/primitive"
+	"go.mongodb.org/mongo-driver/v2/bson"
 )
 
 var (
@@ -90,10 +90,10 @@ func (j *JWTUtil) RefreshToken(tokenString string) (string, error) {
 	return j.GenerateToken(user)
 }
 
-func mustObjectIDFromHex(id string) primitive.ObjectID {
-	oid, err := primitive.ObjectIDFromHex(id)
+func mustObjectIDFromHex(id string) bson.ObjectID {
+	oid, err := bson.ObjectIDFromHex(id)
 	if err != nil {
-		return primitive.NilObjectID
+		return bson.NilObjectID
 	}
 	return oid
 }

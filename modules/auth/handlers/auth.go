@@ -11,7 +11,6 @@ import (
 	"github.com/nutrixpos/pos/modules/auth/middlewares"
 	"github.com/nutrixpos/pos/modules/auth/models"
 	"go.mongodb.org/mongo-driver/v2/bson"
-	"go.mongodb.org/mongo-driver/v2/bson/primitive"
 	"go.mongodb.org/mongo-driver/v2/mongo"
 )
 
@@ -127,7 +126,7 @@ func (h *AuthHandler) Register(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user.ID = result.InsertedID.(primitive.ObjectID)
+	user.ID = result.InsertedID.(bson.ObjectID)
 
 	token, err := h.JWTUtil.GenerateToken(user)
 	if err != nil {
@@ -156,7 +155,7 @@ func (h *AuthHandler) Me(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	userID, err := primitive.ObjectIDFromHex(claims.UserID)
+	userID, err := bson.ObjectIDFromHex(claims.UserID)
 	if err != nil {
 		http.Error(w, "invalid user id", http.StatusBadRequest)
 		return
@@ -217,7 +216,7 @@ func (h *AuthHandler) DeleteUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	oid, err := primitive.ObjectIDFromHex(userID)
+	oid, err := bson.ObjectIDFromHex(userID)
 	if err != nil {
 		http.Error(w, "invalid user id", http.StatusBadRequest)
 		return
@@ -293,7 +292,7 @@ func (h *AuthHandler) ChangePassword(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	oid, err := primitive.ObjectIDFromHex(req.UserID)
+	oid, err := bson.ObjectIDFromHex(req.UserID)
 	if err != nil {
 		http.Error(w, "invalid user id", http.StatusBadRequest)
 		return
@@ -350,7 +349,7 @@ func (h *AuthHandler) ChangeMyPassword(w http.ResponseWriter, r *http.Request) {
 
 	var user models.User
 
-	user_id_obj, err := primitive.ObjectIDFromHex(claims.UserID)
+	user_id_obj, err := bson.ObjectIDFromHex(claims.UserID)
 	if err != nil {
 		http.Error(w, "invalid user id", http.StatusBadRequest)
 		return

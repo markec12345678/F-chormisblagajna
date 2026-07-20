@@ -20,7 +20,6 @@ import (
 	"github.com/nutrixpos/pos/modules/core/dto"
 	"github.com/nutrixpos/pos/modules/core/models"
 	"go.mongodb.org/mongo-driver/v2/bson"
-	"go.mongodb.org/mongo-driver/v2/bson/primitive"
 	"go.mongodb.org/mongo-driver/v2/mongo/options"
 )
 
@@ -151,7 +150,7 @@ func (os *OrderService) WasteOrderItem(OrderItem models.OrderItem, order_id stri
 		Log: models.Log{
 			Type:   "waste_orderitem",
 			Date:   time.Now(),
-			Id:     primitive.NewObjectID().Hex(),
+			Id:     bson.NewObjectID().Hex(),
 			UserId: user_id,
 		},
 		Quantity: quantity,
@@ -205,7 +204,7 @@ func (os *OrderService) RefundItem(request dto.OrderItemRefundRequest, user_id s
 
 				disposal_svc.AddMaterialDisposal(models.MaterialDisposal{
 					Disposal: models.Disposal{
-						Id:       primitive.NilObjectID.Hex(),
+						Id:       bson.NilObjectID.Hex(),
 						OrderId:  request.OrderId,
 						Type:     models.TypeDisposalMaterial,
 						Quantity: material_refund.DisposeQty,
@@ -271,7 +270,7 @@ func (os *OrderService) RefundItem(request dto.OrderItemRefundRequest, user_id s
 
 		disposal_svc.AddProductDisposal(models.ProductDisposal{
 			Disposal: models.Disposal{
-				Id:       primitive.NilObjectID.Hex(),
+				Id:       bson.NilObjectID.Hex(),
 				OrderId:  request.OrderId,
 				Type:     models.TypeDisposalProduct,
 				Quantity: orderItem.Quantity,
@@ -602,7 +601,7 @@ func (os *OrderService) FinishOrder(order_id string, user_id string) (err error)
 
 	logs_data := models.LogOrderFinish{
 		Log: models.Log{
-			Id:     primitive.NewObjectID().Hex(),
+			Id:     bson.NewObjectID().Hex(),
 			Type:   models.LogTypeOrderFinish,
 			Date:   time.Now(),
 			UserId: user_id,
@@ -742,10 +741,10 @@ func (os *OrderService) SubmitOrder(order models.Order) (models.Order, error) {
 	order.SalePrice = totalSalePrice - order.Discount
 	order.Cost = totalCost
 	order.SubmittedAt = time.Now()
-	order.Id = primitive.NewObjectID().Hex()
+	order.Id = bson.NewObjectID().Hex()
 
 	for index, _ := range order.Items {
-		order.Items[index].Id = primitive.NewObjectID().Hex()
+		order.Items[index].Id = bson.NewObjectID().Hex()
 	}
 
 	if order.State != "stashed" {
@@ -982,7 +981,7 @@ func (os *OrderService) StartOrder(order_id string, order_items []models.OrderIt
 
 	logs_data := models.LogOrderStart{
 		Log: models.Log{
-			Id:     primitive.NewObjectID().Hex(),
+			Id:     bson.NewObjectID().Hex(),
 			Type:   models.LogTypeOrderStart,
 			Date:   time.Now(),
 			UserId: user_id,

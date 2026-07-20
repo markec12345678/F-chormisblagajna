@@ -14,7 +14,6 @@ import (
 	"github.com/nutrixpos/pos/common/logger"
 	"github.com/nutrixpos/pos/modules/core/models"
 	"go.mongodb.org/mongo-driver/v2/bson"
-	"go.mongodb.org/mongo-driver/v2/bson/primitive"
 	"go.mongodb.org/mongo-driver/v2/mongo/options"
 )
 
@@ -33,7 +32,7 @@ func (cs *CategoryService) InsertCategory(category models.Category) (err error) 
 		return err
 	}
 
-	category.Id = primitive.NewObjectID().Hex()
+	category.Id = bson.NewObjectID().Hex()
 
 	collection := client.Database(cs.Config.Databases[0].Database).Collection("categories")
 	_, err = collection.InsertOne(ctx, category)

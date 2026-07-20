@@ -16,7 +16,6 @@ import (
 	"github.com/nutrixpos/pos/common/userio"
 	"github.com/nutrixpos/pos/modules/core/models"
 	"go.mongodb.org/mongo-driver/v2/bson"
-	"go.mongodb.org/mongo-driver/v2/bson/primitive"
 	"go.mongodb.org/mongo-driver/v2/mongo"
 )
 
@@ -56,7 +55,7 @@ func (s *Seeder) SeedSettings() error {
 		// Insert the settings into the settings collection
 		settingsCollection := db.Collection("settings")
 		settings := models.Settings{
-			Id: primitive.NewObjectID().Hex(),
+			Id: bson.NewObjectID().Hex(),
 			Inventory: models.MaterialSettings{
 				StockAlertTreshold: 1000,
 			},
@@ -156,7 +155,7 @@ func (s *Seeder) SeedProducts() error {
 
 	material.Quantity = 15
 
-	sub_product_id := primitive.NewObjectID().Hex()
+	sub_product_id := bson.NewObjectID().Hex()
 
 	sub_product := models.Product{
 		Id:    sub_product_id,
@@ -169,7 +168,7 @@ func (s *Seeder) SeedProducts() error {
 
 	products := []models.Product{
 		{
-			Id:    primitive.NewObjectID().Hex(),
+			Id:    bson.NewObjectID().Hex(),
 			Name:  "ProductSeeded 2",
 			Price: 100.0,
 			Materials: []models.Material{
@@ -355,35 +354,35 @@ func (s *Seeder) SeedCategories() error {
 func (s *Seeder) SeedMaterials(seedEntries bool) error {
 	entries := []models.MaterialEntry{
 		{
-			Id:               primitive.NewObjectID().Hex(),
+			Id:               bson.NewObjectID().Hex(),
 			Quantity:         2000,
 			PurchasePrice:    250,
 			PurchaseQuantity: 200,
 			Company:          "Test1",
 		},
 		{
-			Id:               primitive.NewObjectID().Hex(),
+			Id:               bson.NewObjectID().Hex(),
 			Quantity:         2000,
 			PurchasePrice:    250,
 			PurchaseQuantity: 200,
 			Company:          "Test2",
 		},
 		{
-			Id:               primitive.NewObjectID().Hex(),
+			Id:               bson.NewObjectID().Hex(),
 			Quantity:         2000,
 			PurchasePrice:    250,
 			PurchaseQuantity: 200,
 			Company:          "Test3",
 		},
 		{
-			Id:               primitive.NewObjectID().Hex(),
+			Id:               bson.NewObjectID().Hex(),
 			Quantity:         2000,
 			PurchasePrice:    250,
 			PurchaseQuantity: 200,
 			Company:          "Test4",
 		},
 		{
-			Id:               primitive.NewObjectID().Hex(),
+			Id:               bson.NewObjectID().Hex(),
 			Quantity:         2000,
 			PurchasePrice:    250,
 			PurchaseQuantity: 200,
@@ -393,7 +392,7 @@ func (s *Seeder) SeedMaterials(seedEntries bool) error {
 
 	materials := []models.Material{
 		{
-			Id:   primitive.NewObjectID().Hex(),
+			Id:   bson.NewObjectID().Hex(),
 			Name: "MotzarillaSeeded",
 			Unit: "gm",
 			Settings: models.MaterialSettings{
@@ -401,11 +400,11 @@ func (s *Seeder) SeedMaterials(seedEntries bool) error {
 			},
 		},
 		{
-			Id:   primitive.NewObjectID().Hex(),
+			Id:   bson.NewObjectID().Hex(),
 			Name: "Milk (seeded)",
 			Entries: []models.MaterialEntry{
 				{
-					Id:               primitive.NewObjectID().Hex(),
+					Id:               bson.NewObjectID().Hex(),
 					Quantity:         2,
 					PurchasePrice:    350,
 					PurchaseQuantity: 5,

@@ -20,7 +20,6 @@ import (
 	"github.com/nutrixpos/pos/modules/core/dto"
 	"github.com/nutrixpos/pos/modules/core/models"
 	"go.mongodb.org/mongo-driver/v2/bson"
-	"go.mongodb.org/mongo-driver/v2/bson/primitive"
 	"go.mongodb.org/mongo-driver/v2/mongo/options"
 )
 
@@ -57,7 +56,7 @@ func (rs *RecipeService) Waste(product_id string, quantity float64, order_id str
 		Log: models.Log{
 			Type:   "product_waste",
 			Date:   time.Now(),
-			Id:     primitive.NewObjectID().Hex(),
+			Id:     bson.NewObjectID().Hex(),
 			UserId: user_id,
 		},
 		Quantity:    quantity,
@@ -103,7 +102,7 @@ func (rs *RecipeService) Increase(product_id string, quantity float64, source st
 		Log: models.Log{
 			Type:   "product_increase",
 			Date:   time.Now(),
-			Id:     primitive.NewObjectID().Hex(),
+			Id:     bson.NewObjectID().Hex(),
 			UserId: user_id,
 		},
 		Quantity: quantity,
@@ -210,7 +209,7 @@ func (rs *RecipeService) InsertNew(product models.Product) (afterInsert models.P
 
 	collection := client.Database(rs.Config.Databases[0].Database).Collection("recipes")
 
-	product.Id = primitive.NewObjectID().Hex()
+	product.Id = bson.NewObjectID().Hex()
 
 	result, err := collection.InsertOne(ctx, product)
 	if err != nil {

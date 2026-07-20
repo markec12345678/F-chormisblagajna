@@ -15,7 +15,6 @@ import (
 	core_models "github.com/nutrixpos/pos/modules/core/models"
 	"github.com/nutrixpos/pos/modules/hubsync/models"
 	"go.mongodb.org/mongo-driver/v2/bson"
-	"go.mongodb.org/mongo-driver/v2/bson/primitive"
 )
 
 type SyncerService struct {
@@ -297,7 +296,7 @@ func (s *SyncerService) CopyToBuffer() error {
 		}
 	}
 
-	tracker_id, _ := primitive.ObjectIDFromHex(tracker.Id)
+	tracker_id, _ := bson.ObjectIDFromHex(tracker.Id)
 
 	_, err = collection.UpdateOne(ctx, bson.M{"_id": tracker_id}, bson.M{
 		"$set": bson.M{

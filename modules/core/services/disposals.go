@@ -10,7 +10,6 @@ import (
 	"github.com/nutrixpos/pos/common/logger"
 	"github.com/nutrixpos/pos/modules/core/models"
 	"go.mongodb.org/mongo-driver/v2/bson"
-	"go.mongodb.org/mongo-driver/v2/bson/primitive"
 	"go.mongodb.org/mongo-driver/v2/mongo/options"
 )
 
@@ -200,7 +199,7 @@ func (ds *DisposalService) AddMaterialDisposal(disposal models.MaterialDisposal,
 	ctx, cancel := context.WithTimeout(context.Background(), timeout)
 	defer cancel()
 
-	disposal.Id = primitive.NewObjectID().Hex()
+	disposal.Id = bson.NewObjectID().Hex()
 
 	collection := client.Database(ds.Config.Databases[0].Database).Collection("disposals")
 	_, err = collection.InsertOne(ctx, disposal)
@@ -211,7 +210,7 @@ func (ds *DisposalService) AddMaterialDisposal(disposal models.MaterialDisposal,
 
 	disposal_add_log := models.LogDisposalMaterialAdd{
 		Log: models.Log{
-			Id:     primitive.NewObjectID().Hex(),
+			Id:     bson.NewObjectID().Hex(),
 			Type:   models.LogTypeDisposalAdd,
 			Date:   time.Now(),
 			UserId: user_id,
@@ -243,7 +242,7 @@ func (ds *DisposalService) AddProductDisposal(disposal models.ProductDisposal, u
 	ctx, cancel := context.WithTimeout(context.Background(), timeout)
 	defer cancel()
 
-	disposal.Id = primitive.NewObjectID().Hex()
+	disposal.Id = bson.NewObjectID().Hex()
 
 	collection := client.Database(ds.Config.Databases[0].Database).Collection("disposals")
 	_, err = collection.InsertOne(ctx, disposal)
@@ -254,7 +253,7 @@ func (ds *DisposalService) AddProductDisposal(disposal models.ProductDisposal, u
 
 	disposal_add_log := models.LogDisposalProductAdd{
 		Log: models.Log{
-			Id:     primitive.NewObjectID().Hex(),
+			Id:     bson.NewObjectID().Hex(),
 			Type:   models.LogTypeDisposalAdd,
 			Date:   time.Now(),
 			UserId: user_id,

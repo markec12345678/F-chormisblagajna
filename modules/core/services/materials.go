@@ -15,7 +15,6 @@ import (
 	"github.com/nutrixpos/pos/common/logger"
 	"github.com/nutrixpos/pos/modules/core/models"
 	"go.mongodb.org/mongo-driver/v2/bson"
-	"go.mongodb.org/mongo-driver/v2/bson/primitive"
 	"go.mongodb.org/mongo-driver/v2/mongo/options"
 )
 
@@ -163,7 +162,7 @@ func (ms *MaterialService) Waste(entry_id, material_id string, quantity float64,
 		Log: models.Log{
 			Type:   models.LogTypeMaterialWaste,
 			Date:   time.Now(),
-			Id:     primitive.NewObjectID().Hex(),
+			Id:     bson.NewObjectID().Hex(),
 			UserId: entry_id,
 		},
 		MaterialId: material_id,
@@ -222,20 +221,16 @@ func (ms *MaterialService) InventoryReturn(entry_id, material_id string, quantit
 			},
 		}
 
-		arrayFilters := options.ArrayFilters{
-			Filters: []interface{}{
-				bson.M{
-					"item.materials.material.id": material_id,
-					"item.materials.entry.id":    entry_id,
-				},
-				bson.M{
-					"material.material.id": material_id,
-					"material.entry.id":    entry_id,
-				},
+		opts := options.UpdateOne().SetArrayFilters([]interface{}{
+			bson.M{
+				"item.materials.material.id": material_id,
+				"item.materials.entry.id":    entry_id,
 			},
-		}
-
-		opts := options.Update().SetArrayFilters(arrayFilters)
+			bson.M{
+				"material.material.id": material_id,
+				"material.entry.id":    entry_id,
+			},
+		})
 
 		_, err = client.Database(ms.Config.Databases[0].Database).Collection("orders").UpdateOne(context.Background(), filter, update, opts)
 		if err != nil {
@@ -247,7 +242,7 @@ func (ms *MaterialService) InventoryReturn(entry_id, material_id string, quantit
 		Log: models.Log{
 			Type:   models.LogTypeMaterialInventoryReturn,
 			Date:   time.Now(),
-			Id:     primitive.NewObjectID().Hex(),
+			Id:     bson.NewObjectID().Hex(),
 			UserId: user_id,
 		},
 		OrderId:  order_id,
@@ -305,7 +300,7 @@ func (cs *MaterialService) ConsumeFromInventory(material models.Material, entry_
 
 	logs_data := models.LogMaterialConsume{
 		Log: models.Log{
-			Id:     primitive.NewObjectID().Hex(),
+			Id:     bson.NewObjectID().Hex(),
 			Type:   "component_consume",
 			Date:   time.Now(),
 			UserId: user_id,
@@ -482,7 +477,7 @@ func (ms *MaterialService) ConsumeItemComponentsForOrder(item models.OrderItem, 
 			logs_data := bson.M{
 				"type":             "component_consume",
 				"date":             time.Now(),
-				"id":               primitive.NewObjectID().Hex(),
+				"id":               bson.NewObjectID().Hex(),
 				"component_id":     component.Material.Id,
 				"quantity":         component.Quantity * item.Quantity,
 				"entry_id":         component.Entry.Id,
@@ -499,7 +494,7 @@ func (ms *MaterialService) ConsumeItemComponentsForOrder(item models.OrderItem, 
 
 			filter := bson.M{"id": component.Material.Id}
 			sort := bson.M{"entries.expiration_date": 1}
-			cursor, err := client.Database(ms.Config.Databases[0].Database).Collection("materials").Find(context.Background(), filter, &options.FindOptions{Sort: sort})
+			cursor, err := client.Database(ms.Config.Databases[0].Database).Collection("materials").Find(context.Background(), filter, options.Find().SetSort(sort))
 			if err != nil {
 				return notifications, err
 			}
@@ -550,7 +545,7 @@ func (ms *MaterialService) ConsumeItemComponentsForOrder(item models.OrderItem, 
 					logs_data := bson.M{
 						"type":             "component_consume",
 						"date":             time.Now(),
-						"id":               primitive.NewObjectID().Hex(),
+						"id":               bson.NewObjectID().Hex(),
 						"component_id":     component.Material.Id,
 						"quantity":         entry.Quantity,
 						"entry_id":         component.Entry.Id,
@@ -582,7 +577,7 @@ func (ms *MaterialService) ConsumeItemComponentsForOrder(item models.OrderItem, 
 					logs_data := bson.M{
 						"type":             "component_consume",
 						"date":             time.Now(),
-						"id":               primitive.NewObjectID().Hex(),
+						"id":               bson.NewObjectID().Hex(),
 						"component_id":     component.Material.Id,
 						"quantity":         demanded_quantity,
 						"entry_id":         component.Entry.Id,
@@ -792,10 +787,10 @@ func (cs *MaterialService) AddComponent(material models.Material, user_id string
 
 	ctx := context.Background()
 
-	material.Id = primitive.NewObjectID().Hex()
+	material.Id = bson.NewObjectID().Hex()
 
 	for index, _ := range material.Entries {
-		material.Entries[index].Id = primitive.NewObjectID().Hex()
+		material.Entries[index].Id = bson.NewObjectID().Hex()
 	}
 
 	// Insert the DBComponent struct into the "materials" collection
@@ -809,7 +804,7 @@ func (cs *MaterialService) AddComponent(material models.Material, user_id string
 	for _, entry := range material.Entries {
 
 		logs_data := bson.M{
-			"id":          primitive.NewObjectID().Hex(),
+			"id":          bson.NewObjectID().Hex(),
 			"type":        "component_add",
 			"date":        time.Now(),
 			"material_id": material.Id,
@@ -848,7 +843,7 @@ func (cs *MaterialService) PushMaterialEntry(componentId string, entries []model
 	for _, entry := range entries {
 
 		entry.PurchaseQuantity = entry.Quantity
-		entry_id := primitive.NewObjectID().Hex()
+		entry_id := bson.NewObjectID().Hex()
 
 		entry_data := bson.M{
 			"id":                entry_id,
@@ -861,7 +856,7 @@ func (cs *MaterialService) PushMaterialEntry(componentId string, entries []model
 		}
 
 		update := bson.M{"$push": bson.M{"entries": entry_data}}
-		opts := options.Update().SetUpsert(false)
+		opts := options.UpdateOne().SetUpsert(false)
 
 		_, err = client.Database(cs.Config.Databases[0].Database).Collection("materials").UpdateOne(ctx, filter, update, opts)
 		if err != nil {
@@ -870,7 +865,7 @@ func (cs *MaterialService) PushMaterialEntry(componentId string, entries []model
 
 		logs_data := bson.M{
 			"type":        "component_add",
-			"id":          primitive.NewObjectID().Hex(),
+			"id":          bson.NewObjectID().Hex(),
 			"date":        time.Now(),
 			"material_id": componentId,
 			"entry_id":    entry_id,

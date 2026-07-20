@@ -5,14 +5,14 @@ import (
 	"time"
 
 	"github.com/nutrixpos/pos/modules/auth/models"
-	"go.mongodb.org/mongo-driver/v2/bson/primitive"
+	"go.mongodb.org/mongo-driver/v2/bson"
 )
 
 func TestJWTUtil_GenerateToken(t *testing.T) {
 	jwtUtil := NewJWTUtil("test-secret-key", 24)
 
 	user := models.User{
-		ID:       primitive.NewObjectID(),
+		ID:       bson.NewObjectID(),
 		Username: "testuser",
 		Email:    "test@example.com",
 		Roles:    []string{"admin"},
@@ -32,7 +32,7 @@ func TestJWTUtil_ValidateToken(t *testing.T) {
 	jwtUtil := NewJWTUtil("test-secret-key", 24)
 
 	user := models.User{
-		ID:       primitive.NewObjectID(),
+		ID:       bson.NewObjectID(),
 		Username: "testuser",
 		Email:    "test@example.com",
 		Roles:    []string{"admin"},
@@ -66,7 +66,7 @@ func TestJWTUtil_ValidateToken_InvalidSecret(t *testing.T) {
 	jwtUtil2 := NewJWTUtil("secret-2", 24)
 
 	user := models.User{
-		ID:       primitive.NewObjectID(),
+		ID:       bson.NewObjectID(),
 		Username: "testuser",
 		Email:    "test@example.com",
 		Roles:    []string{"admin"},
@@ -87,7 +87,7 @@ func TestJWTUtil_ValidateToken_Expired(t *testing.T) {
 	jwtUtil := NewJWTUtil("test-secret-key", -1)
 
 	user := models.User{
-		ID:       primitive.NewObjectID(),
+		ID:       bson.NewObjectID(),
 		Username: "testuser",
 		Email:    "test@example.com",
 		Roles:    []string{"admin"},
@@ -110,7 +110,7 @@ func TestJWTUtil_RefreshToken(t *testing.T) {
 	jwtUtil := NewJWTUtil("test-secret-key", 24)
 
 	user := models.User{
-		ID:       primitive.NewObjectID(),
+		ID:       bson.NewObjectID(),
 		Username: "testuser",
 		Email:    "test@example.com",
 		Roles:    []string{"admin"},

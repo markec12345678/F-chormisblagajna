@@ -14,7 +14,6 @@ import (
 	"github.com/nutrixpos/pos/modules/core/dto"
 	"github.com/nutrixpos/pos/modules/core/models"
 	"go.mongodb.org/mongo-driver/v2/bson"
-	"go.mongodb.org/mongo-driver/v2/bson/primitive"
 	"go.mongodb.org/mongo-driver/v2/mongo/options"
 )
 
@@ -175,17 +174,17 @@ func (ss *SalesService) AddOrderItemToDayRefund(refund_request dto.OrderItemRefu
 			return err
 		}
 	} else {
-		_, err = collection.UpdateOne(ctx, filter, bson.M{"$push": bson.M{"refunds": sales_refund}, "$inc": bson.M{"refunds_value": refund_request.RefundValue}}, options.Update().SetUpsert(true))
+		_, err = collection.UpdateOne(ctx, filter, bson.M{"$push": bson.M{"refunds": sales_refund}, "$inc": bson.M{"refunds_value": refund_request.RefundValue}}, options.UpdateOne().SetUpsert(true))
 		if err != nil {
 			return err
 		}
 	}
 
 	log := models.LogOrderItemRefund{
-		Id: primitive.NewObjectID().Hex(),
+		Id: bson.NewObjectID().Hex(),
 		Log: models.Log{
 			Type:   models.LogTypeOrderItemRefunded,
-			Id:     primitive.NewObjectID().Hex(),
+			Id:     bson.NewObjectID().Hex(),
 			Date:   time.Now(),
 			UserId: user_id,
 		},
@@ -265,7 +264,7 @@ func (ss *SalesService) AddOrderToSalesDay(order models.Order, items_cost []mode
 			return err
 		}
 	} else {
-		_, err = collection.UpdateOne(ctx, filter, bson.M{"$push": bson.M{"orders": sales_order}, "$inc": bson.M{"costs": sales_order.Order.Cost, "total_sales": sales_order.Order.SalePrice}}, options.Update().SetUpsert(true))
+		_, err = collection.UpdateOne(ctx, filter, bson.M{"$push": bson.M{"orders": sales_order}, "$inc": bson.M{"costs": sales_order.Order.Cost, "total_sales": sales_order.Order.SalePrice}}, options.UpdateOne().SetUpsert(true))
 		if err != nil {
 			return err
 		}
@@ -274,7 +273,7 @@ func (ss *SalesService) AddOrderToSalesDay(order models.Order, items_cost []mode
 	log := models.LogSalesPerDayOrder{
 		Log: models.Log{
 			Type:   models.LogTypeSalesPerDayOrder,
-			Id:     primitive.NewObjectID().Hex(),
+			Id:     bson.NewObjectID().Hex(),
 			Date:   time.Now(),
 			UserId: user_id,
 		},

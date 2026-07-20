@@ -9,7 +9,6 @@ import (
 	"github.com/nutrixpos/pos/common/logger"
 	"github.com/nutrixpos/pos/modules/core/models"
 	"go.mongodb.org/mongo-driver/v2/bson"
-	"go.mongodb.org/mongo-driver/v2/bson/primitive"
 	"go.mongodb.org/mongo-driver/v2/mongo/options"
 )
 
@@ -100,7 +99,7 @@ func (cs CustomersService) InsertNew(customer models.Customer) (afterInsert mode
 
 	collection := client.Database(cs.Config.Databases[0].Database).Collection("customers")
 
-	customer.Id = primitive.NewObjectID().Hex()
+	customer.Id = bson.NewObjectID().Hex()
 
 	result, err := collection.InsertOne(ctx, customer)
 	if err != nil {

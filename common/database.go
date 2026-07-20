@@ -3,7 +3,6 @@ package common
 import (
 	"fmt"
 	"sync"
-	"time"
 
 	"github.com/nutrixpos/pos/common/config"
 	"github.com/nutrixpos/pos/common/logger"
