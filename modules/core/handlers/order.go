@@ -139,7 +139,7 @@ func WasteOrderItem(config config.Config, logger logger.ILogger, settings models
 		}
 
 		quantityStr := r.URL.Query().Get("quantity")
-		if reason == "" {
+		if quantityStr == "" {
 			http.Error(w, "quantity query string is required", http.StatusBadRequest)
 			return
 		}
@@ -866,6 +866,7 @@ func StartOrder(config config.Config, logger logger.ILogger, settings models.Set
 			}
 
 			w.Write(json_response)
+			return
 		}
 
 		w.Header().Set("Content-Type", "application/json")

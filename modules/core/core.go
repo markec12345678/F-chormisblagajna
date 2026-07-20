@@ -224,7 +224,7 @@ func (c *Core) RegisterHttpHandlers(router *mux.Router, prefix string) {
 	router.Handle(prefix+"/api/products/{id}", core_middlewares.AllowCors(auth_svc.AllowAnyOfRoles(handlers.DeleteProduct(c.Config, c.Logger), "admin"))).Methods("DELETE", "OPTIONS")
 	router.Handle(prefix+"/api/products/{id}", core_middlewares.AllowCors(auth_svc.AllowAnyOfRoles(handlers.UpdateProduct(c.Config, c.Logger), "admin"))).Methods("PATCH", "OPTIONS")
 	router.Handle(prefix+"/api/products", core_middlewares.AllowCors(auth_svc.AllowAnyOfRoles(handlers.GetProducts(c.Config, c.Logger), "admin", "cashier", "chef"))).Methods("GET", "OPTIONS")
-	router.Handle(prefix+"/api/products", core_middlewares.AllowCors(auth_svc.AllowAnyOfRoles(handlers.InesrtNewProduct(c.Config, c.Logger), "admin"))).Methods("POST", "OPTIONS")
+	router.Handle(prefix+"/api/products", core_middlewares.AllowCors(auth_svc.AllowAnyOfRoles(handlers.InsertNewProduct(c.Config, c.Logger), "admin"))).Methods("POST", "OPTIONS")
 	router.Handle(prefix+"/api/settings", core_middlewares.AllowCors(auth_svc.AllowAnyOfRoles(handlers.GetSettings(c.Config, c.Logger), "admin", "cashier", "chef"))).Methods("GET", "OPTIONS")
 	router.Handle(prefix+"/api/settings", core_middlewares.AllowCors(auth_svc.AllowAnyOfRoles(handlers.UpdateSettings(c.Config, c.Logger), "admin"))).Methods("PATCH", "OPTIONS")
 	router.Handle(prefix+"/api/languages", core_middlewares.AllowCors(handlers.GetAvailableLanguages(c.Config, c.Logger))).Methods("GET", "OPTIONS")
@@ -233,7 +233,7 @@ func (c *Core) RegisterHttpHandlers(router *mux.Router, prefix string) {
 	router.Handle(prefix+"/api/disposals/{id}", core_middlewares.AllowCors(auth_svc.AllowAnyOfRoles(handlers.DeleteProduct(c.Config, c.Logger), "admin"))).Methods("DELETE", "OPTIONS")
 	router.Handle(prefix+"/api/disposals/{id}", core_middlewares.AllowCors(auth_svc.AllowAnyOfRoles(handlers.UpdateProduct(c.Config, c.Logger), "admin"))).Methods("PATCH", "OPTIONS")
 	router.Handle(prefix+"/api/disposals", core_middlewares.AllowCors(auth_svc.AllowAnyOfRoles(handlers.GetDisposals(c.Config, c.Logger), "admin", "cashier"))).Methods("GET", "OPTIONS")
-	router.Handle(prefix+"/api/disposals", core_middlewares.AllowCors(auth_svc.AllowAnyOfRoles(handlers.InesrtNewProduct(c.Config, c.Logger), "admin"))).Methods("POST", "OPTIONS")
+	router.Handle(prefix+"/api/disposals", core_middlewares.AllowCors(auth_svc.AllowAnyOfRoles(handlers.InsertNewProduct(c.Config, c.Logger), "admin"))).Methods("POST", "OPTIONS")
 
 	if c.NotificationSvc == nil {
 		notification_service, err := services.SpawnNotificationSingletonSvc("melody", c.Logger, c.Config)

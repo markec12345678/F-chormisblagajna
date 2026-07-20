@@ -10,6 +10,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"regexp"
 	"sync"
 	"time"
 
@@ -252,7 +253,7 @@ func (rs *RecipeService) GetProducts(params GetProductsParams) (products []model
 	filter := bson.M{}
 	if params.Search != "" {
 		filter["name"] = bson.M{
-			"$regex": fmt.Sprintf("(?i).*%s.*", params.Search),
+			"$regex": fmt.Sprintf("(?i).*%s.*", regexp.QuoteMeta(params.Search)),
 		}
 	}
 
@@ -358,7 +359,7 @@ func (rs *RecipeService) GetRecipeMaterials(recipe_id string) (materials []model
 
 	var recipe models.Product
 
-	err = client.Database(rs.Config.Databases[0].Database).Collection("recipes").FindOne(ctx, bson.M{"id": recipe}).Decode(&recipe)
+	err = client.Database(rs.Config.Databases[0].Database).Collection("recipes").FindOne(ctx, bson.M{"id": recipe_id}).Decode(&recipe)
 	if err != nil {
 		return materials, err
 	}

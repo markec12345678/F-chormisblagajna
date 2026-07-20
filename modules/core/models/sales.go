@@ -28,7 +28,7 @@ type ItemRefund struct {
 	OrderId         string                      `json:"order_id" bson:"order_id" mapstructure:"order_id"`
 	ItemId          string                      `json:"order_item_id" bson:"order_item_id" mapstructure:"order_item_id"`
 	ProductId       string                      `json:"product_id" bson:"product_id" mapstructure:"product_id"`
-	Reason          string                      `json:"reason" bons:"reason" mapstructure:"reason"`
+	Reason          string                      `json:"reason" bson:"reason" mapstructure:"reason"`
 	Amount          float64                     `json:"amount" bson:"amount" mapstructure:"amount"`
 	ItemCost        float64                     `json:"item_cost" bson:"item_cost" mapstructure:"item_cost"`
 	Destination     string                      `json:"destination" bson:"destination" mapstructure:"destination"`

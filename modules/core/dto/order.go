@@ -11,7 +11,7 @@ type OrderItemRefundRequest struct {
 	OrderId         string                         `json:"order_id" bson:"order_id"`
 	ItemId          string                         `json:"order_item_id" bson:"order_item_id"`
 	ProductId       string                         `json:"product_id" bson:"product_id"`
-	Reason          string                         `json:"reason" bons:"reason"`
+	Reason          string                         `json:"reason" bson:"reason"`
 	RefundValue     float64                        `json:"refund_value"`
 	Destination     string                         `json:"destination" bson:"destination"`
 	MaterialRefunds []OrderItemRefundMaterialDTO   `json:"material_refunds"`

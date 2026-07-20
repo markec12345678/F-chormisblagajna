@@ -324,7 +324,7 @@ func (cs *MaterialService) ConsumeFromInventory(material models.Material, entry_
 			Type:      "topic_message",
 			Severity:  "warn",
 			Message:   fmt.Sprintf("Inventory for %s is low: %f", material.Name, float64(available_quantity)),
-			Key:       fmt.Sprintf("low_inventiry@%s", material.Id),
+			Key:       fmt.Sprintf("low_inventory@%s", material.Id),
 		})
 	}
 

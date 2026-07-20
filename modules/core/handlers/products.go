@@ -57,6 +57,7 @@ func UpdateProductImage(config config.Config, logger logger.ILogger) http.Handle
 		if err != nil {
 			logger.Error(fmt.Sprintf("Error uploading file: %s", err.Error()))
 			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
 		}
 
 		names := strings.Split(fileHeader.Filename, ".")
@@ -201,8 +202,8 @@ func DeleteProduct(config config.Config, logger logger.ILogger) http.HandlerFunc
 	}
 }
 
-// InesrtNewProduct returns a HTTP handler function to insert a new product in the database.
-func InesrtNewProduct(config config.Config, logger logger.ILogger) http.HandlerFunc {
+// InsertNewProduct returns a HTTP handler function to insert a new product in the database.
+func InsertNewProduct(config config.Config, logger logger.ILogger) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
 		request := struct {

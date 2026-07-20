@@ -49,7 +49,7 @@ func (rs *ReceiptService) Print(order models.Order, discount float64, service_co
 		return err
 	}
 
-	order_items := make([]map[string]interface{}, len(order.Items))
+	order_items := make([]map[string]interface{}, 0, len(order.Items))
 	subtotal := 0
 
 	for _, item := range order.Items {

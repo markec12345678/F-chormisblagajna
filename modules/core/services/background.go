@@ -40,7 +40,7 @@ func CheckExpirationDates(log logger.ILogger, conf config.Config, notification_s
 		return
 	}
 
-	collection := client.Database(conf.Databases[0].Name).Collection("materials")
+	collection := client.Database(conf.Databases[0].Database).Collection("materials")
 	cursor, err := collection.Find(ctx, bson.M{})
 	if err != nil {
 		log.Error(err.Error())

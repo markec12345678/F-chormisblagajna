@@ -3,6 +3,7 @@ package services
 import (
 	"context"
 	"fmt"
+	"regexp"
 	"time"
 
 	"github.com/nutrixpos/pos/common"
@@ -56,7 +57,7 @@ func (ds *DisposalService) GetDisposals(params GetDisposalsParameters) (disposal
 
 	if params.DisposalIdContains != "" {
 		filter["id"] = bson.M{
-			"$regex": fmt.Sprintf("(?i).*%s.*", params.DisposalIdContains),
+			"$regex": fmt.Sprintf("(?i).*%s.*", regexp.QuoteMeta(params.DisposalIdContains)),
 		}
 	}
 
@@ -142,7 +143,7 @@ func (cs *DisposalService) UpdateDisposal(id string, disposal interface{}) (upda
 		_, err = collection.UpdateOne(ctx, bson.M{"id": material_disposal.Id}, bson.M{"$set": data})
 
 		var db_material_disposal models.MaterialDisposal
-		err = client.Database(cs.Config.Databases[0].Database).Collection("settings").FindOne(ctx, bson.M{}).Decode(&db_material_disposal)
+		err = client.Database(cs.Config.Databases[0].Database).Collection("disposals").FindOne(ctx, bson.M{"id": material_disposal.Id}).Decode(&db_material_disposal)
 		if err != nil {
 			return db_material_disposal, err
 		}
@@ -159,7 +160,7 @@ func (cs *DisposalService) UpdateDisposal(id string, disposal interface{}) (upda
 		_, err = collection.UpdateOne(ctx, bson.M{"id": id}, bson.M{"$set": data})
 
 		var db_orderitem_disposal models.ProductDisposal
-		err = client.Database(cs.Config.Databases[0].Database).Collection("settings").FindOne(ctx, bson.M{}).Decode(&db_orderitem_disposal)
+		err = client.Database(cs.Config.Databases[0].Database).Collection("disposals").FindOne(ctx, bson.M{"id": id}).Decode(&db_orderitem_disposal)
 		if err != nil {
 			return db_orderitem_disposal, err
 		}

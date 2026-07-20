@@ -12,6 +12,7 @@ import (
 	"log"
 	"math"
 	"math/rand"
+	"regexp"
 	"time"
 
 	"github.com/nutrixpos/pos/common"
@@ -818,7 +819,7 @@ func (os *OrderService) GetOrders(params GetOrdersParameters) (orders []models.O
 
 	if params.OrderDisplayIdContains != "" {
 		filter["display_id"] = bson.M{
-			"$regex": fmt.Sprintf("(?i).*%s.*", params.OrderDisplayIdContains),
+			"$regex": fmt.Sprintf("(?i).*%s.*", regexp.QuoteMeta(params.OrderDisplayIdContains)),
 		}
 	}
 
