@@ -414,7 +414,8 @@ func (rs *RecipeService) GetRecipeTree(recipe_id string) (tree models.Product, e
 			return tree, err
 		}
 
-		//TODO - Fix Quantity vs Ready from Product
+		// Quantity here represents how much of this sub-product is needed
+		// in the parent recipe (not the sub-recipe's own quantity from DB)
 		sub_recipe.Quantity = float64(sub_product.Quantity)
 		tree.SubProducts = append(tree.SubProducts, sub_recipe)
 	}
