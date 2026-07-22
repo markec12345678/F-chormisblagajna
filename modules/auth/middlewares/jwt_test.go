@@ -139,3 +139,43 @@ func TestJWTUtil_RefreshToken(t *testing.T) {
 		t.Errorf("Username = %v, want %v", claims.Username, user.Username)
 	}
 }
+
+func TestJWTUtil_RefreshToken_InvalidToken(t *testing.T) {
+	jwtUtil := NewJWTUtil("test-secret-key", 24)
+
+	_, err := jwtUtil.RefreshToken("invalid.token.here")
+	if err != ErrInvalidToken {
+		t.Errorf("RefreshToken with invalid token should return ErrInvalidToken, got: %v", err)
+	}
+}
+
+func TestJWTUtil_Roles(t *testing.T) {
+	jwtUtil := NewJWTUtil("test-secret-key", 24)
+
+	user := models.User{
+		ID:       bson.NewObjectID(),
+		Username: "testuser",
+		Email:    "test@example.com",
+		Roles:    []string{"admin", "cashier"},
+	}
+
+	token, err := jwtUtil.GenerateToken(user)
+	if err != nil {
+		t.Fatalf("GenerateToken failed: %v", err)
+	}
+
+	claims, err := jwtUtil.ValidateToken(token)
+	if err != nil {
+		t.Fatalf("ValidateToken failed: %v", err)
+	}
+
+	if len(claims.Roles) != 2 {
+		t.Errorf("Roles length = %v, want 2", len(claims.Roles))
+	}
+	if claims.Roles[0] != "admin" {
+		t.Errorf("Roles[0] = %v, want admin", claims.Roles[0])
+	}
+	if claims.Roles[1] != "cashier" {
+		t.Errorf("Roles[1] = %v, want cashier", claims.Roles[1])
+	}
+}
