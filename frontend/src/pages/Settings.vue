@@ -2,11 +2,25 @@
      <div class="w-full">
         <div class="grid mx-2">
             <div class="col-12 flex">
-                <div class="gird w-full">
+                <div class="grid w-full">
                     <div class="col-12">
                         <h3>{{$t('settings')}}</h3>
                     </div>
-                    <div class="col-12 flex-column flex">
+                    <div v-if="isSettingsLoading" class="col-12">
+                        <div class="flex flex-column gap-3">
+                            <Skeleton width="20rem" height="2rem" />
+                            <Skeleton width="15rem" height="2rem" />
+                            <Skeleton width="25rem" height="2rem" />
+                            <Skeleton width="10rem" height="3rem" />
+                        </div>
+                    </div>
+                    <div v-else-if="settingsError" class="col-12">
+                        <InlineMessage severity="error" class="w-full">
+                            {{ settingsError }}
+                        </InlineMessage>
+                        <Button label="Retry" icon="pi pi-refresh" class="mt-2" @click="getSettings()" />
+                    </div>
+                    <div v-else class="col-12 flex-column flex">
                         <h4><i class="fa fa-boxes-stacked"></i> {{$t('inventory_item',3)}}</h4>
                         <div class="flex align-items-center gap-2">
                             <span>{{ $t('stock_alert_threshold') }}</span>
@@ -135,7 +149,7 @@ import {getCurrentInstance,ref} from 'vue'
 import Dropdown from 'primevue/dropdown';
 import { useI18n } from 'vue-i18n'
 import { globalStore } from '../stores';
-import {RadioButton,Avatar,Badge, Select, ToggleSwitch} from 'primevue';
+import {RadioButton,Avatar,Badge, Select, ToggleSwitch, Skeleton, InlineMessage} from 'primevue';
 import auth from '../services/auth';
 
 const { proxy } = getCurrentInstance();
@@ -153,6 +167,8 @@ const shop_mode = ref('')
 const auto_open_cash_drawer = ref(false)
 
 const toast = useToast();
+const isSettingsLoading = ref(true)
+const settingsError = ref('')
 
 const store = globalStore()
 
@@ -224,6 +240,8 @@ const saveSettings = () => {
 }
 
 const getSettings = () => {
+    isSettingsLoading.value = true
+    settingsError.value = ''
     axios.get(`http://${import.meta.env.VITE_APP_BACKEND_HOST}${import.meta.env.VITE_APP_MODULE_CORE_API_PREFIX}/api/settings`, {
         headers: {
             Authorization: `Bearer ${auth.accessToken.value}`
@@ -246,7 +264,12 @@ const getSettings = () => {
         if (err.response?.status === 401) {
             auth.signOut()
             window.location.href = '/'
+        } else {
+            settingsError.value = 'Failed to load settings. Please try again.'
         }
+    })
+    .finally(() => {
+        isSettingsLoading.value = false
     });
 }
 

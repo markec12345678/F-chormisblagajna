@@ -2,12 +2,12 @@
      <div class="w-full">
         <div class="grid mx-2">
             <div class="col-12 flex">
-                <div class="gird w-full">
+                <div class="grid w-full">
                     <div class="col-12">
                         <h3>{{ $t('inventory',1) }}</h3>
                     </div>
                     <div class="col-12 flex justify-content-center align-items-center w-full">
-                        <DataTable :value="inventory_components" stripedRows tableStyle="min-width: 50rem" class="w-full">
+                        <DataTable :loading="isInventoryLoading" :value="inventory_components" stripedRows tableStyle="min-width: 50rem" class="w-full">
                             <template #header>
                                 <div class="flex flex-wrap items-center justify-between align-items-center gap-2">
                                     <Button icon="pi pi-plus" :label="$t('add_inventory_item')" @click="add_component_dialog = true" rounded raised />
@@ -209,6 +209,7 @@ const isLogsTableLoading = ref(true)
   const expandedComponentLogsRows = ref([])
   
   const inventory_components = ref([])
+  const isInventoryLoading = ref(true)
 
   const component_logs = ref([])
   const component_logs_dialog = ref(false)
@@ -502,6 +503,7 @@ const confirmDeleteMaterial = (material_id: string) => {
 
 
   const loadInventory = () => {
+    isInventoryLoading.value = true
     axios.get(`http://${import.meta.env.VITE_APP_BACKEND_HOST}${import.meta.env.VITE_APP_MODULE_CORE_API_PREFIX}/api/materials`,{
         headers: {
             Authorization: `Bearer ${auth.accessToken.value}`
@@ -514,6 +516,9 @@ const confirmDeleteMaterial = (material_id: string) => {
         });
         
         inventory_components.value = result.data.data
+    })
+    .finally(() => {
+        isInventoryLoading.value = false
     })
   }
 

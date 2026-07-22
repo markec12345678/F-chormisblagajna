@@ -12,9 +12,10 @@ import Dropdown from 'primevue/dropdown';
 import axios from 'axios';
 import { useI18n } from 'vue-i18n'
 import Button from 'primevue/button';
-import { globalStore } from '../store';
+import { globalStore } from '../stores';
 import auth from '../services/auth';
 
+const { proxy } = getCurrentInstance();
 const store = globalStore()
 
 

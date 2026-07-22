@@ -2,7 +2,7 @@
     <div class="w-full">
         <div class="grid mx-2">
             <div class="col-12 flex">
-                <div class="gird w-full">
+                <div class="grid w-full">
                     <div class="col-12">
                         <h3>{{$t('category',3)}}</h3>
                     </div>
@@ -244,6 +244,7 @@ const addEdittedProduct = (product: any) => {
 
 const getCategories = (first=0,rows=categoriesTableRowsPerPage.value) => {
 
+    isCategoriesTableLoading.value = true
 
     if (first == 0){
         first = 1
@@ -262,6 +263,9 @@ const getCategories = (first=0,rows=categoriesTableRowsPerPage.value) => {
     })
     .catch(() => {
         toast.add({ severity: 'error', summary: 'Error', detail: 'Failed to fetch categories' });
+    })
+    .finally(() => {
+        isCategoriesTableLoading.value = false;
     });
 
     }

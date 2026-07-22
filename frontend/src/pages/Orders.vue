@@ -2,7 +2,7 @@
        <div class="w-full">
             <div class="grid mx-2">
                 <div class="col-12 flex">
-                    <div class="gird w-full">
+                    <div class="grid w-full">
                         <div class="col-12">
                             <h3>{{ $t('order',3) }}</h3>
                         </div>
@@ -161,6 +161,8 @@ const confirmCancelOrder = (event,display_id,order_id) => {
 
 const loadOrders =  (first=0,rows=100) => {
 
+        isOrdersTableLoading.value = true
+
         let page_number = Math.floor(first/rows) + 1
 
     if (page_number == 0) {
@@ -177,6 +179,9 @@ const loadOrders =  (first=0,rows=100) => {
         orders.value = result.data.data
         ordersTableTotalRecords.value = result.data.meta.total_records
     })
+    .finally(() => {
+        isOrdersTableLoading.value = false
+    });
 };
 
 loadOrders()

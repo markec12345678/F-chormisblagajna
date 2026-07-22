@@ -149,15 +149,15 @@
                     <Button type="button" :label="$t('add')" @click="addWithComment()"></Button>
                 </div>
             </Dialog>
-            <Dialog v-model:visible="order_additional_details_dialog" modal :header="$t('order_details')" class="xs:w-12 md:w-11 lg:w-11" :dir="store.orientation == 'rtl' ? 'rtl' : 'ltr'">
+            <Dialog v-model:visible="order_additional_details_dialog" modal :header="$t('order_details')" class="xs:w-12 md:w-10 lg:w-8" :dir="store.orientation == 'rtl' ? 'rtl' : 'ltr'">
                 <Stepper linear value="1">
                     <StepList>
                         <Step v-for="(step,index) in order_details_steps" :key="index" :value="`${index+1}`" >{{ step.label }}</Step>
                     </StepList>
                     <StepPanels>
                         <StepPanel v-slot="{ activateCallback }" value="1">
-                            <div class="flex justify-content-center flex-wrap gap-3">
-                                <div class="flex flex-column align-items-center">
+                            <div class="grid">
+                                <div :class="`flex flex-column align-items-center ${store.getShopMode === 'kitchen' ? 'col-12 md:col-4' : 'col-12'}`">
                                     <h2 class="mt-0">
                                         <i class="fa-regular fa-credit-card mx-2"></i>
                                          {{$t('payment')}}
@@ -175,8 +175,7 @@
                                     </div>
                                 </div>
                                 <template v-if="store.getShopMode === 'kitchen'">
-                                    <Divider layout="vertical" />
-                                    <div class="flex flex-column align-items-center">
+                                    <div class="flex flex-column align-items-center col-12 md:col-4">
                                         <h2 class="mt-0">
                                             <i class="fa fa-box-open mx-2"></i>
                                             {{$t('service_type')}}
@@ -186,8 +185,7 @@
                                         <ToggleButton v-model="is_delivery" onIcon="pi pi-truck" offIcon="pi pi-truck" :offLabel="$t('delivery')" :onLabel="$t('delivery')" class="w-15rem h-5rem lg:h-10rem sm:w-40 border-noround" aria-label="Confirmation" />
                                     </div>
                                 </template>
-                                <Divider layout="vertical" />
-                                <div class="flex flex-column align-items-start">
+                                <div class="flex flex-column align-items-start col-12 md:col-4">
                                     <h2 class="mt-0">
                                         <i class="fa-regular fa-comment mx-2"></i>
                                         {{$t('comment')}}
@@ -316,7 +314,7 @@
         </div>
     </div>
     <div style="width:100vw;height:100vh;display:flex;justify-content:center;align-items:center" v-if="loading">
-      <ProgressSpinner style="width: 35px; height: 35px;stroke:blue !important;" strokeWidth="6" fill="transparent"
+      <ProgressSpinner style="width: 35px; height: 35px;" strokeWidth="6" fill="transparent"
       animationDuration=".5s" aria-label="Custom ProgressSpinner" />
     </div>
     <Drawer v-model:visible="drawer_visible">

@@ -2,7 +2,7 @@
      <div class="w-full">
         <div class="grid mx-2">
             <div class="col-12 flex">
-                <div class="gird w-full">
+                <div class="grid w-full">
                     <div class="col-12">
                         <h3>{{$t('product',3)}}</h3>
                     </div>

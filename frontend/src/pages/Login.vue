@@ -130,6 +130,10 @@ async function login() {
   background-attachment: fixed;
 }
 
+:global(.my-app-dark) .login-wrapper {
+  background: linear-gradient(135deg, #0f0f0f 0%, #1a1a2e 50%, #0f0f0f 100%);
+}
+
 .login-card {
   background: white;
   border-radius: 1.5rem;
@@ -138,6 +142,11 @@ async function login() {
   max-width: 420px;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
   animation: slideUp 0.5s ease-out;
+}
+
+:global(.my-app-dark) .login-card {
+  background: #18181b;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
 }
 
 @keyframes slideUp {
@@ -170,11 +179,19 @@ async function login() {
   margin: 0 0 0.5rem;
 }
 
+:global(.my-app-dark) .login-title {
+  color: #e4e4e7;
+}
+
 .login-subtitle {
   color: #64748b;
   text-align: center;
   font-size: 0.95rem;
   margin: 0 0 2rem;
+}
+
+:global(.my-app-dark) .login-subtitle {
+  color: #a1a1aa;
 }
 
 .login-form {
@@ -195,12 +212,21 @@ async function login() {
   font-weight: 500;
 }
 
+:global(.my-app-dark) .field label {
+  color: #d4d4d8;
+}
+
 :deep(.p-inputtext),
 :deep(.p-password-input) {
   padding: 0.75rem 1rem;
   border-radius: 0.5rem;
   border: 1px solid #e2e8f0;
   transition: all 0.2s;
+}
+
+:global(.my-app-dark) :deep(.p-inputtext),
+:global(.my-app-dark) :deep(.p-password-input) {
+  border-color: #3f3f46;
 }
 
 :deep(.p-inputtext:focus),
@@ -228,6 +254,12 @@ async function login() {
   padding: 0.75rem 1rem;
   color: #dc2626;
   font-size: 0.875rem;
+}
+
+:global(.my-app-dark) .error-banner {
+  background: #450a0a;
+  border-color: #7f1d1d;
+  color: #fca5a5;
 }
 
 .error-banner .pi {
@@ -264,6 +296,10 @@ async function login() {
 .text-muted {
   color: #94a3b8;
   font-size: 0.875rem;
+}
+
+:global(.my-app-dark) .text-muted {
+  color: #71717a;
 }
 
 .text-primary {

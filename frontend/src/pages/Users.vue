@@ -2,12 +2,12 @@
      <div class="w-full">
         <div class="grid mx-2">
             <div class="col-12 flex">
-                <div class="gird w-full">
+                <div class="grid w-full">
                     <div class="col-12">
                         <h3>{{$t('user',3)}}</h3>
                     </div>
                     <div class="col-12">
-                        <DataTable :value="users" stripedRows tableStyle="min-width: 50rem;max-height:50vh;" class="w-full pr-2">
+                        <DataTable :loading="isUsersLoading" :value="users" stripedRows tableStyle="min-width: 50rem;max-height:50vh;" class="w-full pr-2">
                             <template #header>
                                 <div class="flex justify-start">
                                     <Button icon="pi pi-plus" :label="$t('add_user')"  rounded raised @click="userAddDialog=true" />
@@ -109,6 +109,7 @@ const store = globalStore()
 const backendUrl = `http://${import.meta.env.VITE_APP_BACKEND_HOST}${import.meta.env.VITE_APP_MODULE_CORE_API_PREFIX}`;
 
 const users = ref([])
+const isUsersLoading = ref(true)
 const userAddDialog = ref(false)
 const passwordEditDialog = ref(false)
 const availableRoles = ['admin', 'cashier', 'chef']
@@ -129,6 +130,7 @@ console.log(auth)
 const isSuperuser = computed(() => auth.currentUser?.value.roles?.includes('superuser') || false)
 
 const loadUsers = () => {
+    isUsersLoading.value = true
     axios.get(`${backendUrl}/api/auth/users`, {
         headers: {
             Authorization: `Bearer ${auth.accessToken.value}`
@@ -139,6 +141,9 @@ const loadUsers = () => {
     })
     .catch(() => {
         toast.add({severity:'error', summary: 'Error', detail: 'Failed to load users'});
+    })
+    .finally(() => {
+        isUsersLoading.value = false;
     });
 }
 
