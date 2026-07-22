@@ -12,7 +12,6 @@ package handlers
 
 import (
 	"encoding/json"
-	"log"
 	"math"
 	"net/http"
 	"os"
@@ -487,8 +486,7 @@ func FinishOrder(config config.Config, logger logger.ILogger, settings models.Se
 		settings, err := settings_Svc.GetSettings()
 		if err != nil {
 			logger.Error(err.Error())
-			w.Write([]byte(err.Error()))
-			w.WriteHeader(http.StatusInternalServerError)
+			http.Error(w, "failed to get settings", http.StatusInternalServerError)
 			return
 		}
 
@@ -538,8 +536,7 @@ func SubmitOrder(config config.Config, logger logger.ILogger, settings models.Se
 		settings, err = settings_Svc.GetSettings()
 		if err != nil {
 			logger.Error(err.Error())
-			w.Write([]byte(err.Error()))
-			w.WriteHeader(http.StatusInternalServerError)
+			http.Error(w, "failed to get settings", http.StatusInternalServerError)
 			return
 		}
 
@@ -558,8 +555,7 @@ func SubmitOrder(config config.Config, logger logger.ILogger, settings models.Se
 			product, err := product_svc.GetProduct(item.Product.Id)
 			if err != nil {
 				logger.Error(err.Error())
-				w.Write([]byte(err.Error()))
-				w.WriteHeader(http.StatusInternalServerError)
+				http.Error(w, "failed to get product", http.StatusInternalServerError)
 				return
 			}
 
@@ -831,8 +827,7 @@ func StartOrder(config config.Config, logger logger.ILogger, settings models.Set
 		settings, err = settings_Svc.GetSettings()
 		if err != nil {
 			logger.Error(err.Error())
-			w.Write([]byte(err.Error()))
-			w.WriteHeader(http.StatusInternalServerError)
+			http.Error(w, "failed to get settings", http.StatusInternalServerError)
 			return
 		}
 
@@ -897,7 +892,8 @@ func GetOrder(config config.Config, logger logger.ILogger) http.HandlerFunc {
 
 		jsonOrder, err := json.Marshal(response)
 		if err != nil {
-			log.Fatal(err)
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
 		}
 
 		// Write the JSON to the response
