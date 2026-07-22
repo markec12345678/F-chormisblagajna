@@ -498,16 +498,17 @@ func (ms *MaterialService) ConsumeItemComponentsForOrder(item models.OrderItem, 
 			if err != nil {
 				return notifications, err
 			}
-			defer cursor.Close(context.Background())
 
 			var material models.Material
 			for cursor.Next(context.Background()) {
 				err := cursor.Decode(&material)
 				if err != nil {
+					cursor.Close(context.Background())
 					return notifications, err
 				}
 				break
 			}
+			cursor.Close(context.Background())
 
 			if len(material.Entries) == 0 {
 				return notifications, fmt.Errorf("no entries found for material %s", component.Material.Id)

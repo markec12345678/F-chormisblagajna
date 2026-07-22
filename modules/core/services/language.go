@@ -43,9 +43,10 @@ func (ls *LanguageService) GetLanguage(lang_code string) (foundLanguage models.L
 			ls.Logger.Error(err.Error())
 			continue
 		}
-		defer jsonFile.Close()
 
 		byteValue, _ := io.ReadAll(jsonFile)
+		jsonFile.Close()
+
 		if err := json.Unmarshal(byteValue, &languageData); err != nil {
 			ls.Logger.Error(err.Error())
 			continue

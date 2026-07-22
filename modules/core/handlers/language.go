@@ -82,9 +82,10 @@ func GetAvailableLanguages(config config.Config, logger logger.ILogger) http.Han
 				http.Error(w, err.Error(), http.StatusInternalServerError)
 				return
 			}
-			defer jsonFile.Close()
 
 			byteValue, _ := io.ReadAll(jsonFile)
+			jsonFile.Close()
+
 			var languageFile struct {
 				Language string `json:"language"`
 				Code     string `json:"code"`

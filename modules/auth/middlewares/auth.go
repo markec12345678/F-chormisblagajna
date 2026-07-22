@@ -14,6 +14,10 @@ import (
 	"github.com/zitadel/zitadel-go/v3/pkg/zitadel"
 )
 
+type contextKey string
+
+const AuthCtxKey contextKey = "auth_ctx"
+
 type IAuthService interface {
 	AllowAuthenticated(next http.Handler) http.Handler
 	AllowAnyOfRoles(next http.Handler, roles ...string) http.Handler
@@ -74,7 +78,7 @@ func (ia *InternalAuth) AllowAuthenticated(next http.Handler) http.Handler {
 			return
 		}
 
-		r = r.WithContext(context.WithValue(r.Context(), "auth_ctx", claims))
+		r = r.WithContext(context.WithValue(r.Context(), AuthCtxKey, claims))
 		next.ServeHTTP(w, r)
 	})
 }
@@ -105,7 +109,7 @@ func (ia *InternalAuth) AllowAnyOfRoles(next http.Handler, roles ...string) http
 
 		for _, userRole := range claims.Roles {
 			if userRole == "superuser" {
-				r = r.WithContext(context.WithValue(r.Context(), "auth_ctx", claims))
+				r = r.WithContext(context.WithValue(r.Context(), AuthCtxKey, claims))
 				next.ServeHTTP(w, r)
 				return
 			}
@@ -114,7 +118,7 @@ func (ia *InternalAuth) AllowAnyOfRoles(next http.Handler, roles ...string) http
 		for _, role := range roles {
 			for _, userRole := range claims.Roles {
 				if userRole == role {
-					r = r.WithContext(context.WithValue(r.Context(), "auth_ctx", claims))
+					r = r.WithContext(context.WithValue(r.Context(), AuthCtxKey, claims))
 					next.ServeHTTP(w, r)
 					return
 				}
@@ -187,7 +191,7 @@ func (za *ZitadelAuth) AllowAnyOfRoles(next http.Handler, roles ...string) http.
 
 			authCtx, err := za.AuthZ.CheckAuthorization(r.Context(), reqToken, authorization.WithRole(role))
 			if err == nil {
-				r = r.WithContext(context.WithValue(r.Context(), "auth_ctx", authCtx.IntrospectionResponse))
+				r = r.WithContext(context.WithValue(r.Context(), AuthCtxKey, authCtx.IntrospectionResponse))
 				authorized = true
 				next.ServeHTTP(w, r)
 				break
