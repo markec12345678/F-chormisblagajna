@@ -4,6 +4,7 @@
 - Go 1.25 monorepo with MongoDB backend (mongo-driver v2.2.0)
 - Point-of-sale system for restaurants/shops: inventory, sales, products
 - Active development - no backward compatibility guarantee
+- License: GPL v2
 
 ## Build Commands
 ```bash
@@ -14,10 +15,10 @@ go vet ./...          # static analysis
 ```
 
 ## Architecture
-- `/cmd/` - CLI entrypoints
+- `/cmd/` - CLI entrypoints (Cobra CLI)
 - `/modules/` - business logic (core, hubsync, auth modules)
 - `/common/` - shared utilities (database, config, logger, middlewares)
-- `/frontend/` - Vue 3 SPA (separate build)
+- `/frontend/` - Vue 3 SPA (separate build with Vite)
 
 ## Database
 - Use `common.GetDatabaseClient()` singleton - never create new `mongo.Connect()` connections
@@ -71,22 +72,71 @@ id := bson.NewObjectID()
 ❌ Wrong: `&options.FindOptions{Sort: sort}`
 ✅ Correct: `options.Find().SetSort(sort)`
 
+### 4. Error Handling in Services
+❌ Wrong (CRASHES SERVER):
+```go
+client, err := common.GetDatabaseClient(...)
+if err != nil {
+    log.Fatal(err)  // or panic(err)
+}
+```
+✅ Correct:
+```go
+client, err := common.GetDatabaseClient(...)
+if err != nil {
+    return fmt.Errorf("FunctionName: %w", err)
+}
+```
+
+### 5. Regex Injection (ReDoS)
+❌ Wrong:
+```go
+filter["name"] = bson.M{"$regex": fmt.Sprintf("(?i).*%s.*", userInput)}
+```
+✅ Correct:
+```go
+import "regexp"
+filter["name"] = bson.M{"$regex": fmt.Sprintf("(?i).*%s.*", regexp.QuoteMeta(userInput))}
+```
+
+### 6. Error Response to Client
+❌ Wrong (leaks internal errors):
+```go
+w.Write([]byte(err.Error()))
+w.WriteHeader(http.StatusInternalServerError)
+```
+✅ Correct:
+```go
+http.Error(w, "failed to get data", http.StatusInternalServerError)
+```
+
+## Security Practices
+- JWT secret auto-generated if empty (crypto/rand)
+- Rate limiting: sliding window on auth endpoints
+- User input escaped with `regexp.QuoteMeta` in MongoDB queries
+- Error messages to clients are generic (no internal details)
+- Docker runs as non-root user
+- Passwords: bcrypt hashed
+- Tokens: crypto/rand (not math/rand)
+
 ## Dependencies
 - `go.mongodb.org/mongo-driver/v2` - MongoDB driver v2
 - `github.com/gorilla/mux` - HTTP router
 - `github.com/spf13/cobra` + `viper` - CLI framework
 - `github.com/golang-jwt/jwt/v5` - JWT authentication
 - `github.com/nutrixpos/crypt` - password hashing
+- `github.com/nutrixpos/melody` - WebSocket
 
 ## Testing
 - Tests in: `common/config`, `common/middlewares`, `modules/auth/middlewares`
 - Rate limiter: `common/middlewares/ratelimit.go` with sliding window
 - Frontend tests: `frontend/src/__tests__/`
+- Run: `go test -race ./...`
 
 ## CI/CD
 - GitHub Actions: `.github/workflows/ci.yml`
-- Jobs: Go (vet+test+build+vulncheck) → Vue (typecheck+lint+test+build) → Docker
-- Docker: multi-stage build, non-root user, healthcheck
+- Jobs: Go (vet+golangci-lint+test+build+vulncheck) → Vue (typecheck+lint+test+build) → Docker
+- Docker: multi-stage build, non-root user, healthcheck, stripped binary
 
 ## Entities
 - `Material`, `Component` and `Inventory Item` are the same entity

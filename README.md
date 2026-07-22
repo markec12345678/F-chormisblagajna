@@ -6,6 +6,7 @@
   <a href="https://pkg.go.dev/github.com/nutrixpos/pos"><img src="https://pkg.go.dev/badge/github.com/nutrixpos/pos.svg" alt="Go Reference"></a>
   <a href="https://github.com/markec12345678/F-chormisblagajna/actions"><img src="https://github.com/markec12345678/F-chormisblagajna/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
   <a href="https://nutrixpos.com/userguide/installation.html"><img src="https://img.shields.io/badge/docs-nutrixpos.com-teal" alt="Docs"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-GPL--v2-blue" alt="License"></a>
 </p>
 
 # NutrixPOS
@@ -31,13 +32,13 @@ Blagajniški sistem za restavracije in trgovine. Go backend (MongoDB) + Vue 3 SP
 | Komponenta | Tehnologija |
 |------------|-------------|
 | Backend | Go 1.25 + gorilla/mux + Cobra CLI |
-| Baza | MongoDB |
+| Baza | MongoDB (mongo-driver v2.2.0) |
 | Frontend | Vue 3 + TypeScript + PrimeVue 4 |
 | Build | Vite 6 + viteSingleFile |
 | State | Pinia |
 | Auth | JWT (HS256) / Zitadel OIDC |
-| CI/CD | GitHub Actions |
-| Container | Docker (multi-stage) |
+| CI/CD | GitHub Actions (golangci-lint) |
+| Container | Docker (multi-stage, non-root) |
 
 ## Hitri začetek
 
@@ -69,7 +70,7 @@ Frontend bo dostopen na `http://localhost:3000`.
 
 ## Konfiguracija
 
- Kopiraj `config.example.yaml` v `config.yaml`:
+Kopiraj `config.example.yaml` v `config.yaml`:
 
 ```yaml
 databases:
@@ -115,7 +116,7 @@ cd frontend && npm run test:unit
 ### CI/CD
 
 GitHub Actions pipeline (.github/workflows/ci.yml):
-- **Backend**: vet, test, build, govulncheck
+- **Backend**: vet, golangci-lint, test, build, govulncheck
 - **Frontend**: type-check, lint, test, build
 - **Docker**: multi-stage build + cache
 
@@ -141,6 +142,15 @@ main.go
             └── Sinhronizacija z hub strežnikom
 ```
 
+## Varnost
+
+- **JWT secret** — samodejna generacija naključnega ključa ob zagonu
+- **Rate limiting** — drseno okno na auth endpointih (10 prijav/min, 5 registracij/min)
+- **NoSQL injection** — uporabniški vnos ekraniran z `regexp.QuoteMeta`
+- **Error handling** — notranje napake niso izpostavljene strankam
+- **Docker** — non-root uporabnik, healthcheck, strip binary
+- **Kriptografija** — `crypto/rand` za varne tokene, bcrypt za gesla
+
 ## Dostopne vloge
 
 | Vloga | Dovoljenja |
@@ -149,6 +159,21 @@ main.go
 | `admin` | Administracija, naročila, nastavitve |
 | `cashier` | Blagajna, prodaja, stranke |
 | `chef` | Kuhinjski zaslon, pregled materialov |
+
+## Datoteke
+
+| Datoteka | Namen |
+|----------|-------|
+| `README.md` | Ta datoteka |
+| `LICENSE` | GNU GPL v2 |
+| `CONTRIBUTING.md` | Navodila za prispevke |
+| `SECURITY.md` | Politika varnosti |
+| `CODEOWNERS` | Lastnik repozitorija |
+| `AGENTS.md` | Navodila za AI agente |
+| `.golangci.yml` | Konfiguracija lintinga |
+| `.github/workflows/ci.yml` | CI/CD pipeline |
+| `Dockerfile` | Multi-stage build |
+| `docker-compose.yaml` | Pos + frontend + MongoDB |
 
 ## Licenca
 
