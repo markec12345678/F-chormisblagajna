@@ -19,7 +19,10 @@ func TestRandStringBytesMaskImprSrc(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			result := RandStringBytesMaskImprSrc(tt.n)
+			result, err := RandStringBytesMaskImprSrc(tt.n)
+			if err != nil {
+				t.Fatalf("RandStringBytesMaskImprSrc(%d) returned error: %v", tt.n, err)
+			}
 			if len(result) != tt.n {
 				t.Errorf("RandStringBytesMaskImprSrc(%d) returned length %d, want %d", tt.n, len(result), tt.n)
 			}
@@ -27,15 +30,15 @@ func TestRandStringBytesMaskImprSrc(t *testing.T) {
 	}
 
 	t.Run("uniqueness", func(t *testing.T) {
-		a := RandStringBytesMaskImprSrc(32)
-		b := RandStringBytesMaskImprSrc(32)
+		a, _ := RandStringBytesMaskImprSrc(32)
+		b, _ := RandStringBytesMaskImprSrc(32)
 		if a == b {
 			t.Errorf("Two random strings should differ, both got %q", a)
 		}
 	})
 
 	t.Run("hex_chars_only", func(t *testing.T) {
-		result := RandStringBytesMaskImprSrc(40)
+		result, _ := RandStringBytesMaskImprSrc(40)
 		for i, c := range result {
 			if !((c >= '0' && c <= '9') || (c >= 'a' && c <= 'f')) {
 				t.Errorf("character at index %d is %q, expected hex char", i, c)

@@ -27,7 +27,7 @@
             <div class="col-12">
                 <div class="grid">
                     <div class="col-3 xl:col-2">
-                        <Tree v-model:expandedKeys="expandedKeys" :value="menu_tree" selectionMode="single" class="w-full" @node-select="(node) => sidemenuNodeSelect(node)">
+                        <Tree v-model:expandedKeys="expandedKeys" v-model:selectionKeys="selectionKeys" :value="menu_tree" selectionMode="single" class="w-full" @node-select="(node) => sidemenuNodeSelect(node)">
                             <template #default="slotProps">
                                 <div style="text-decoration: none;color: inherit;" class="flex align-items-center w-full">
                                     <div>{{ $t(`${slotProps.node.label.title}`,slotProps.node.label.plural ? 3 : 1) }}</div>
@@ -67,7 +67,7 @@
 </template>
 
 <script setup lang="ts">
-import {ref,computed,getCurrentInstance} from "vue";
+import {ref,computed,getCurrentInstance,watch} from "vue";
 import { Toolbar,Dialog } from "primevue";
 import Tree from "primevue/tree";
 import Button from "primevue/button";
@@ -76,7 +76,9 @@ import { globalStore } from '@/stores';
 import axios from "axios";
 import OverlayPanel from "primevue/overlaypanel";
 import ProgressSpinner from "primevue/progressspinner";
+import { useRoute } from 'vue-router';
 const { proxy } = getCurrentInstance();
+const route = useRoute();
 
 const store = globalStore()
 const user_profile_op = ref();
@@ -128,6 +130,25 @@ const expandNode = (node) => {
 };
 
 const expandedKeys = ref({});
+const selectionKeys = ref({});
+
+const findKeyByLink = (nodes: any[], link: string): string | null => {
+    for (const node of nodes) {
+        if (node.link === link) return node.key;
+        if (node.children) {
+            const found = findKeyByLink(node.children, link);
+            if (found) return found;
+        }
+    }
+    return null;
+};
+
+watch(() => route.path, (path) => {
+    const key = findKeyByLink(menu_tree.value, path);
+    if (key) {
+        selectionKeys.value = { [key]: true };
+    }
+}, { immediate: true });
 
 const menu_tree =ref([
     {
@@ -323,13 +344,10 @@ const loadLanguage = async () => {
             }
 
         })
-        .catch((err) => {
-            console.log(err)
-        });
+        .catch(() => {});
         loading.value = false
     })
     .catch((err) => {
-        console.log(err)
         if (err.response?.status === 401) {
             proxy.$auth.signOut()
             window.location.href = '/'

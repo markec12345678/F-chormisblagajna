@@ -83,14 +83,21 @@ func GetAvailableLanguages(config config.Config, logger logger.ILogger) http.Han
 				return
 			}
 
-			byteValue, _ := io.ReadAll(jsonFile)
+			byteValue, err := io.ReadAll(jsonFile)
 			jsonFile.Close()
+			if err != nil {
+				logger.Error(err.Error())
+				continue
+			}
 
 			var languageFile struct {
 				Language string `json:"language"`
 				Code     string `json:"code"`
 			}
-			json.Unmarshal(byteValue, &languageFile)
+			if err := json.Unmarshal(byteValue, &languageFile); err != nil {
+				logger.Error(err.Error())
+				continue
+			}
 			availableLanguages = append(availableLanguages, languageFile)
 		}
 

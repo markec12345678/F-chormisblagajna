@@ -13,6 +13,12 @@
                                     <Button icon="pi pi-plus" :label="$t('add_user')"  rounded raised @click="userAddDialog=true" />
                                 </div>
                             </template>
+                            <template #empty>
+                                <div class="flex flex-column align-items-center gap-2 py-4">
+                                    <i class="pi pi-users" style="font-size:2rem;opacity:0.3"></i>
+                                    <p class="m-0" style="color:#94a3b8">{{$t('no_results')}}</p>
+                                </div>
+                            </template>
                             <Column sortable field="username" :header="$t('username')"></Column>
                             <Column sortable field="email" :header="$t('email')"></Column>
                             <Column field="roles" :header="$t('role',3)">
@@ -33,15 +39,18 @@
                         <Dialog v-model:visible="userAddDialog" modal :header="$t('add_user')" :style="{ width: '75rem' }" :breakpoints="{ '1199px': '90vw', '575px': '90vw' }">
                             <div class="flex flex-column gap-2 w-5">
                                 <label for="username">{{$t('username')}}</label>
-                                <InputText id="username" v-model="newUser.username" aria-describedby="username" />
+                                <InputText id="username" v-model="newUser.username" aria-describedby="username" :class="{'p-invalid': user_errors.username}" />
+                                <small class="p-error">{{ user_errors.username }}</small>
                             </div>
                             <div class="flex flex-column gap-2 w-5 mt-2">
                                 <label for="email">{{$t('email')}}</label>
-                                <InputText id="email" v-model="newUser.email" aria-describedby="email" />
+                                <InputText id="email" v-model="newUser.email" aria-describedby="email" :class="{'p-invalid': user_errors.email}" />
+                                <small class="p-error">{{ user_errors.email }}</small>
                             </div>
                             <div class="flex flex-column gap-2 w-5 mt-2">
                                 <label for="password">{{$t('password')}}</label>
-                                <InputText id="password" v-model="newUser.password" type="password" aria-describedby="password" />
+                                <InputText id="password" v-model="newUser.password" type="password" aria-describedby="password" :class="{'p-invalid': user_errors.password}" />
+                                <small class="p-error">{{ user_errors.password }}</small>
                             </div>
                             <div class="flex flex-column gap-2 w-10 mt-3">
                                 <label for="roles">{{$t('role',3)}}</label>
@@ -119,6 +128,7 @@ const newUser = ref({
     password: '',
     roles: []
 })
+const user_errors = ref({ username: '', email: '', password: '' })
 const editPassword = ref({
     userId: '',
     username: '',
@@ -126,7 +136,6 @@ const editPassword = ref({
 })
 
 const auth = proxy.$auth;
-console.log(auth)
 const isSuperuser = computed(() => auth.currentUser?.value.roles?.includes('superuser') || false)
 
 const loadUsers = () => {
@@ -148,10 +157,11 @@ const loadUsers = () => {
 }
 
 const submitUser = () => {
-    if (!newUser.value.username || !newUser.value.password || !newUser.value.email) {
-        toast.add({severity: 'warn', summary: 'Warning', detail: 'Please fill all required fields'});
-        return;
-    }
+    user_errors.value.username = newUser.value.username?.trim() ? '' : proxy.$t('validation_required')
+    user_errors.value.email = newUser.value.email?.trim() ? '' : proxy.$t('validation_required')
+    user_errors.value.password = newUser.value.password?.trim() ? '' : proxy.$t('validation_required')
+
+    if (user_errors.value.username || user_errors.value.email || user_errors.value.password) return
 
     axios.post(`${backendUrl}/api/auth/users`, newUser.value, {
         headers: {

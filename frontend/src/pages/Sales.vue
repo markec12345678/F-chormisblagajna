@@ -53,8 +53,8 @@
                                 </Column>
                                 <Column sortable field="profit" :header="$t('profit')">
                                     <template #body="slotProps">
-                                        <div :style="`${ ( slotProps.data.total_sales - slotProps.data.costs - slotProps.data.refunds_value + ( slotProps.data.inventory_refunds || 0 )) > 0 ? 'color:green' : 'color:red' }`">
-                                            {{ slotProps.data.total_sales - slotProps.data.costs  - slotProps.data.refunds_value + ( slotProps.data.inventory_refunds || 0 ) }}
+                                        <div class="flex align-items-center gap-2">
+                                            <Tag :value="slotProps.data.total_sales - slotProps.data.costs  - slotProps.data.refunds_value + ( slotProps.data.inventory_refunds || 0 )" :severity="( slotProps.data.total_sales - slotProps.data.costs - slotProps.data.refunds_value + ( slotProps.data.inventory_refunds || 0 )) > 0 ? 'success' : 'danger'" />
                                             <Badge :value="`+${slotProps.data.tips} ${$t('tips')}`" severity="secondary" style="margin-right:0.5rem" />
                                         </div>
                                     </template>
@@ -92,8 +92,8 @@
                                         </Column>
                                         <Column sortable field="profit" :header="$t('profit')">
                                             <template #body="slotProps">
-                                                <div :style="`${ (slotProps.data.order.sale_price - slotProps.data.order.cost - ( orders_refunds[slotProps.data.id]?.total_refunds || 0 ) + (orders_refunds[slotProps.data.id]?.inventory_refunds || 0 )) > 0 ? 'color:green' : 'color:red' }`">
-                                                    {{ slotProps.data.order.sale_price - slotProps.data.order.cost - (orders_refunds[slotProps.data.id]?.total_refunds || 0) + (orders_refunds[slotProps.data.id]?.inventory_refunds || 0 ) }} 
+                                                <div class="flex align-items-center gap-2">
+                                                    <Tag :value="slotProps.data.order.sale_price - slotProps.data.order.cost - (orders_refunds[slotProps.data.id]?.total_refunds || 0) + (orders_refunds[slotProps.data.id]?.inventory_refunds || 0 )" :severity="(slotProps.data.order.sale_price - slotProps.data.order.cost - ( orders_refunds[slotProps.data.id]?.total_refunds || 0 ) + (orders_refunds[slotProps.data.id]?.inventory_refunds || 0 )) > 0 ? 'success' : 'danger'" />
                                                     <Badge :value="`+${slotProps.data.order.tips} ${$t('tips')}`" severity="secondary" style="margin-right:0.5rem" />
                                                 </div>
                                             </template>
@@ -122,7 +122,7 @@ import {getCurrentInstance, ref} from 'vue'
 import axios from 'axios'
 import SalesLogTableItems from '@/components/SalesLogTableItems.vue'
 import { $dt } from '@primevue/themes';
-import {Badge, Button} from 'primevue';
+import {Badge, Button, Tag} from 'primevue';
 import { useI18n } from 'vue-i18n'
 import auth from '../services/auth';
 
@@ -436,9 +436,7 @@ const loadSales = (first=salesTableFirstIndex.value,rows=salesTableRowsPerPage.v
         isSalesTableLoading.value = false
 
     })
-    .catch(error => {
-        console.log(error)
-    })
+    .catch(() => {})
 
 }
 

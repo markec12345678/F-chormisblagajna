@@ -2,8 +2,10 @@
     <div v-if="!loading" style="overflow-x: hidden;">
         <div class="grid">
             <div class="col-12 pt-5 pl-3">
-                <div v-if="orders.length <= 0" style="height:100vh;width:100%;" class="flex justify-content-center align-items-center">
-                    <h1 style="color:cadetblue">0 {{$t('order',3)}}</h1>
+                <div v-if="orders.length <= 0" style="height:100vh;width:100%;" class="flex flex-column justify-content-center align-items-center gap-3">
+                    <i class="pi pi-inbox" style="font-size:3rem;opacity:0.3"></i>
+                    <h2 style="color:cadetblue;margin:0">{{$t('order',3)}}: 0</h2>
+                    <p style="color:#94a3b8;margin:0">{{ t('new_orders_appear') }}</p>
                 </div>
                 <div class="flex flex-wrap">
                     <div v-for="column_orders,index in dynamic_columns" :key="index">
@@ -59,7 +61,7 @@ const orientation = computed(() => store.currentOrientation)
 
 
 const loading = ref(true)
-const { locale,setLocaleMessage } = useI18n({ useScope: 'global' })
+const { t, locale,setLocaleMessage } = useI18n({ useScope: 'global' })
 
 const dynamic_columns = ref<Array<Array<any>>>([])
 const prepareLayout = () => {
@@ -100,13 +102,10 @@ const loadLanguage = async () => {
             store.setOrientation(response2.data.data.orientation)
             loading.value = false
         })
-        .catch((err) => {
-            console.log(err)
-        });
+        .catch(() => {});
         loading.value = false
     })
     .catch((err) => {
-        console.log(err)
         if (err.response?.status === 401) {
             auth.signOut()
             window.location.href = '/'
@@ -119,13 +118,10 @@ const loadLanguage = async () => {
 const startWebsocket = () => {
     socket = new WebSocket(`ws://${import.meta.env.VITE_APP_BACKEND_HOST}${import.meta.env.VITE_APP_MODULE_CORE_API_PREFIX}/ws`);
     socket.onopen = () => {
-        console.log("Opened ws connection");
         socket.send(`{"type":"subscribe","topic_name":"all"}`);
     }
 
     socket.onmessage = async (event) => {
-        console.log("Received message: " + event.data);
-
         const data = JSON.parse(event.data);
 
         if (data.type == "topic_message") {
@@ -167,16 +163,11 @@ const startWebsocket = () => {
         }
 
     }
-    socket.onerror = (event) => {
-        console.log("Error occurred");
-        console.log(event);
-    }
+    socket.onerror = () => {}
     socket.onclose = () => {
-        console.log("Connection closed");
         const retryConnection = async () => {
             if (socket.readyState !== WebSocket.OPEN) {
                 await new Promise(r => setTimeout(r, 5000));
-                console.log("Reconnecting to WebSocket...");
                 startWebsocket()
             }
         }

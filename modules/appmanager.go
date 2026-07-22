@@ -66,7 +66,7 @@ func (manager *AppManager) RunModule(name string, logger logger.ILogger, module_
 
 	err := module_builder.module.OnStart()()
 	if err != nil {
-		panic(err)
+		logger.Error(fmt.Sprintf("Module %s failed to start: %s", name, err.Error()))
 	}
 
 	if module_builder.isRegisterHttpHandlers {

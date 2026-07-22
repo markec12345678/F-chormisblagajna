@@ -75,7 +75,10 @@ const i18n = createI18n({
       "report":"Report | Reports",
       "settings":"Settings",
       "language":"Language | Languages",
-      "sales":"Sales"
+      "sales":"Sales",
+      "validation_required":"This field is required",
+      "no_results":"No results found",
+      "new_orders_appear":"New orders will appear here automatically"
     }
   }
 })

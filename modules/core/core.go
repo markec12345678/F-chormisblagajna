@@ -127,7 +127,7 @@ func (c *Core) RegisterBackgroundWorkers() []modules.Worker {
 		notification_service, err := services.SpawnNotificationSingletonSvc("melody", c.Logger, c.Config)
 		if err != nil {
 			c.Logger.Error(err.Error())
-			panic(err)
+			return []modules.Worker{}
 		}
 		c.NotificationSvc = notification_service
 	}
@@ -154,7 +154,13 @@ func (c *Core) RegisterHttpHandlers(router *mux.Router, prefix string) {
 		auth_svc = auth_mw.NewInternalAuth(c.Config, jwtUtil)
 		c.Logger.Info("Using internal JWT authentication")
 	} else if c.Config.Zitadel.Enabled {
-		auth_svc = auth_mw.NewZitadelAuth(c.Config)
+		var err error
+		auth_svc, err = auth_mw.NewZitadelAuth(c.Config)
+		if err != nil {
+			c.Logger.Error(err.Error())
+			c.Logger.Info("Falling back to no-auth mode")
+			auth_svc = auth_mw.NewNoAuth(c.Config)
+		}
 		c.Logger.Info("Using Zitadel authentication")
 	} else {
 		auth_svc = auth_mw.NewNoAuth(c.Config)
@@ -239,9 +245,9 @@ func (c *Core) RegisterHttpHandlers(router *mux.Router, prefix string) {
 		notification_service, err := services.SpawnNotificationSingletonSvc("melody", c.Logger, c.Config)
 		if err != nil {
 			c.Logger.Error(err.Error())
-			panic(err)
+		} else {
+			c.NotificationSvc = notification_service
 		}
-		c.NotificationSvc = notification_service
 	}
 
 	// create public folder if doesn't exist in the uploads dir directory
@@ -250,7 +256,6 @@ func (c *Core) RegisterHttpHandlers(router *mux.Router, prefix string) {
 		err = os.MkdirAll(publicPath, 0755)
 		if err != nil {
 			c.Logger.Error(err.Error())
-			panic(err)
 		}
 	}
 

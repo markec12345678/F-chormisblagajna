@@ -16,6 +16,12 @@
                                         <InputText :placeholder="$t('search')" v-model="ordersSearchText" @keyup.stop="(event) => loadOrders(0,100)"/>
                                     </IconField>
                                 </template>
+                                <template #empty>
+                                    <div class="flex flex-column align-items-center gap-2 py-4">
+                                        <i class="pi pi-box" style="font-size:2rem;opacity:0.3"></i>
+                                        <p class="m-0" style="color:#94a3b8">{{$t('no_results')}}</p>
+                                    </div>
+                                </template>
                                 <Column field="display_id" :header="$t('id')"></Column>
                                 <Column :header="$t('status')">
                                     <template #body="slotProps">

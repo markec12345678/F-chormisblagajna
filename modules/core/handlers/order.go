@@ -159,7 +159,7 @@ func WasteOrderItem(config config.Config, logger logger.ILogger, settings models
 		err = decoder.Decode(&request)
 		if err != nil {
 			logger.Error(err.Error())
-			w.WriteHeader(http.StatusInternalServerError)
+			http.Error(w, "invalid request body", http.StatusBadRequest)
 			return
 		}
 
@@ -210,7 +210,7 @@ func RefundOrderItem(config config.Config, logger logger.ILogger, settings model
 		err := decoder.Decode(&request)
 		if err != nil {
 			logger.Error(err.Error())
-			w.WriteHeader(http.StatusInternalServerError)
+			http.Error(w, "invalid request body", http.StatusBadRequest)
 			return
 		}
 
@@ -525,7 +525,7 @@ func SubmitOrder(config config.Config, logger logger.ILogger, settings models.Se
 		err := decoder.Decode(&request)
 		if err != nil {
 			logger.Error(err.Error())
-			w.WriteHeader(http.StatusInternalServerError)
+			http.Error(w, "invalid request body", http.StatusBadRequest)
 			return
 		}
 
@@ -816,7 +816,7 @@ func StartOrder(config config.Config, logger logger.ILogger, settings models.Set
 		err := decoder.Decode(&request_body)
 		if err != nil {
 			logger.Error(err.Error())
-			w.WriteHeader(http.StatusInternalServerError)
+			http.Error(w, "invalid request body", http.StatusBadRequest)
 			return
 		}
 

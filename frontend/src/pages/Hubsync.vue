@@ -25,7 +25,7 @@
                         </div>
                         <div class="col-12 lg:col-4 flex flex-column gap-2">
                             <label for="binary" class="font-bold">Buffer Size</label>
-                            <InputNumber v-model.nunber="hubSync.settings.buffer_size" mode="decimal" class="w-full mb-2" />
+                            <InputNumber v-model.number="hubSync.settings.buffer_size" mode="decimal" class="w-full mb-2" />
                         </div>
                         <div class="col-12 lg:col-4 flex flex-column gap-2">
                             <label for="binary" class="font-bold">{{$t('last_synced')}}</label>

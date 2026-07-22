@@ -100,7 +100,6 @@ func UpdateCategory(config config.Config, logger logger.ILogger) http.HandlerFun
 			return
 		}
 
-		w.WriteHeader(http.StatusCreated)
 		jsonResponse, err := json.Marshal(JSONApiOkResponse{
 			Data: category,
 			Meta: JSONAPIMeta{

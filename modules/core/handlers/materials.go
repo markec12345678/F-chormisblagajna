@@ -11,7 +11,6 @@ package handlers
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"strconv"
 
@@ -257,9 +256,8 @@ func AddMaterial(config config.Config, logger logger.ILogger) http.HandlerFunc {
 		}
 
 		// Return a success response
-		fmt.Fprint(w, "component adding saved successfully")
-
 		w.WriteHeader(http.StatusCreated)
+		w.Write([]byte("component adding saved successfully"))
 
 	}
 }

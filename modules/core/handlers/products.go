@@ -67,14 +67,14 @@ func UpdateProductImage(config config.Config, logger logger.ILogger) http.Handle
 			file_extension = "." + names[len(names)-1]
 		}
 
-		if err != nil {
-			logger.Error(fmt.Sprintf("Error processing file extension: %s", err.Error()))
-			http.Error(w, err.Error(), http.StatusBadRequest)
-			return
-		}
 		defer file.Close()
 
-		random_string := helpers.RandStringBytesMaskImprSrc(20)
+		random_string, err := helpers.RandStringBytesMaskImprSrc(20)
+		if err != nil {
+			logger.Error(fmt.Sprintf("Error generating random string: %s", err.Error()))
+			http.Error(w, "failed to generate filename", http.StatusInternalServerError)
+			return
+		}
 
 		// Create a new file on the server
 		dst, err := os.Create(helpers.ResolveOsEnvPath(config.UploadsPath) + "/" + random_string + file_extension)
@@ -106,7 +106,12 @@ func UpdateProductImage(config config.Config, logger logger.ILogger) http.Handle
 
 		product.ImageURL = random_string + file_extension
 
-		product_svc.UpdateProduct(id_param, product)
+		err = product_svc.UpdateProduct(id_param, product)
+		if err != nil {
+			logger.Error(fmt.Sprintf("Error updating product: %s", err.Error()))
+			http.Error(w, "failed to update product", http.StatusInternalServerError)
+			return
+		}
 
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)

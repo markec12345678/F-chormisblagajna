@@ -82,7 +82,7 @@
                 </div>
                 <div class="flex flex-column gap-3 w-full">
                     <p class="m-0 font-semibold text-base text-white opacity-80">{{ message.summary }}</p>
-                    <p class="m-0 text-white text-base text-700">{{ message.detail }}</p>
+                    <p class="m-0 text-sm text-white opacity-60">{{ message.detail }}</p>
                 </div>
             </section>
         </template>
@@ -145,15 +145,11 @@ const getSettings = () => {
             locale.value = response2.data.data.code
             store.setOrientation(response2.data.data.orientation)
         })
-        .catch((err) => {
-            console.log(err)
-        });
+        .catch(() => {});
 
 
     })
-    .catch((err) => {
-        console.log(err)
-    });
+    .catch(() => {});
 }
 
 const saveShopMode = () => {
@@ -181,8 +177,7 @@ const saveShopMode = () => {
         show_mode_modal.value = false
         saving_mode.value = false
     })
-    .catch((err) => {
-        console.log(err)
+    .catch(() => {
         toast.add({ severity: 'error', summary: 'Error', detail: 'Failed to save shop mode', life: 3000, group: 'br' })
         saving_mode.value = false
     })

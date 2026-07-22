@@ -2,7 +2,7 @@
 package config
 
 import (
-	"log"
+	"fmt"
 	"strings"
 
 	"github.com/nutrixpos/pos/common/logger"
@@ -81,8 +81,7 @@ func (vc *ViperConfig) GetConfig() (Config, error) {
 	// Unmarshal the config into the config struct.
 	var config Config
 	if err := vc.v.Unmarshal(&config); err != nil {
-		// Log the error.
-		log.Fatalf("Failed to unmarshal config: %v", err)
+		return Config{}, fmt.Errorf("unmarshal config: %w", err)
 	}
 
 	config.Databases = databases

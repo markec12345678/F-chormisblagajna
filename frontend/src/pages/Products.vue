@@ -13,6 +13,12 @@
                                     <Button icon="pi pi-plus" :label="$t('add_product')"  rounded raised @click="productAddDialog=true" />
                                 </div>
                             </template>
+                            <template #empty>
+                                <div class="flex flex-column align-items-center gap-2 py-4">
+                                    <i class="pi pi-box" style="font-size:2rem;opacity:0.3"></i>
+                                    <p class="m-0" style="color:#94a3b8">{{$t('no_results')}}</p>
+                                </div>
+                            </template>
                             <Column sortable field="name" :header="$t('name')"></Column>
                             <Column field="ready" :header="$t('ready_to_serve')"></Column>
                             <Column field="materials.length" :header="$t('inventory_item',3)"></Column>
@@ -61,7 +67,7 @@
                                         <Column field="name" :header="$t('name')"></Column>
                                         <Column field="quantity" :header="$t('quantity')">
                                             <template #body="slotProps">
-                                                <InputText type="number" v-model.number="materials[slotProps.data.index].quantity" aria-describedby="quantity" />
+                                                <InputNumber v-model.number="materials[slotProps.data.index].quantity" :min="0" mode="decimal" :maxFractionDigits="2" aria-describedby="quantity" />
                                             </template>
                                         </Column>
                                         <Column field="unit" :header="$t('unit')"></Column>
@@ -85,7 +91,7 @@
                                         <Column field="name" :header="$t('name')"></Column>
                                         <Column field="quantity" :header="$t('quantity')">
                                             <template #body="slotProps">
-                                                <InputText type="number" v-model.number="sub_products[slotProps.data.index].quantity" aria-describedby="quantity" />
+                                                <InputNumber v-model.number="sub_products[slotProps.data.index].quantity" :min="0" mode="decimal" :maxFractionDigits="2" aria-describedby="quantity" />
                                             </template>
                                         </Column>
                                         <Column :header="$t('actions')">
@@ -97,7 +103,7 @@
                                         </Column>
                                         <template #header>
                                             <div class="flex justify-start">
-                                                <Button icon="pi pi-plus" label="Add Subproduct"  rounded raised @click="add_subproduct_dialog=true" />
+                                                <Button icon="pi pi-plus" :label="$t('add_subproduct')"  rounded raised @click="add_subproduct_dialog=true" />
                                             </div>
                                         </template>
                                     </DataTable>
@@ -112,7 +118,7 @@
                                 </div>
                                 <div v-if="newproduct_enable_fixed_cost" class="flex flex-column gap-2 w-5 mt-2">
                                     <label for="fixed_cost">Fixed Cost</label>
-                                    <InputText id="fixed_cost" name="fixed_cost" type="number" v-model.number="newproduct_fixed_cost" aria-describedby="fixed_cost" />
+                                    <InputText id="fixed_cost" name="fixed_cost" v-model.number="newproduct_fixed_cost" aria-describedby="fixed_cost" />
                                 </div>
 
                                 <div style="opacity: 0;">
@@ -156,7 +162,7 @@
                                     <Column field="name" :header="$t('name')"></Column>
                                     <Column field="quantity" :header="$t('quantity')">
                                         <template #body="slotProps">
-                                            <InputText type="number" v-model.number="productToEdit.materials[slotProps.data.index].quantity" aria-describedby="quantity" />
+                                            <InputNumber v-model.number="productToEdit.materials[slotProps.data.index].quantity" :min="0" mode="decimal" :maxFractionDigits="2" aria-describedby="quantity" />
                                         </template>
                                     </Column>
                                     <Column field="unit" :header="$t('measuring_unit')"></Column>
@@ -180,7 +186,7 @@
                                     <Column field="name" :header="$t('name')"></Column>
                                     <Column field="quantity" :header="$t('quantity')">
                                         <template #body="slotProps">
-                                            <InputText type="number" v-model.number="productToEdit.sub_products[slotProps.data.index].quantity" aria-describedby="quantity" />
+                                            <InputNumber v-model.number="productToEdit.sub_products[slotProps.data.index].quantity" :min="0" mode="decimal" :maxFractionDigits="2" aria-describedby="quantity" />
                                         </template>
                                     </Column>
                                     <Column :header="$t('actions')">
@@ -243,6 +249,7 @@ import DataTable from 'primevue/datatable';
 import Dialog from 'primevue/dialog';
 import FileUpload from 'primevue/fileupload';
 import InputText from 'primevue/inputtext';
+import InputNumber from 'primevue/inputnumber';
 import Column from 'primevue/column';
 import Button from 'primevue/button';
 import ButtonGroup from 'primevue/buttongroup';

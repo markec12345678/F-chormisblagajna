@@ -13,6 +13,12 @@
                                     <Button icon="pi pi-plus" :label="$t('add_inventory_item')" @click="add_component_dialog = true" rounded raised />
                                 </div>
                             </template>
+                            <template #empty>
+                                <div class="flex flex-column align-items-center gap-2 py-4">
+                                    <i class="pi pi-box" style="font-size:2rem;opacity:0.3"></i>
+                                    <p class="m-0" style="color:#94a3b8">{{$t('no_results')}}</p>
+                                </div>
+                            </template>
                             <Column field="name" :header="$t('name')"></Column>
                             <Column field="totalAmount" :header="$t('quantity')"></Column>
                             <Column field="unit" :header="$t('unit')"></Column>
@@ -88,12 +94,13 @@
                <div class="md:w-full">
                     <div class="flex flex-column gap-2">
                         <label for="name">{{ $t('name') }}</label>
-                        <InputText id="name" v-model="new_component_name" aria-describedby="name-help" />
-                        <!-- <small id="name-help">Enter the component name</small> -->
+                        <InputText id="name" v-model="new_component_name" aria-describedby="name-help" :class="{'p-invalid': component_errors.name}" />
+                        <small class="p-error">{{ component_errors.name }}</small>
                     </div>
                     <div class="flex flex-column gap-2 mt-3 ">
                         <label for="unit">{{ $t('measuring_unit') }}</label>
-                        <InputText id="unit" v-model="new_component_unit" aria-describedby="unit-help" />
+                        <InputText id="unit" v-model="new_component_unit" aria-describedby="unit-help" :class="{'p-invalid': component_errors.unit}" />
+                        <small class="p-error">{{ component_errors.unit }}</small>
                     </div>
                     <Divider />
                     <h4>{{$t('entries')}}</h4>
@@ -217,7 +224,7 @@ const isLogsTableLoading = ref(true)
 
 
   const add_component_dialog = ref(false)
-
+  const component_errors = ref({ name: '', unit: '' })
 
   const new_component_name = ref("")
   const new_component_unit = ref("")
@@ -424,6 +431,10 @@ const confirmDeleteMaterial = (material_id: string) => {
 
 
   const submitNewComponent = () => {
+      component_errors.value.name = new_component_name.value?.trim() ? '' : proxy.$t('validation_required')
+      component_errors.value.unit = new_component_unit.value?.trim() ? '' : proxy.$t('validation_required')
+
+      if (component_errors.value.name || component_errors.value.unit) return
 
       var entries : any = []
       new_component_entries.value.forEach((entry) => {

@@ -443,7 +443,11 @@
                             </a>
                             <OverlayPanel ref="stashed_orders_op" class="w-5 lg:w-3" style="max-height:60vh;overflow-y: auto;">
                                 <h4 class="m-2" style="color:#c2c2c2">{{ t('stashed_orders') }}</h4>
-                                <StashedOrder :order="order" v-for="(order,index) in stashedOrders" :key="index" @back_to_checkout="BackStashedOrderToCheckout(index)" />
+                                <div v-if="stashedOrders.length === 0" class="flex flex-column align-items-center gap-2 py-3">
+                                    <i class="pi pi-clock" style="font-size:1.5rem;opacity:0.3"></i>
+                                    <p class="m-0 text-sm" style="color:#94a3b8">{{ t('no_results') }}</p>
+                                </div>
+                                <StashedOrder v-else :order="order" v-for="(order,index) in stashedOrders" :key="index" @back_to_checkout="BackStashedOrderToCheckout(index)" />
                             </OverlayPanel>
                         </li>
                     </ul>
@@ -737,17 +741,13 @@ const mainSearchTextChanged = (event:any) => {
                 mainSearchResult.value.push(response.data.data[i])
             }
         })
-        .catch(error => {
-            console.error(error);
-        });
+        .catch(() => {});
 
     }else{
         mainSearchResult.value = []
         mainsearch_op.value.hide()
     }
 
-
-    console.log(mainSearchText.value)
 }
 
 const getCurrentOrders = () => {
@@ -907,9 +907,6 @@ const stashOrder = () => {
         subtotal.value = 0
 
 
-        console.log(response)
-
-
         for (var index=0;index<response.data.data.items.length;index++){
             const temp_order_item = new OrderItem()
             await temp_order_item.FromItemData(response.data.data.items[index])
@@ -937,8 +934,6 @@ let socket : WebSocket
 const SendChatMessage = (msg: string) => {
     if (socket.readyState === WebSocket.OPEN) {
         socket.send(`{"type":"chat_message","message":"${msg}","sender_name":"${user.value.name}","user_sub":"${user.value.sub}","to":"*","date": "${new Date().toLocaleString()}"}`)
-    }else {
-        console.log("WS closed")
     }
     chat_text.value = ""
 }
@@ -947,13 +942,10 @@ const SendChatMessage = (msg: string) => {
 const startWebsocket = () => {
     socket = new WebSocket(`ws://${import.meta.env.VITE_APP_BACKEND_HOST}${import.meta.env.VITE_APP_MODULE_CORE_API_PREFIX}/ws`);
     socket.onopen = () => {
-        console.log("Opened ws connection");
         socket.send(`{"type":"subscribe","topic_name":"all"}`);
     }
 
     socket.onmessage = async (event) => {
-        console.log("Received message: " + event.data);
-
         const data = JSON.parse(event.data);
 
         if (data.type == "topic_message") {
@@ -1008,16 +1000,11 @@ const startWebsocket = () => {
         }
 
     }
-    socket.onerror = (event) => {
-        console.log("Error occurred");
-        console.log(event);
-    }
+    socket.onerror = () => {}
     socket.onclose = () => {
-        console.log("Connection closed");
         const retryConnection = async () => {
             if (socket.readyState !== WebSocket.OPEN) {
                 await new Promise(r => setTimeout(r, 5000));
-                console.log("Reconnecting to WebSocket...");
                 startWebsocket()
             }
         }
@@ -1058,13 +1045,10 @@ const loadSettings = async () => {
                 {"number": 3, "label": t('confirmation')},
             ]
         })
-        .catch((err) => {
-            console.log(err)
-        });
+        .catch(() => {});
         loading.value = false
     })
     .catch((err) => {
-        console.log(err)
         if (err.response?.status === 401) {
             auth.signOut()
             window.location.href = '/'
@@ -1083,8 +1067,6 @@ const init = async () => {
     getStashedOrders()
     getCurrentOrders()
 
-    console.log("user:")
-    console.log(user.value)
 }
 
 init()

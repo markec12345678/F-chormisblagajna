@@ -43,7 +43,11 @@ func (hs *HubSyncModule) OnEnd() func() {
 
 func (c *HubSyncModule) RegisterHttpHandlers(router *mux.Router, prefix string) {
 
-	auth_svc := auth_mw.NewZitadelAuth(c.Config)
+	auth_svc, err := auth_mw.NewZitadelAuth(c.Config)
+	if err != nil {
+		c.Logger.Error(fmt.Sprintf("Failed to initialize Zitadel auth: %s", err.Error()))
+		return
+	}
 
 	c.Logger.Info("Successfully conntected to Zitadel")
 

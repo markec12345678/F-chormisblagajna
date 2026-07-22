@@ -30,13 +30,9 @@ func (sp *SeedProcess) GetCmd(prompter userio.Prompter) (*cobra.Command, error) 
 	cmd := &cobra.Command{
 		Use:   "seed",
 		Short: "Seed db with data for dev/test purposes.",
-		Run: func(cmd *cobra.Command, args []string) {
+		RunE: func(cmd *cobra.Command, args []string) error {
 			sp.Logger.Info("Seeding..")
-			err := sp.Seed(sp.Modules, prompter)
-			if err != nil {
-				sp.Logger.Error(err.Error())
-				panic(err)
-			}
+			return sp.Seed(sp.Modules, prompter)
 		},
 	}
 

@@ -2,9 +2,9 @@ package middlewares
 
 import (
 	"context"
+	"fmt"
 	"log/slog"
 	"net/http"
-	"os"
 	"strconv"
 
 	"github.com/nutrixpos/pos/common/config"
@@ -136,9 +136,9 @@ type ZitadelAuth struct {
 	Config config.Config
 }
 
-func NewZitadelAuth(conf config.Config) *ZitadelAuth {
+func NewZitadelAuth(conf config.Config) (*ZitadelAuth, error) {
 	if !conf.Zitadel.Enabled {
-		return &ZitadelAuth{}
+		return nil, nil
 	}
 
 	ctx := context.Background()
@@ -155,12 +155,12 @@ func NewZitadelAuth(conf config.Config) *ZitadelAuth {
 
 	if err != nil {
 		slog.Error("zitadel sdk could not initialize", "error", err)
-		os.Exit(1)
+		return nil, fmt.Errorf("zitadel init: %w", err)
 	}
 
 	za.AuthZ = authZ
 
-	return &za
+	return &za, nil
 }
 
 func (za *ZitadelAuth) AllowAuthenticated(next http.Handler) http.Handler {

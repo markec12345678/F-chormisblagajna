@@ -7,12 +7,18 @@
                        <h3>{{$t('customer',3)}}</h3>
                    </div>
                    <div class="col-12">
-                       <DataTable @page="updatCustomersTableRowsPerPage" :lazy="true" :totalRecords="customersTableTotalRecords" :loading="isCustomersTableLoading"  paginatorPosition="both"  paginator :rows="customersTableRowsPerPage" :rowsPerPageOptions="[50, 100, 500]" :value="customers" stripedRows tableStyle="min-width: 50rem;max-height:50vh;" class="w-full pr-2">
-                           <template #header>
-                               <div class="flex justify-start">
-                                   <Button icon="pi pi-plus" :label="$t('add_customer')"  rounded raised @click="customerAddDialog=true" />
-                               </div>
-                           </template>
+                        <DataTable @page="updatCustomersTableRowsPerPage" :lazy="true" :totalRecords="customersTableTotalRecords" :loading="isCustomersTableLoading"  paginatorPosition="both"  paginator :rows="customersTableRowsPerPage" :rowsPerPageOptions="[50, 100, 500]" :value="customers" stripedRows tableStyle="min-width: 50rem;max-height:50vh;" class="w-full pr-2">
+                            <template #header>
+                                <div class="flex justify-start">
+                                    <Button icon="pi pi-plus" :label="$t('add_customer')"  rounded raised @click="customerAddDialog=true" />
+                                </div>
+                            </template>
+                            <template #empty>
+                                <div class="flex flex-column align-items-center gap-2 py-4">
+                                    <i class="pi pi-user" style="font-size:2rem;opacity:0.3"></i>
+                                    <p class="m-0" style="color:#94a3b8">{{$t('no_results')}}</p>
+                                </div>
+                            </template>
                            <Column sortable field="name" :header="$t('name')"></Column>
                            <Column field="address" :header="$t('address')"></Column>
                            <Column field="phone" :header="$t('phone',1)"></Column>
@@ -26,11 +32,12 @@
                                </template>
                            </Column>
                        </DataTable>
-                       <Dialog v-model:visible="customerAddDialog" modal :header="$t('add_customer')" :style="{ width: '75rem',direction: store.orientation == 'rtl' ? 'rtl' : 'ltr' }" :breakpoints="{ '1199px': '50vw', '575px': '90vw' }">
-                           <div class="flex flex-column gap-2 w-5">
-                               <label for="name">{{$t('name')}}</label>
-                               <InputText id="name" v-model="new_customer_name" aria-describedby="name" />
-                           </div>
+                        <Dialog v-model:visible="customerAddDialog" modal :header="$t('add_customer')" :style="{ width: '75rem',direction: store.orientation == 'rtl' ? 'rtl' : 'ltr' }" :breakpoints="{ '1199px': '50vw', '575px': '90vw' }">
+                            <div class="flex flex-column gap-2 w-5">
+                                <label for="name">{{$t('name')}}</label>
+                                <InputText id="name" v-model="new_customer_name" aria-describedby="name" :class="{'p-invalid': customer_add_errors.name}" />
+                                <small class="p-error">{{ customer_add_errors.name }}</small>
+                            </div>
                            <div class="flex flex-column gap-2 w-5 mt-2">
                                <label for="address">{{$t('address')}}</label>
                                <InputText id="address" v-model="new_customer_address" aria-describedby="address" />
@@ -46,11 +53,12 @@
                                </ButtonGroup>
                            </template>
                        </Dialog>
-                       <Dialog v-model:visible="customerEditDialog" modal :header="`${$t('edit_customer')} ${customerToEdit.name}`" :style="{ width: '75rem',direction: store.orientation == 'rtl' ? 'rtl' : 'ltr' }" :breakpoints="{ '1199px': '50vw', '575px': '90vw' }">
-                           <div class="flex flex-column gap-2 w-5">
-                               <label for="name">{{$t('name')}}</label>
-                               <InputText id="name" v-model="customerToEdit.name" aria-describedby="name" />
-                           </div>
+                        <Dialog v-model:visible="customerEditDialog" modal :header="`${$t('edit_customer')} ${customerToEdit.name}`" :style="{ width: '75rem',direction: store.orientation == 'rtl' ? 'rtl' : 'ltr' }" :breakpoints="{ '1199px': '50vw', '575px': '90vw' }">
+                            <div class="flex flex-column gap-2 w-5">
+                                <label for="name">{{$t('name')}}</label>
+                                <InputText id="name" v-model="customerToEdit.name" aria-describedby="name" :class="{'p-invalid': customer_edit_errors.name}" />
+                                <small class="p-error">{{ customer_edit_errors.name }}</small>
+                            </div>
                            <div class="flex flex-column gap-2 w-5 mt-2">
                                <label for="address">{{$t('address')}}</label>
                                <InputText id="address" v-model.number="customerToEdit.address" aria-describedby="address" />
@@ -95,6 +103,8 @@ const confirm = useConfirm();
 
 const customerToEdit = ref<any>({})
 const customerEditDialog =  ref(false)
+const customer_add_errors = ref({ name: '' })
+const customer_edit_errors = ref({ name: '' })
 
 const customerAddDialog = ref(false)
 const new_customer_name = ref("")
@@ -159,6 +169,9 @@ const prepareCustomerToEdit = (customer: any) => {
 
 
 const updateCustomer = () => {
+   customer_edit_errors.value.name = customerToEdit.value.name?.trim() ? '' : proxy.$t('validation_required')
+
+   if (customer_edit_errors.value.name) return
 
    axios.patch(`http://${import.meta.env.VITE_APP_BACKEND_HOST}${import.meta.env.VITE_APP_MODULE_CORE_API_PREFIX}/api/customers/${customerToEdit.value.id}`, 
    {
@@ -181,6 +194,10 @@ const updateCustomer = () => {
 
 
 const submitCustomer = () => {
+   customer_add_errors.value.name = new_customer_name.value?.trim() ? '' : proxy.$t('validation_required')
+
+   if (customer_add_errors.value.name) return
+
    const payload = {
        name: new_customer_name.value,
        phone: new_customer_phone.value,

@@ -175,11 +175,9 @@ const getSettings = () => {
         },
     })
     .then((response)=>{
-        console.log(response.data.data)
         settings.value = response.data.data
     })
     .catch((err) => {
-        console.log(err)
         if (err.response?.status === 401) {
             auth.signOut()
             window.location.href = '/'

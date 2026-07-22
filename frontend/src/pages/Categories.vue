@@ -13,6 +13,12 @@
                                     <Button icon="pi pi-plus" :label="$t('add_category')"  rounded raised @click="categoryAddDialog=true" />
                                 </div>
                             </template>
+                            <template #empty>
+                                <div class="flex flex-column align-items-center gap-2 py-4">
+                                    <i class="pi pi-sitemap" style="font-size:2rem;opacity:0.3"></i>
+                                    <p class="m-0" style="color:#94a3b8">{{$t('no_results')}}</p>
+                                </div>
+                            </template>
                             <Column sortable field="name" :header="$t('name')"></Column>
                             <Column field="products.length" :header="$t('product',3)">
                                 <template #body="slotProps">
@@ -32,7 +38,8 @@
                         <Dialog v-model:visible="categoryAddDialog" modal :header="$t('add_new_category')" :style="{ width: '75rem',direction: store.orientation == 'rtl' ? 'rtl' : 'ltr' }" :breakpoints="{ '1199px': '90vw', '575px': '90vw' }">
                             <div class="flex flex-column gap-2 w-5">
                                 <label for="name">{{ $t('name') }}</label>
-                                <InputText id="name" v-model="new_category.name" aria-describedby="name" />
+                                <InputText id="name" v-model="new_category.name" aria-describedby="name" :class="{'p-invalid': new_category_error}" />
+                                <small class="p-error">{{ new_category_error }}</small>
                             </div>
                             <div class="flex flex-column gap-2 w-10 mt-3">
                                 <label for="name">{{ $t('product', 3) }}</label>
@@ -62,7 +69,8 @@
                         <Dialog v-model:visible="categoryEditDialog" modal :header="`${$t('edit')} ${categoryToEdit.name}`" :style="{ width: '75rem',direction: store.orientation == 'rtl' ? 'rtl' : 'ltr' }" :breakpoints="{ '1199px': '90vw', '575px': '90vw' }">
                             <div class="flex flex-column gap-2 w-5">
                                 <label for="name">{{ $t('name') }}</label>
-                                <InputText id="name" v-model="categoryToEdit.name" aria-describedby="name" />
+                                <InputText id="name" v-model="categoryToEdit.name" aria-describedby="name" :class="{'p-invalid': category_edit_error}" />
+                                <small class="p-error">{{ category_edit_error }}</small>
                             </div>
                             <div class="flex flex-column gap-2 w-10 mt-3">
                                 <label for="name">{{ $t('product', 3) }}</label>
@@ -125,6 +133,7 @@ const toast = useToast()
 
 const new_category = ref<any>({})
 const new_cateogry_product_dialog = ref(false)
+const new_category_error = ref('')
 
 const categories = ref<any[]>([])
 const categoriesTableTotalRecords = ref(0)
@@ -135,6 +144,7 @@ const categoryAddDialog = ref(false)
 const categoryToEdit = ref<any>({})
 const categoryEditDialog = ref(false)
 const add_editted_product_dialog = ref(false)
+const category_edit_error = ref('')
 
 const prepareCategoryToEdit = (product: any) => {
     categoryToEdit.value = JSON.parse(JSON.stringify(product))
@@ -152,6 +162,9 @@ const updatCategoriesTableRowsPerPage = (event: any) => {
 }
 
 const submitCategory = () => {
+    new_category_error.value = new_category.value.name?.trim() ? '' : proxy.$t('validation_required')
+
+    if (new_category_error.value) return
 
     axios.post(`http://${import.meta.env.VITE_APP_BACKEND_HOST}${import.meta.env.VITE_APP_MODULE_CORE_API_PREFIX}/api/categories`, {
         data: new_category.value
@@ -189,6 +202,10 @@ const deleteCategory = (category_id: string) => {
 }
 
 const updateCategory = () => {
+    category_edit_error.value = categoryToEdit.value.name?.trim() ? '' : proxy.$t('validation_required')
+
+    if (category_edit_error.value) return
+
     axios.patch(`http://${import.meta.env.VITE_APP_BACKEND_HOST}${import.meta.env.VITE_APP_MODULE_CORE_API_PREFIX}/api/categories/${categoryToEdit.value.id}`, {
         data: categoryToEdit.value
     }, {

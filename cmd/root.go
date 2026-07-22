@@ -53,7 +53,7 @@ func (root *RootProcess) Execute() error {
 		Long: `Nutrix is an open source project aiming to make restaurant management a seamless and efficient experience.
 		Free forever and distributed under the GPT-2 license. https://github.com/nutrixpos/pos`,
 
-		Run: func(cmd *cobra.Command, args []string) {
+		RunE: func(cmd *cobra.Command, args []string) error {
 
 			frontendServerStartChan := make(chan bool, 1)
 			frontendOpenBrowserChan := make(chan bool, 1)
@@ -302,7 +302,7 @@ func (root *RootProcess) Execute() error {
 			// make sure that settings bootstrapping data exists, it's idempotent
 			err := seeder_svc.SeedSettings()
 			if err != nil {
-				panic(err)
+				return fmt.Errorf("seed settings: %w", err)
 			}
 
 			settings_svc := services.SettingsService{
@@ -313,9 +313,8 @@ func (root *RootProcess) Execute() error {
 			settings, err := settings_svc.GetSettings()
 
 			if err != nil {
-				// Log and panic if settings can't be loaded
 				root.Logger.Error(err.Error())
-				panic("Can't load settings from DB")
+				return fmt.Errorf("load settings: %w", err)
 			}
 
 			// Log successful database connection
@@ -345,9 +344,8 @@ func (root *RootProcess) Execute() error {
 			// Retrieve all registered modules
 			modules, err := appmanager.GetModules()
 			if err != nil {
-				// Log error and panic if modules can't be retrieved
 				root.Logger.Error(err.Error())
-				panic(err)
+				return fmt.Errorf("get modules: %w", err)
 			}
 
 			root.Modules = modules
@@ -367,10 +365,10 @@ func (root *RootProcess) Execute() error {
 
 			listener, err := net.Listen("tcp4", srv.Addr)
 			if err != nil {
-				log.Fatal(err)
+				return fmt.Errorf("listen: %w", err)
 			}
 
-			log.Fatal(srv.Serve(listener))
+			return srv.Serve(listener)
 		},
 	}
 
@@ -425,5 +423,7 @@ func startFrontendServer(startChan chan bool, logger logger.ILogger) {
 	}
 
 	logger.Info("Serving static files on http://localhost:8080/")
-	log.Fatal(srv.ListenAndServe())
+	if err := srv.ListenAndServe(); err != nil {
+		logger.Error("frontend server error: " + err.Error())
+	}
 }

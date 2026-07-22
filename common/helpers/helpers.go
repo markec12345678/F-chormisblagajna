@@ -3,6 +3,7 @@ package helpers
 import (
 	"crypto/rand"
 	"encoding/hex"
+	"fmt"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -35,15 +36,15 @@ func OpenURL(url string) error {
 	return exec.Command(cmd, args...).Start()
 }
 
-func RandStringBytesMaskImprSrc(n int) string {
+func RandStringBytesMaskImprSrc(n int) (string, error) {
 
 	b := make([]byte, (n+1)/2)
 
 	if _, err := rand.Read(b); err != nil {
-		panic(err)
+		return "", fmt.Errorf("generate random string: %w", err)
 	}
 
-	return hex.EncodeToString(b)[:n]
+	return hex.EncodeToString(b)[:n], nil
 }
 
 func ResolveOsEnvPath(inputPath string) string {

@@ -142,5 +142,5 @@ func (l *LogService) GetOrderItemsRefundLogs(order_items_ids [][]string) (logs [
 		return nil, err
 	}
 
-	return logs, err
+	return refund_logs, nil
 }

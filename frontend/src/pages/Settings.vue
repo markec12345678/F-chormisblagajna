@@ -24,7 +24,7 @@
                         <h4><i class="fa fa-boxes-stacked"></i> {{$t('inventory_item',3)}}</h4>
                         <div class="flex align-items-center gap-2">
                             <span>{{ $t('stock_alert_threshold') }}</span>
-                            <InputText class="ml-3" v-model.number="stock_alert_treshold" type="number" />
+                            <InputNumber class="ml-3" v-model="stock_alert_treshold" :min="0" />
                         </div>
                         
                         <Divider />
@@ -36,14 +36,14 @@
                                     <span>{{$t('prefix')}} :</span>
                                     <InputText v-model="order_queues[index].prefix" class="mx-2" />
                                     <span>{{ $t('next') }} :</span>
-                                    <InputText v-model.number="order_queues[index].next"  class="mx-2 "/>
+                                    <InputNumber v-model="order_queues[index].next" class="mx-2" :min="0" />
                                     <Button severity="secondary" aria-label="Remove" icon="pi pi-times" @click="order_queues.splice(index,1)" />
                                 </div>
                                 <div class="flex align-items-center mt-3">
                                     <span>{{$t('prefix')}} :</span>
                                     <InputText v-model="new_queue_prefix" class="mx-2" />
                                     <span>{{$t('next')}} :</span>
-                                    <InputText v-model.number="new_queue_next"  class="mx-2 "/>
+                                    <InputNumber v-model="new_queue_next" class="mx-2" :min="1" />
 
                                     <Button :label="$t('add')" @click="order_queues.push({prefix:new_queue_prefix,next:new_queue_next}); new_queue_prefix = ''; new_queue_next = 1" />
                                 </div>
@@ -142,11 +142,11 @@
 <script setup lang="ts">
 import axios from 'axios'
 import InputText from 'primevue/inputtext';
+import InputNumber from 'primevue/inputnumber';
 import Divider from 'primevue/divider';
 import Button from 'primevue/button';
 import { useToast } from "primevue/usetoast";
 import {getCurrentInstance,ref} from 'vue'
-import Dropdown from 'primevue/dropdown';
 import { useI18n } from 'vue-i18n'
 import { globalStore } from '../stores';
 import {RadioButton,Avatar,Badge, Select, ToggleSwitch, Skeleton, InlineMessage} from 'primevue';
@@ -234,8 +234,7 @@ const saveSettings = () => {
         toast.add({ severity: 'success', summary: 'Settings updated successfully!', detail: 'Done! ', life: 3000,group:'br' });
     })
     .catch((err) => {
-        toast.add({ severity: 'error', summary: 'Failed', detail: 'Error updating settings !', life: 3000,group:'br' });  
-        console.log(err)
+        toast.add({ severity: 'error', summary: 'Failed', detail: 'Error updating settings !', life: 3000,group:'br' });
     });
 }
 
@@ -248,7 +247,6 @@ const getSettings = () => {
         },
     })
     .then((response)=>{
-        console.log(response.data.data)
         stock_alert_treshold.value = response.data.data.inventory.stock_alert_treshold
         order_queues.value = response.data.data.orders.queues
         default_cost_calculation_method.value = response.data.data.orders.default_cost_calculation_method
@@ -260,7 +258,6 @@ const getSettings = () => {
         auto_open_cash_drawer.value = response.data.data.auto_open_cash_drawer
     })
     .catch((err) => {
-        console.log(err)
         if (err.response?.status === 401) {
             auth.signOut()
             window.location.href = '/'
@@ -286,7 +283,7 @@ const applyLang = () => {
         store.setOrientation(response.data.data.orientation)
     })
     .catch(() => {
-        proxy.$toast.add({severity:'error', summary: 'Error', detail: "error loading language", life: 3000,grpup:'br'});
+        toast.add({severity:'error', summary: 'Error', detail: "error loading language", life: 3000,group:'br'});
     });
 }
 
@@ -301,7 +298,7 @@ const getAvailableLanguages = () => {
         languages.value = response.data.data
     })
     .catch(error => {
-        proxy.$toast.add({severity:'error', summary: 'Error', detail: error.response.data.error, life: 3000,grpup:'br'});
+        toast.add({severity:'error', summary: 'Error', detail: 'Failed to load languages', life: 3000,group:'br'});
     });
 }
 
