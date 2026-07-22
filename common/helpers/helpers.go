@@ -1,14 +1,13 @@
 package helpers
 
 import (
+	"crypto/rand"
 	"encoding/hex"
-	"math/rand"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"regexp"
 	"runtime"
-	"time"
 )
 
 func OpenURL(url string) error {
@@ -38,11 +37,9 @@ func OpenURL(url string) error {
 
 func RandStringBytesMaskImprSrc(n int) string {
 
-	var src = rand.New(rand.NewSource(time.Now().UnixNano()))
+	b := make([]byte, (n+1)/2)
 
-	b := make([]byte, (n+1)/2) // can be simplified to n/2 if n is always even
-
-	if _, err := src.Read(b); err != nil {
+	if _, err := rand.Read(b); err != nil {
 		panic(err)
 	}
 

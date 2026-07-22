@@ -9,7 +9,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"log"
 	"math"
 	"math/rand"
 	"regexp"
@@ -438,7 +437,7 @@ func (os *OrderService) CalculateCost(items []models.OrderItem) (cost []models.I
 		err = client.Database(os.Config.Databases[0].Database).Collection("recipes").FindOne(context.Background(), bson.M{"id": items[itemIndex].Product.Id}).Decode(&recipe)
 
 		if err != nil {
-			panic(err)
+			return cost, fmt.Errorf("CalculateCost: recipe lookup: %w", err)
 		}
 
 		enableFixedCost := recipe.EnableFixedCost
@@ -616,7 +615,7 @@ func (os *OrderService) FinishOrder(order_id string, user_id string) (err error)
 
 	_, err = client.Database(os.Config.Databases[0].Database).Collection("logs").InsertOne(ctx, logs_data)
 	if err != nil {
-		log.Fatal(err)
+		return fmt.Errorf("FinishOrder: insert log: %w", err)
 	}
 
 	order.Cost = totalCost
@@ -711,7 +710,7 @@ func (os *OrderService) GetOrderDisplayId() (order_display_id string, err error)
 func (os *OrderService) SubmitOrder(order models.Order) (models.Order, error) {
 	client, err := common.GetDatabaseClient(os.Logger, &os.Config)
 	if err != nil {
-		log.Fatal(err)
+		return order, fmt.Errorf("SubmitOrder: %w", err)
 	}
 
 	ctx := context.Background()
@@ -899,7 +898,7 @@ func (os *OrderService) GetOrders(params GetOrdersParameters) (orders []models.O
 func (os *OrderService) ConsumeOrderComponents(order models.Order, user_id string) error {
 	_, err := common.GetDatabaseClient(os.Logger, &os.Config)
 	if err != nil {
-		log.Fatal(err)
+		return fmt.Errorf("ConsumeOrderComponents: %w", err)
 	}
 
 	materialService := MaterialService{
@@ -955,7 +954,7 @@ func (os *OrderService) ConsumeOrderComponents(order models.Order, user_id strin
 func (os *OrderService) StartOrder(order_id string, order_items []models.OrderItem, user_id string) error {
 	client, err := common.GetDatabaseClient(os.Logger, &os.Config)
 	if err != nil {
-		log.Fatal(err)
+		return fmt.Errorf("StartOrder: %w", err)
 	}
 
 	ctx := context.Background()
@@ -1002,7 +1001,7 @@ func (os *OrderService) StartOrder(order_id string, order_items []models.OrderIt
 func (os *OrderService) GetOrder(order_id string) (models.Order, error) {
 	client, err := common.GetDatabaseClient(os.Logger, &os.Config)
 	if err != nil {
-		log.Fatal(err)
+		return models.Order{}, fmt.Errorf("GetOrder: %w", err)
 	}
 
 	ctx := context.Background()

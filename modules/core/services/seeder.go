@@ -8,7 +8,7 @@ package services
 
 import (
 	"context"
-	"log"
+	"fmt"
 
 	"github.com/nutrixpos/pos/common"
 	"github.com/nutrixpos/pos/common/config"
@@ -424,7 +424,7 @@ func (s *Seeder) SeedMaterials(seedEntries bool) error {
 
 	client, err := common.GetDatabaseClient(s.Logger, &s.Config)
 	if err != nil {
-		log.Fatal(err)
+		return fmt.Errorf("SeedMaterials: %w", err)
 	}
 
 	ctx := context.Background()

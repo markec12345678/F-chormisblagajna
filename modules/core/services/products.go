@@ -9,7 +9,6 @@ package services
 import (
 	"context"
 	"fmt"
-	"log"
 	"regexp"
 	"sync"
 	"time"
@@ -354,7 +353,7 @@ func (rs *RecipeService) GetRecipeMaterials(recipe_id string) (materials []model
 	ctx := context.Background()
 	client, err := common.GetDatabaseClient(rs.Logger, &rs.Config)
 	if err != nil {
-		log.Fatal(err)
+		return materials, fmt.Errorf("GetRecipeMaterials: %w", err)
 	}
 
 	var recipe models.Product
@@ -374,7 +373,7 @@ func (rs *RecipeService) GetRecipeTree(recipe_id string) (tree models.Product, e
 
 	client, err := common.GetDatabaseClient(rs.Logger, &rs.Config)
 	if err != nil {
-		log.Fatal(err)
+		return tree, fmt.Errorf("GetRecipeTree: %w", err)
 	}
 
 	var recipe models.Product
@@ -435,7 +434,7 @@ func (rs *RecipeService) GetReadyNumber(recipe_id string) (ready float64, err er
 	ctx := context.Background()
 	client, err := common.GetDatabaseClient(rs.Logger, &rs.Config)
 	if err != nil {
-		log.Fatal(err)
+		return ready, fmt.Errorf("GetReadyNumber: %w", err)
 	}
 
 	var product models.Product
@@ -453,7 +452,7 @@ func (rs *RecipeService) GetReadyNumber(recipe_id string) (ready float64, err er
 func (rs *RecipeService) CheckRecipesAvailability(recipe_ids []string) (availabilities []dto.RecipeAvailability, err error) {
 	client, err := common.GetDatabaseClient(rs.Logger, &rs.Config)
 	if err != nil {
-		log.Fatal(err)
+		return availabilities, fmt.Errorf("CheckRecipesAvailability: %w", err)
 	}
 
 	ctx := context.Background()
