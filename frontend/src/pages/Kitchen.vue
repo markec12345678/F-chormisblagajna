@@ -26,7 +26,7 @@
 <script setup lang="ts">
 import QueueOrder from '@/components/QueueOrder.vue'
 import axios from 'axios';
-import {ref,computed,useTemplateRef,watch} from 'vue';
+import {ref,watch} from 'vue';
 import { useToast } from "primevue/usetoast";
 import { Notification} from '@/classes/Notification';
 import { globalStore } from '@/stores';
@@ -44,20 +44,9 @@ const notifications = ref<Notification[]>([])
 const orders = ref([])
 const openedDialogs = ref(0)
 
-const chat_text = ref("")
 const chats = ref<any[]>([])
-const chat_container = useTemplateRef("chat_container")
-
-
-const user : any = computed(() => {
-
-return auth.currentUser.value
-
-})
-
 
 let socket : WebSocket
-const orientation = computed(() => store.currentOrientation)
 
 
 const loading = ref(true)
@@ -74,7 +63,7 @@ const prepareLayout = () => {
 
 watch(
     () => orders.value,
-    (newVal) => {
+    () => {
         displayOrders()
     },
     {
@@ -198,11 +187,11 @@ const loadOrders =  () => {
 
 const displayOrders = () => {
 
-    for (var i=0;i<dynamic_columns.value.length;i++){
+    for (let i=0;i<dynamic_columns.value.length;i++){
         dynamic_columns.value[i] = []
     }
 
-    for(var i=0;i<orders.value.length;i++){
+    for(let i=0;i<orders.value.length;i++){
         dynamic_columns.value[i % dynamic_columns.value.length].push(orders.value[i])
     }
 }

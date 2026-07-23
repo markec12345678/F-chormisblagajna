@@ -193,11 +193,11 @@ import ConfirmPopup from 'primevue/confirmpopup'
 import { useToast } from 'primevue/usetoast'
 import OrderItemView from './OrderItemView.vue'
 import { OrderItem, Product } from '@/classes/OrderItem'
-import { getCurrentInstance, nextTick } from 'vue'
+import { nextTick } from 'vue'
 import { globalStore } from '@/stores'
 import auth from '../services/auth'
 
-const store = <any>globalStore()
+const store = globalStore()
 
 const loading = ref(false)
 const toast = useToast()

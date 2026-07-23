@@ -1,39 +1,27 @@
-import axios, { AxiosProgressEvent } from 'axios'
+import axios, { type AxiosProgressEvent } from 'axios'
 
+type ProgressEventHandler = (progressEvent: AxiosProgressEvent) => void
 
-const upload_svc:any = {}
-
-type ProgressEventHandler = (progressEvent: AxiosProgressEvent) => void;
-
-
-upload_svc.uploadProductImage = (product_id: String,file: File,backendURL: string,progressLoadingFunc: ProgressEventHandler) =>  {
-    
-
-        const formData = new FormData();
-        formData.append('file', file);
-        formData.append('type', file.type);
-
-        return axios.patch(`${backendURL}/api/products/${product_id}/image`,
-            formData,
-            {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
-                onUploadProgress: progressLoadingFunc
-                // onUploadProgress: progressEvent => {
-                //     // uploadingProgressText = `Uploading media ${i+1}/${media.value.length} (${Math.floor(progressEvent.loaded * 100 / size)}%)`
-                //     if (mediaLoading.value.length < i+1)
-                //         mediaLoading.value.push({
-                //             isLoading : true
-                //         } as MediaLoading)
-
-                //     mediaLoading.value[i].isLoading = true
-                //     mediaLoading.value[i].percent = Math.floor(progressEvent.loaded * 100 / size)
-                // }
-            }
-        )
+interface UploadService {
+  uploadProductImage: (
+    productId: string,
+    file: File,
+    backendURL: string,
+    onProgress: ProgressEventHandler,
+  ) => ReturnType<typeof axios.patch>
 }
 
+const upload_svc: UploadService = {
+  uploadProductImage(productId, file, backendURL, onProgress) {
+    const formData = new FormData()
+    formData.append('file', file)
+    formData.append('type', file.type)
 
+    return axios.patch(`${backendURL}/api/products/${productId}/image`, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+      onUploadProgress: onProgress,
+    })
+  },
+}
 
 export default upload_svc

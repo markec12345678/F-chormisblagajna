@@ -236,7 +236,7 @@ import { useToast } from 'primevue/usetoast'
 import { getCurrentInstance, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { globalStore } from '../stores'
-import { RadioButton, Avatar, Badge, Select, ToggleSwitch, Skeleton, InlineMessage } from 'primevue'
+import { RadioButton, Badge, Select, ToggleSwitch, Skeleton, InlineMessage } from 'primevue'
 import auth from '../services/auth'
 
 const { proxy } = getCurrentInstance()
@@ -321,7 +321,7 @@ const saveSettings = () => {
         group: 'br',
       })
     })
-    .catch((err) => {
+    .catch(() => {
       toast.add({
         severity: 'error',
         summary: t('failed'),
@@ -409,7 +409,7 @@ const getAvailableLanguages = () => {
     .then((response) => {
       languages.value = response.data.data
     })
-    .catch((error) => {
+    .catch(() => {
       toast.add({
         severity: 'error',
         summary: 'Error',

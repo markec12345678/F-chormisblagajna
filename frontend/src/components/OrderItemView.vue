@@ -106,7 +106,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineModel, ref, watch, defineEmits, getCurrentInstance } from 'vue'
+import { defineModel, ref, watch, defineEmits } from 'vue'
 import InputText from 'primevue/inputtext'
 import Button from 'primevue/button'
 import Dropdown from 'primevue/dropdown'
@@ -115,22 +115,20 @@ import { Material, OrderItem } from '@/classes/OrderItem'
 import PickMaterial from '@/components/PickMaterial.vue'
 import Dialog from 'primevue/dialog'
 import axios from 'axios'
-import { globalStore } from '@/stores'
+import { globalStore, type Settings } from '@/stores'
 import auth from '../services/auth'
 
-const store = <any>globalStore()
+const store = globalStore()
 
 const model = defineModel<OrderItem>({
   required: true,
 })
 
-const { proxy } = getCurrentInstance()
-
 const emit = defineEmits(['changed'])
 
 const new_component_dialog = ref(false)
 const materialValidity = ref<boolean[]>([])
-const settings = ref<any>(null)
+const settings = ref<Settings | null>(null)
 
 const removeMaterialByIndex = (index: number) => {
   model.value.RemoveMaterialByIndex(index)

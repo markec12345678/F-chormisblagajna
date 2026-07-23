@@ -39,7 +39,7 @@ const props = defineProps({
   },
 })
 
-const payment_status: any = computed(() => {
+const payment_status = computed(() => {
   if (props.order.is_paid) {
     return {
       title: t('paid'),
@@ -53,7 +53,7 @@ const payment_status: any = computed(() => {
   }
 })
 
-const order_status: any = computed(() => {
+const order_status = computed(() => {
   if (props.order.state == '' || props.order.state == 'pending') {
     return {
       title: t('pending'),

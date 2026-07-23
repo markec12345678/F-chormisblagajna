@@ -100,7 +100,7 @@ const save = () => {
         },
       },
     )
-    .then((response) => {
+    .then(() => {
       toast.add({
         severity: 'success',
         summary: 'Success',

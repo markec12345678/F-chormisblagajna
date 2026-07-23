@@ -173,7 +173,6 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { globalStore } from '@/stores'
 import axios from 'axios'
 import { getCurrentInstance } from 'vue'
 import DataTable from 'primevue/datatable'
@@ -193,7 +192,6 @@ const confirm = useConfirm()
 const toast = useToast()
 const { t } = useI18n({ useScope: 'global' })
 
-const store = globalStore()
 const backendUrl = `http://${import.meta.env.VITE_APP_BACKEND_HOST}${import.meta.env.VITE_APP_MODULE_CORE_API_PREFIX}`
 
 const users = ref([])

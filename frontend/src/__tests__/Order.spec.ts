@@ -41,7 +41,7 @@ describe('Order', () => {
     expect(order.is_paid).toBe(false)
     expect(order.is_auto_start).toBe(false)
     expect(order.items).toEqual([])
-    expect(order.customer).toEqual({})
+    expect(order.customer).toEqual({ id: '', name: '', phone: '', address: '' })
     expect(order.delivery_info).toBeNull()
     expect(order.custom_data).toBeNull()
   })

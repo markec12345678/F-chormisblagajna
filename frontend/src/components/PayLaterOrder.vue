@@ -17,7 +17,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, computed, getCurrentInstance, defineEmits } from 'vue'
+import { defineProps, computed, defineEmits } from 'vue'
 import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
 import Message from 'primevue/message'
@@ -28,7 +28,6 @@ import axios from 'axios'
 import { useToast } from 'primevue/usetoast'
 import auth from '../services/auth'
 
-const { proxy } = getCurrentInstance()
 const toast = useToast()
 
 const emit = defineEmits(['order_paid'])
@@ -62,11 +61,11 @@ const props = defineProps({
   },
 })
 
-const order_unpaid_amount_str: any = computed(() => {
+const order_unpaid_amount_str = computed(() => {
   return props.order.sale_price + ' EGP'
 })
 
-const order_status: any = computed(() => {
+const order_status = computed(() => {
   if (props.order.state == '' || props.order.state == 'pending') {
     return {
       title: t('pending'),

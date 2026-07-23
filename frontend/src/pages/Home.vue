@@ -994,7 +994,7 @@ import Badge from 'primevue/badge'
 import NotificationView from '@/components/NotificationView.vue'
 import OverlayPanel from 'primevue/overlaypanel'
 import { Notification } from '@/classes/Notification'
-import { ref, watch, computed, getCurrentInstance, nextTick, useTemplateRef, version } from 'vue'
+import { ref, watch, computed, getCurrentInstance, nextTick, useTemplateRef } from 'vue'
 import StashedOrder from '@/components/StashedOrder.vue'
 import InlineMessage from 'primevue/inlinemessage'
 import MainSearchResultView from '@/components/MainSearchResultView.vue'
@@ -1009,7 +1009,6 @@ import Card from 'primevue/card'
 import Popover from 'primevue/popover'
 import Textarea from 'primevue/textarea'
 import PickCustomer from '@/components/PickCustomer.vue'
-import AddCustomer from '@/components/AddCustomer.vue'
 import { useI18n } from 'vue-i18n'
 import { ToggleButton, Drawer, Avatar, ButtonGroup, Select } from 'primevue'
 import { globalStore } from '@/stores'
@@ -1037,7 +1036,6 @@ const is_pay_later = ref(false)
 const order_comment = ref('')
 const new_order_delivery_customer = ref([])
 const pick_customer_dialog = ref(false)
-const add_customer_dialog = ref(false)
 const new_custom_data_value = ref('')
 const new_custom_data_key = ref('')
 const custom_data: any = ref([])
@@ -1185,7 +1183,7 @@ const toggle_discount_popover = (event) => {
   discount_op.value.toggle(event)
 }
 
-const user: any = computed(() => {
+const user = computed(() => {
   return auth.currentUser.value
 })
 
@@ -1269,7 +1267,7 @@ const getCurrentOrders = () => {
     })
 }
 
-const roles: any = computed(() => {
+const roles = computed(() => {
   return auth.currentUser.value?.roles || []
 })
 

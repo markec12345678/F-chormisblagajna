@@ -130,7 +130,7 @@
 </template>
 
 <script setup>
-import { computed, getCurrentInstance, ref, onMounted } from 'vue'
+import { computed, ref, onMounted } from 'vue'
 import Toast from 'primevue/toast'
 import Dialog from 'primevue/dialog'
 import Button from 'primevue/button'

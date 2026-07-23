@@ -46,7 +46,7 @@ const props = defineProps({
   },
 })
 
-const order_status: any = computed(() => {
+const order_status = computed(() => {
   if (props.order.state == '' || props.order.state == 'pending') {
     return {
       title: t('pending'),

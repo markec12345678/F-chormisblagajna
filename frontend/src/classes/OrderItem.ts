@@ -2,7 +2,23 @@ import axios from 'axios'
 import auth from '@/services/auth'
 import { globalStore } from '@/stores'
 
-const store = <any>globalStore()
+const store = globalStore()
+
+interface ApiMaterial {
+  id: string
+  name: string
+  quantity: number
+  unit: string
+  entries: ApiMaterialEntry[]
+}
+
+interface ApiMaterialEntry {
+  id: string
+  company: string
+  quantity: number
+  purchase_price: number
+  purchase_quantity: number
+}
 
 export class MaterialEntry {
   id: string
@@ -294,14 +310,14 @@ export class OrderItem {
         const materials: Material[] = []
         this.product = response.data.data
 
-        response.data.data.materials.forEach((material: any) => {
+        response.data.data.materials.forEach((material: ApiMaterial) => {
           const new_material = new Material()
           new_material.id = material.id
           new_material.quantity = material.quantity
           new_material.name = material.name
           new_material.unit = material.unit
 
-          material.entries.forEach((entry: any) => {
+          material.entries.forEach((entry: ApiMaterialEntry) => {
             const new_entry: MaterialEntry = new MaterialEntry()
             new_entry.id = entry.id
             new_entry.company = entry.company
@@ -327,7 +343,7 @@ export class OrderItem {
             }
           })
 
-          const settings = <any>store.getSettings
+          const settings = store.getSettings
 
           if (settings.orders.default_cost_calculation_method == 'average') {
             this.ValidateMaterialTotalQuantity(materialIndex)
@@ -540,14 +556,14 @@ export class OrderItem {
           this.can_change_ready_toggle = true
         }
 
-        response.data.data.materials.forEach((material: any) => {
+        response.data.data.materials.forEach((material: ApiMaterial) => {
           const new_material = new Material()
           new_material.id = material.id
           new_material.quantity = material.quantity
           new_material.name = material.name
           new_material.unit = material.unit
 
-          material.entries.forEach((entry: any) => {
+          material.entries.forEach((entry: ApiMaterialEntry) => {
             const new_entry: MaterialEntry = new MaterialEntry()
             new_entry.id = entry.id
             new_entry.company = entry.company

@@ -1,5 +1,18 @@
 import { OrderItem } from '@/classes/OrderItem'
 
+export interface Customer {
+  id: string
+  name: string
+  phone: string
+  address: string
+}
+
+export interface DeliveryInfo {
+  receiver_name: string
+  address: string
+  phone: string
+}
+
 export default class Order {
   submitted_at: Date
   id: string
@@ -14,9 +27,9 @@ export default class Order {
   is_paid: boolean
   tips: number
   payment_source: string
-  customer: any
-  delivery_info: any
-  custom_data: any
+  customer: Customer
+  delivery_info: DeliveryInfo | null
+  custom_data: Record<string, string> | null
 
   constructor() {
     this.submitted_at = new Date()
@@ -32,7 +45,7 @@ export default class Order {
     this.is_paid = false
     this.tips = 0
     this.payment_source = ''
-    this.customer = {}
+    this.customer = { id: '', name: '', phone: '', address: '' }
     this.delivery_info = null
     this.custom_data = null
   }

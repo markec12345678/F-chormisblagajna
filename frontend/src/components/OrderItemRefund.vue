@@ -140,7 +140,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, ref, defineEmits, getCurrentInstance } from 'vue'
+import { defineProps, ref, defineEmits } from 'vue'
 import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
 import { OrderItem, Product } from '@/classes/OrderItem'
@@ -152,8 +152,6 @@ import { useToast } from 'primevue/usetoast'
 import auth from '../services/auth'
 
 const toast = useToast()
-
-const { proxy } = getCurrentInstance()
 
 const refund_value = ref(0)
 
