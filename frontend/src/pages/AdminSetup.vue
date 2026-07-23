@@ -3,26 +3,26 @@
     <div class="setup-card">
       <div class="flex justify-content-end">
         <a href="https://nutrixpos.com/userguide/installation.html" target="_blank">
-            <Button icon="pi pi-info-circle" class="p-button-text" />
+          <Button icon="pi pi-info-circle" class="p-button-text" />
         </a>
       </div>
       <div class="setup-icon">
         <i class="pi pi-user-plus"></i>
       </div>
 
-      <h1 class="setup-title">Create Admin User</h1>
+      <h1 class="setup-title">{{ $t('create_admin_user') }}</h1>
       <p class="setup-subtitle">
-        No admin user exists yet.<br />
-        Create your administrator account to get started.
+        {{ $t('no_admin_exists') }}<br />
+        {{ $t('create_admin_subtitle') }}
       </p>
 
       <form class="setup-form" @submit.prevent="submit">
         <div class="field">
-          <label for="username">Username</label>
+          <label for="username">{{ $t('username') }}</label>
           <InputText
             id="username"
             v-model="form.username"
-            placeholder="e.g. admin"
+            :placeholder="$t('admin_placeholder')"
             :class="{ 'p-invalid': errors.username }"
             class="w-full"
           />
@@ -30,12 +30,12 @@
         </div>
 
         <div class="field">
-          <label for="email">Email</label>
+          <label for="email">{{ $t('email') }}</label>
           <InputText
             id="email"
             v-model="form.email"
             type="email"
-            placeholder="e.g. admin@example.com"
+            :placeholder="$t('email_placeholder')"
             :class="{ 'p-invalid': errors.email }"
             class="w-full"
           />
@@ -43,12 +43,12 @@
         </div>
 
         <div class="field">
-          <label for="password">Password</label>
+          <label for="password">{{ $t('password') }}</label>
           <InputText
             id="password"
             v-model="form.password"
             type="password"
-            placeholder="Your password"
+            :placeholder="$t('password_placeholder')"
             :class="{ 'p-invalid': errors.password }"
             class="w-full"
           />
@@ -56,16 +56,18 @@
         </div>
 
         <div class="field">
-          <label for="confirm_password">Confirm Password</label>
+          <label for="confirm_password">{{ $t('confirm_password') }}</label>
           <InputText
             id="confirm_password"
             v-model="form.confirm_password"
             type="password"
-            placeholder="Enter your password again"
+            :placeholder="$t('confirm_password_placeholder')"
             :class="{ 'p-invalid': errors.confirm_password }"
             class="w-full"
           />
-          <small v-if="errors.confirm_password" class="p-error">{{ errors.confirm_password }}</small>
+          <small v-if="errors.confirm_password" class="p-error">{{
+            errors.confirm_password
+          }}</small>
         </div>
 
         <div v-if="serverError" class="error-banner mt-3 mb-2">
@@ -75,13 +77,13 @@
 
         <div v-if="success" class="success-banner mb-2 mt-4">
           <i class="pi pi-check-circle"></i>
-          Admin created successfully! Redirecting to home...
+          {{ $t('admin_created_success') }}
         </div>
 
         <div v-if="!success" class="flex flex-column gap-1 mt-1">
           <Button
             type="submit"
-            label="Create Admin"
+            :label="$t('create_admin')"
             icon="pi pi-user-plus"
             iconPos="right"
             class="submit-btn"
@@ -97,12 +99,14 @@
 <script setup lang="ts">
 import '../styles/setup-shared.css'
 import { ref, reactive } from 'vue'
+import { useI18n } from 'vue-i18n'
 import InputText from 'primevue/inputtext'
 import Button from 'primevue/button'
 import axios from 'axios'
 import { useRouter } from 'vue-router'
 import auth from '@/services/auth'
 
+const { t } = useI18n()
 const router = useRouter()
 
 const apiUrl = `http://${import.meta.env.VITE_APP_BACKEND_HOST}${import.meta.env.VITE_APP_MODULE_CORE_API_PREFIX}`
@@ -126,11 +130,11 @@ const serverError = ref('')
 const success = ref(false)
 
 function validate(): boolean {
-  errors.username = form.username.trim() ? '' : 'Username is required'
-  errors.email = form.email.trim() ? '' : 'Email is required'
-  errors.email = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email) ? '' : 'Invalid email format'
-  errors.password = form.password.length >= 6 ? '' : 'Password must be at least 6 characters'
-  errors.confirm_password = form.password === form.confirm_password ? '' : 'Passwords do not match'
+  errors.username = form.username.trim() ? '' : t('username_required')
+  errors.email = form.email.trim() ? '' : t('email_required')
+  errors.email = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email) ? '' : t('email_invalid')
+  errors.password = form.password.length >= 6 ? '' : t('password_min_length')
+  errors.confirm_password = form.password === form.confirm_password ? '' : t('passwords_no_match')
 
   return !errors.username && !errors.email && !errors.password && !errors.confirm_password
 }
@@ -145,7 +149,7 @@ async function submit() {
     const response = await axios.post(`${apiUrl}/api/auth/register`, {
       username: form.username.trim(),
       email: form.email.trim(),
-      password: form.password
+      password: form.password,
     })
 
     const data = response.data
@@ -163,10 +167,10 @@ async function submit() {
       router.push({ path: '/' })
     }, 1500)
   } catch (err: any) {
-    serverError.value = err?.response?.data?.error || err?.response?.data?.message || 'Failed to create admin user'
+    serverError.value =
+      err?.response?.data?.error || err?.response?.data?.message || t('admin_create_failed')
   } finally {
     loading.value = false
   }
 }
 </script>
-

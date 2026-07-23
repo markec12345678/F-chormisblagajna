@@ -52,8 +52,8 @@
                 </div>
                 <template #footer>
                     <ButtonGroup>
-                        <Button label="Cancel" @click="material_settings_dialog=false" severity="secondary" aria-label="Save"  />
-                        <Button class="ml-2" severity="primary" label="Save" aria-label="Save" @click="saveMaterialSettings"/>
+                        <Button :label="$t('cancel')" @click="material_settings_dialog=false" severity="secondary" aria-label="Save"  />
+                        <Button class="ml-2" severity="primary" :label="$t('save')" aria-label="Save" @click="saveMaterialSettings"/>
                     </ButtonGroup>
                 </template>
             </Dialog>
@@ -174,7 +174,7 @@ import Dialog from 'primevue/dialog'
 import InputText from 'primevue/inputtext'
 import { useConfirm } from "primevue/useconfirm";
 import Tag from 'primevue/tag'
-import { Material, MaterialEntry } from '@/classes/OrderItem';
+import { Material } from '@/classes/OrderItem';
 import Calendar from 'primevue/calendar';
 import FloatLabel from 'primevue/floatlabel'
 import EditMaterial from '@/components/EditMaterial.vue'
@@ -184,9 +184,11 @@ import {Divider} from 'primevue'
 import { globalStore } from '@/stores';
 import auth from '../services/auth';
   
-import { ref,getCurrentInstance,computed } from "vue";
+import { ref } from "vue";
+import { useI18n } from "vue-i18n";
 import { useToast } from "primevue/usetoast";
 
+const { t } = useI18n();
 const store = globalStore()
 
 const entries_dialog = ref(false)
@@ -266,7 +268,7 @@ const loadEntries = (first=0,rows=entriesTableRowsPerPage.value) => {
         entriesTableTotalRecords.value = response.data.meta.total_records;
     })
     .catch(() => {
-        toast.add({severity:'error', summary: 'Error', detail: 'Failed to load products'});
+        toast.add({severity:'error', summary: 'Error', detail: t('products_load_failed')});
     })
     .finally(() => {
         isEntriesTableLoading.value = false;
@@ -276,16 +278,16 @@ const loadEntries = (first=0,rows=entriesTableRowsPerPage.value) => {
 
 const confirmDeleteMaterial = (material_id: string) => {
     confirm.require({
-        message: 'Are you sure you want to delete this material ?',
-        header: 'Confirmation',
+        message: t('confirm_delete_material'),
+        header: t('confirmation'),
         icon: 'pi pi-exclamation-triangle',
         rejectProps: {
-            label: 'Cancel',
+            label: t('cancel'),
             severity: 'secondary',
             outlined: true
         },
         acceptProps: {
-            label: 'Yes',
+            label: t('yes'),
             severity: 'danger'
         },
         accept: () => {
@@ -303,10 +305,10 @@ const confirmDeleteMaterial = (material_id: string) => {
         Authorization: `Bearer ${auth.accessToken.value}`
     }
     }).then(() => {
-        toast.add({ severity: 'success', summary: 'Success', detail: "Material deleted successfully", life: 3000 });
+        toast.add({ severity: 'success', summary: 'Success', detail: t('material_deleted_success'), life: 3000 });
         loadInventory()
     }).catch(() => {
-        toast.add({ severity: 'error', summary: 'Error', detail: "Failed to delete material", life: 3000 });
+        toast.add({ severity: 'error', summary: 'Error', detail: t('material_delete_failed'), life: 3000 });
     });
   }
 
@@ -323,7 +325,7 @@ const confirmDeleteMaterial = (material_id: string) => {
         }
     }).then(() => {
       edit_material_dialog.value = false
-      toast.add({severity:'success', summary: 'Success', detail: "successfully edit material data", life: 3000});
+      toast.add({severity:'success', summary: 'Success', detail: t('material_edited_success'), life: 3000});
       loadInventory()
     }).catch((error) => {
       toast.add({severity:'error', summary: 'Error', detail: error.message, life: 3000});
@@ -344,7 +346,7 @@ const confirmDeleteMaterial = (material_id: string) => {
             Authorization: `Bearer ${auth.accessToken.value}`
         }
     }).then(() => {
-      toast.add({severity:'success', summary: 'Success', detail: 'Material settings saved', life: 3000,group:'br'});
+      toast.add({severity:'success', summary: 'Success', detail: t('material_settings_saved'), life: 3000,group:'br'});
       material_settings_dialog.value = false
     }).catch(error => {
       toast.add({severity:'error', summary: 'Error', detail: error.message, life: 3000});
@@ -355,15 +357,15 @@ const confirmDeleteMaterial = (material_id: string) => {
   const confirmDeleteEntry = (event,material_id, entry_id) => {
     confirm.require({
         target: event.currentTarget,
-        message: 'Are you sure you want to delete this entry ?',
+        message: t('confirm_delete_entry'),
         icon: 'pi pi-exclamation-triangle',
         rejectProps: {
-            label: 'Cancel',
+            label: t('cancel'),
             severity: 'secondary',
             outlined: true
         },
         acceptProps: {
-            label: 'Yes'
+            label: t('yes')
         },
         accept: () => {
 
@@ -376,7 +378,7 @@ const confirmDeleteMaterial = (material_id: string) => {
                 }
             })
             .then(() => {
-                    toast.add({ severity: 'success', summary: 'Done', detail: "Entry deleted !",life: 3000,group:'br' });
+                    toast.add({ severity: 'success', summary: 'Done', detail: t('entry_deleted'),life: 3000,group:'br' });
                     inventory_components.value.forEach((component) => {
                         if (component.id == expanded_component_id.value){
                             component.entries.splice(component.entries.findIndex(el => el.id == data), 1)
@@ -393,7 +395,7 @@ const confirmDeleteMaterial = (material_id: string) => {
 
   const addNewEntry = (component_id) => {
 
-    var newEntry = {
+    const newEntry = {
                 "quantity": parseFloat(new_entry_quantity.value),
                 "purchase_price": parseFloat(new_entry_price.value),
                 "company": new_entry_company.value,
@@ -410,7 +412,7 @@ const confirmDeleteMaterial = (material_id: string) => {
         }
       })
       .then(() => {
-        toast.add({ severity: 'success', summary: 'Success', detail: 'Entry saved successfully !', life: 3000,group:'br' });
+        toast.add({ severity: 'success', summary: 'Success', detail: t('entry_saved'), life: 3000,group:'br' });
 
         inventory_components.value.forEach((component) => {
             if (component.id == component_id)
@@ -436,7 +438,7 @@ const confirmDeleteMaterial = (material_id: string) => {
 
       if (component_errors.value.name || component_errors.value.unit) return
 
-      var entries : any = []
+      const entries : any = []
       new_component_entries.value.forEach((entry) => {
           entries.push({
             company: entry.company,
@@ -457,7 +459,7 @@ const confirmDeleteMaterial = (material_id: string) => {
         }
       })
       .then(() => {
-        toast.add({ severity: 'success', summary: 'Success', detail: 'Component saved successfully !', life: 3000,group:'br' });
+        toast.add({ severity: 'success', summary: 'Success', detail: t('component_saved'), life: 3000,group:'br' });
         add_component_dialog.value = false
         loadInventory()
         new_component_entries.value = []
@@ -493,7 +495,7 @@ const confirmDeleteMaterial = (material_id: string) => {
     material_logs_id.value = component_id
     isLogsTableLoading.value = true
 
-    let page_number = Math.floor((first/rows)) + 1
+    const page_number = Math.floor((first/rows)) + 1
 
     
 

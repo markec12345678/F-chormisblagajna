@@ -26,7 +26,7 @@
 <script setup lang="ts">
 import QueueOrder from '@/components/QueueOrder.vue'
 import axios from 'axios';
-import {ref,getCurrentInstance,computed,useTemplateRef, nextTick,watch} from 'vue';
+import {ref,computed,useTemplateRef,watch} from 'vue';
 import { useToast } from "primevue/usetoast";
 import { Notification} from '@/classes/Notification';
 import { globalStore } from '@/stores';
@@ -67,7 +67,7 @@ const dynamic_columns = ref<Array<Array<any>>>([])
 const prepareLayout = () => {
     const screenWidth = window.innerWidth;
     dynamic_columns.value = []
-    for(var i=0;i<parseInt(`${screenWidth / 16 / 20}rem`);i++){
+    for(let i=0;i<parseInt(`${screenWidth / 16 / 20}rem`);i++){
         dynamic_columns.value.push([])
     }
 }
@@ -128,12 +128,12 @@ const startWebsocket = () => {
             if (data.topic_name == "order_finished"){
 
                 toast.removeGroup('br')
-                toast.add({ severity: 'success', summary: 'Order Finished', detail: `order with id ( ${data.order_id} ) finished and is ready to be served !`, life: 3000,group:'br' });
+                toast.add({ severity: 'success', summary: t('order_finished'), detail: `order with id ( ${data.order_id} ) ${t('order_ready_to_serve')}`, life: 3000,group:'br' });
 
                 const notification = new Notification();
-                notification.description = `order with id #${data.order_id} finished and is ready to be served !`
+                notification.description = `order with id #${data.order_id} ${t('order_ready_to_serve')}`
                 notification.severity = "success"
-                notification.topic_name = "Order Finished"
+                notification.topic_name = t('order_finished')
                 notification.type = "topic_message"
                 notifications.value.push(notification);
 

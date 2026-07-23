@@ -1,94 +1,100 @@
 <template>
-    <div>
-        <Message severity="secondary">
-            <template #container>
-                <div class="p-3 flex justify-content-between align-items-center">
-                    <span>{{ props.order.display_id }}</span>
-                    <Badge :value="order_status.title" :severity="order_status.severity" />
-                    <span>{{ props.order.items.length }} Item(s)</span>
-                    <Button @click="payUnpaidOrder()">
-                        {{$t('checkout')}}
-                        <Badge :value="order_unpaid_amount_str" class="p-badge-secondary" />
-                    </Button>
-                </div>
-            </template>
-        </Message>
-    </div>
+  <div>
+    <Message severity="secondary">
+      <template #container>
+        <div class="p-3 flex justify-content-between align-items-center">
+          <span>{{ props.order.display_id }}</span>
+          <Badge :value="order_status.title" :severity="order_status.severity" />
+          <span>{{ props.order.items.length }} {{ $t('items') }}</span>
+          <Button @click="payUnpaidOrder()">
+            {{ $t('checkout') }}
+            <Badge :value="order_unpaid_amount_str" class="p-badge-secondary" />
+          </Button>
+        </div>
+      </template>
+    </Message>
+  </div>
 </template>
 
 <script setup lang="ts">
-import {defineProps,computed,getCurrentInstance,defineEmits} from 'vue'
-import Message from 'primevue/message';
-import Button from 'primevue/button';
-import Badge from 'primevue/badge';
+import { defineProps, computed, getCurrentInstance, defineEmits } from 'vue'
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
+import Message from 'primevue/message'
+import Button from 'primevue/button'
+import Badge from 'primevue/badge'
 import Order from '@/classes/Order'
-import axios from 'axios';
-import { useToast } from "primevue/usetoast";
-import auth from '../services/auth';
+import axios from 'axios'
+import { useToast } from 'primevue/usetoast'
+import auth from '../services/auth'
 
-const { proxy } = getCurrentInstance();
-const toast = useToast();
-
+const { proxy } = getCurrentInstance()
+const toast = useToast()
 
 const emit = defineEmits(['order_paid'])
 
 const payUnpaidOrder = () => {
-    axios.get(`http://${import.meta.env.VITE_APP_BACKEND_HOST}${import.meta.env.VITE_APP_MODULE_CORE_API_PREFIX}/api/orders/${props.order.id}/pay`,{
+  axios
+    .get(
+      `http://${import.meta.env.VITE_APP_BACKEND_HOST}${import.meta.env.VITE_APP_MODULE_CORE_API_PREFIX}/api/orders/${props.order.id}/pay`,
+      {
         headers: {
-            Authorization: `Bearer ${auth.accessToken.value}`
-        }
-    })
+          Authorization: `Bearer ${auth.accessToken.value}`,
+        },
+      },
+    )
     .then(() => {
-        toast.add({ severity: 'success', summary: 'Success', detail: `Successfully paid order ${props.order.display_id}`, life: 3000,group:'br' });
-        emit('order_paid')
+      toast.add({
+        severity: 'success',
+        summary: 'Success',
+        detail: `Successfully paid order ${props.order.display_id}`,
+        life: 3000,
+        group: 'br',
+      })
+      emit('order_paid')
     })
-};
-
+}
 
 const props = defineProps({
-    order: {
-        type: Order,
-        required: true
-    }
+  order: {
+    type: Order,
+    required: true,
+  },
 })
 
-const order_unpaid_amount_str : any = computed(() => {
-    return props.order.sale_price + " EGP"
+const order_unpaid_amount_str: any = computed(() => {
+  return props.order.sale_price + ' EGP'
 })
 
-const order_status : any = computed(() => {
-
-if (props.order.state == "" || props.order.state == "pending" ){
+const order_status: any = computed(() => {
+  if (props.order.state == '' || props.order.state == 'pending') {
     return {
-        title:"PENDING",
-        severity:"info"
+      title: t('pending'),
+      severity: 'info',
     }
-}
+  }
 
-if (props.order.state == "in_progress" ){
+  if (props.order.state == 'in_progress') {
     return {
-        title:"INPROGRESS",
-        severity:"success"
+      title: t('in_progress'),
+      severity: 'success',
     }
-}
+  }
 
-
-if (props.order.state == "cancelled" ){
+  if (props.order.state == 'cancelled') {
     return {
-        title:"CANCELLED",
-        severity:"danger"
+      title: t('cancelled'),
+      severity: 'danger',
     }
-}
+  }
 
-if (props.order.state == "finished" ){
+  if (props.order.state == 'finished') {
     return {
-        title:"FINISHED",
-        severity:"success"
+      title: t('finished'),
+      severity: 'success',
     }
-}
+  }
 
-return {}
-
+  return {}
 })
-
 </script>

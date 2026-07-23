@@ -98,3 +98,72 @@ func TestOrderItemRefundMaterialDTO_JSON(t *testing.T) {
 		t.Errorf("InventoryReturnQty = %v, want %v", decoded.InventoryReturnQty, dto.InventoryReturnQty)
 	}
 }
+
+func TestOrderItemRefundRequest_AllDestinations(t *testing.T) {
+	destinations := map[string]bool{
+		DTOOrderItemRefundDestination_Inventory: true,
+		DTOOrderItemRefundDestination_Disposals: true,
+		DTOOrderItemRefundDestination_Waste:     true,
+		DTOOrderItemRefundDestination_Custom:    true,
+	}
+
+	if len(destinations) != 4 {
+		t.Errorf("expected 4 distinct destination constants, got %d", len(destinations))
+	}
+
+	constants := []string{
+		DTOOrderItemRefundDestination_Inventory,
+		DTOOrderItemRefundDestination_Disposals,
+		DTOOrderItemRefundDestination_Waste,
+		DTOOrderItemRefundDestination_Custom,
+	}
+	expectedValues := []string{"inventory", "disposals", "waste", "custom"}
+	for i, c := range constants {
+		if c != expectedValues[i] {
+			t.Errorf("destination constant[%d] = %q, want %q", i, c, expectedValues[i])
+		}
+		if c == "" {
+			t.Errorf("destination constant[%d] is empty", i)
+		}
+	}
+
+	seen := make(map[string]bool)
+	for _, c := range constants {
+		if seen[c] {
+			t.Errorf("duplicate destination constant value: %q", c)
+		}
+		seen[c] = true
+	}
+}
+
+func TestHttpComponent_Fields(t *testing.T) {
+	comp := HttpComponent{
+		Name:     "Flour",
+		Unit:     "kg",
+		Quantity: 10.5,
+		Company:  "Acme",
+	}
+
+	data, err := json.Marshal(comp)
+	if err != nil {
+		t.Fatalf("Marshal failed: %v", err)
+	}
+
+	var decoded HttpComponent
+	if err := json.Unmarshal(data, &decoded); err != nil {
+		t.Fatalf("Unmarshal failed: %v", err)
+	}
+
+	if decoded.Name != comp.Name {
+		t.Errorf("Name = %v, want %v", decoded.Name, comp.Name)
+	}
+	if decoded.Unit != comp.Unit {
+		t.Errorf("Unit = %v, want %v", decoded.Unit, comp.Unit)
+	}
+	if decoded.Quantity != comp.Quantity {
+		t.Errorf("Quantity = %v, want %v", decoded.Quantity, comp.Quantity)
+	}
+	if decoded.Company != comp.Company {
+		t.Errorf("Company = %v, want %v", decoded.Company, comp.Company)
+	}
+}

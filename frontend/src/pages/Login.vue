@@ -5,16 +5,16 @@
         <img src="@/assets/logo.png" alt="NutrixPOS" />
       </div>
 
-      <h1 class="login-title">Welcome Back</h1>
-      <p class="login-subtitle">Sign in to continue to NutrixPOS</p>
+      <h1 class="login-title">{{ $t('welcome_back') }}</h1>
+      <p class="login-subtitle">{{ $t('sign_in_subtitle') }}</p>
 
       <form class="login-form" @submit.prevent="login">
         <div class="field">
-          <label for="username">Username</label>
+          <label for="username">{{ $t('username') }}</label>
           <InputText
             id="username"
             v-model="form.username"
-            placeholder="Enter your username"
+            :placeholder="$t('enter_username')"
             :class="{ 'p-invalid': errors.username }"
             class="w-full"
             autocomplete="username"
@@ -23,11 +23,11 @@
         </div>
 
         <div class="field">
-          <label for="password">Password</label>
+          <label for="password">{{ $t('password') }}</label>
           <Password
             id="password"
             v-model="form.password"
-            placeholder="Enter your password"
+            :placeholder="$t('enter_password')"
             :class="{ 'p-invalid': errors.password }"
             class="w-full"
             :feedback="false"
@@ -45,7 +45,7 @@
 
         <Button
           type="submit"
-          label="Sign In"
+          :label="$t('sign_in')"
           icon="pi pi-sign-in"
           class="login-btn"
           :loading="loading"
@@ -54,13 +54,15 @@
       </form>
 
       <Divider>
-        <span class="text-muted">or</span>
+        <span class="text-muted">{{ $t('or') }}</span>
       </Divider>
 
       <div class="text-center">
         <small class="text-muted">
-          Don't have an account?
-          <router-link to="/register" class="text-primary font-semibold">Contact admin</router-link>
+          {{ $t('no_account') }}
+          <router-link to="/register" class="text-primary font-semibold">{{
+            $t('contact_admin')
+          }}</router-link>
         </small>
       </div>
     </div>
@@ -69,6 +71,7 @@
 
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
+import { useI18n } from 'vue-i18n'
 import InputText from 'primevue/inputtext'
 import Password from 'primevue/password'
 import Button from 'primevue/button'
@@ -76,6 +79,7 @@ import Divider from 'primevue/divider'
 import { useRouter } from 'vue-router'
 import auth from '@/services/auth'
 
+const { t } = useI18n()
 const router = useRouter()
 
 const form = reactive({
@@ -92,8 +96,8 @@ const loading = ref(false)
 const serverError = ref('')
 
 function validate(): boolean {
-  errors.username = form.username.trim() ? '' : 'Username is required'
-  errors.password = form.password ? '' : 'Password is required'
+  errors.username = form.username.trim() ? '' : t('username_required')
+  errors.password = form.password ? '' : t('password_required')
   return !errors.username && !errors.password
 }
 
@@ -109,10 +113,10 @@ async function login() {
     if (success) {
       router.push({ path: '/' })
     } else {
-      serverError.value = 'Invalid username or password'
+      serverError.value = t('invalid_credentials')
     }
   } catch (err: any) {
-    serverError.value = err?.response?.data?.error || 'Login failed. Please try again.'
+    serverError.value = err?.response?.data?.error || t('login_failed')
   } finally {
     loading.value = false
   }
@@ -231,7 +235,7 @@ async function login() {
 
 :deep(.p-inputtext:focus),
 :deep(.p-password-input:focus) {
-  border-color: #14977B;
+  border-color: #14977b;
   box-shadow: 0 0 0 3px rgba(20, 151, 123, 0.1);
 }
 
@@ -274,7 +278,7 @@ async function login() {
   font-size: 1rem !important;
   font-weight: 600 !important;
   border-radius: 0.5rem !important;
-  background: linear-gradient(135deg, #14977B 0%, #1fb590 100%) !important;
+  background: linear-gradient(135deg, #14977b 0%, #1fb590 100%) !important;
   border: none !important;
   transition: all 0.2s;
 }
@@ -303,7 +307,7 @@ async function login() {
 }
 
 .text-primary {
-  color: #14977B;
+  color: #14977b;
 }
 
 .text-primary:hover {

@@ -1,175 +1,274 @@
 <template>
-    <div :style="`direction: ${store.orientation == 'rtl' ? 'rtl' : 'ltr'}`" class="p-3">
-        <div class="grid w-12">
+  <div :style="`direction: ${store.orientation == 'rtl' ? 'rtl' : 'ltr'}`" class="p-3">
+    <div class="grid w-12">
+      <div class="col-12"></div>
 
-            <div class="col-12">
-                
-            </div>
+      <div class="flex col-12">
+        <Badge :value="order_status.title" :severity="order_status.severity" />
+        <Badge :value="payment_status.title" :severity="payment_status.severity" class="mx-1" />
+      </div>
 
-            <div class="flex col-12">
-                <Badge :value="order_status.title" :severity="order_status.severity" />
-                <Badge :value="payment_status.title" :severity="payment_status.severity" class="mx-1" />
-            </div>
+      <div class="col-1">{{ $t('item', 3) }}</div>
+      <div class="col-11">
+        <OrderItemsInfo :order="order" @updated="emit('updated')" />
+      </div>
 
-            <div class="col-1">{{$t('item',3)}}</div>
-            <div class="col-11">
-                <OrderItemsInfo :order="order" @updated="emit('updated')" />
-            </div>
+      <div class="col-6">{{ $t('display_id') }}</div>
+      <div class="col-6">{{ props.order.display_id }}</div>
 
-            <div class="col-6">{{ $t('display_id') }}</div>
-            <div class="col-6">{{ props.order.display_id }}</div>
+      <div class="col-12">
+        <h4 class="mb-0 w-full align-items-start justify-content-start">
+          <i class="fa fa-user mx-2"></i>
+          {{ $t('customer') }}
+        </h4>
+      </div>
+      <div class="flex flex-column col-8 xs:col-12">
+        <DataTable class="mt-2" :value="[props.order.customer]">
+          <Column field="id" :header="$t('id')"></Column>
+          <Column field="name" :header="$t('name')"></Column>
+          <Column field="address" :header="$t('address')"></Column>
+          <Column field="phone" :header="$t('phone')"></Column>
+        </DataTable>
+      </div>
 
+      <div class="col-6 mt-3">{{ $t('status') }}</div>
+      <div class="col-6 mt-3">
+        <Badge :value="order_status.title" :severity="order_status.severity" />
+      </div>
 
-            <div class="col-12">
-                <h4 class="mb-0 w-full align-items-start justify-content-start">
-                    <i class="fa fa-user mx-2"></i>
-                    {{$t('customer')}}
-                </h4>
-            </div>
-            <div class="flex flex-column col-8 xs:col-12">
-                <DataTable class="mt-2" :value="[props.order.customer]">
-                    <Column field="id" header="Id"></Column>
-                    <Column field="name" :header="$t('name')"></Column>
-                    <Column field="address" :header="$t('address')"></Column>
-                    <Column field="phone" :header="$t('phone')"></Column>
-                </DataTable>
-            </div>
+      <div class="col-6">{{ $t('submitted_at') }}</div>
+      <div class="col-6">{{ props.order.submitted_at }}</div>
 
-            <div class="col-6 mt-3">{{ $t('status') }}</div>
-            <div class="col-6 mt-3">
-                <Badge :value="order_status.title" :severity="order_status.severity" />
-            </div>
+      <div class="col-6">{{ $t('started_at') }}</div>
+      <div class="col-6">{{ props.order.started_at }}</div>
 
-            <div class="col-6">{{ $t('submitted_at') }}</div>
-            <div class="col-6">{{ props.order.submitted_at }}</div>
+      <div class="col-6">{{ $t('comment') }}</div>
+      <div class="col-6">{{ props.order.comment }}</div>
 
-            <div class="col-6">{{$t('started_at')}}</div>
-            <div class="col-6">{{ props.order.started_at }}</div>
+      <div class="col-6">{{ $t('cost') }}</div>
+      <div class="col-6">{{ props.order.cost }}</div>
 
-            <div class="col-6">{{ $t('comment') }}</div>
-            <div class="col-6">{{ props.order.comment }}</div>
+      <div class="col-6">{{ $t('sale_price') }}</div>
+      <div class="col-6">{{ props.order.sale_price }}</div>
 
-            <div class="col-6">{{ $t('cost') }}</div>
-            <div class="col-6">{{ props.order.cost }}</div>
+      <div class="col-6">{{ $t('pay_later') }}?</div>
+      <div class="col-6">{{ props.order.is_pay_later }}</div>
 
-            <div class="col-6">{{ $t('sale_price') }}</div>
-            <div class="col-6">{{ props.order.sale_price }}</div>
+      <div class="col-6">{{ $t('paid') }}</div>
+      <div class="col-6">{{ props.order.is_paid }}</div>
 
-            <div class="col-6">{{$t('pay_later')}}?</div>
-            <div class="col-6">{{ props.order.is_pay_later }}</div>
+      <div class="col-6">{{ $t('payment_source') }}</div>
+      <div class="col-6">{{ props.order.payment_source }}</div>
 
-            <div class="col-6">{{$t('paid')}}</div>
-            <div class="col-6">{{ props.order.is_paid }}</div>
+      <div class="col-6">{{ $t('discount') }}</div>
+      <div class="col-6">{{ props.order.discount }}</div>
 
-            <div class="col-6">{{$t('payment_source')}}</div>
-            <div class="col-6">{{ props.order.payment_source }}</div>
+      <div class="col-6">{{ $t('tips') }}</div>
+      <div class="flex col-6 align-items-center gap-2">
+        <div>{{ props.order.tips }}</div>
+        <ButtonGroup>
+          <Button
+            icon="pi pi-plus"
+            severity="success"
+            :label="$t('add_tip')"
+            @click="toggle_add_tip_popover"
+          />
+          <Popover ref="add_tip_popover">
+            <InputGroup>
+              <InputText :placeholder="$t('tips')" v-model.number="add_tips_amount" />
+              <Button
+                icon="pi pi-check"
+                severity="success"
+                :label="$t('save')"
+                @click="addTip(add_tips_amount)"
+              />
+            </InputGroup>
+          </Popover>
+          <Button
+            icon="pi pi-minus"
+            severity="secondary"
+            :label="$t('remove_tip')"
+            @click="toggle_remove_tip_popover"
+          />
+          <Popover ref="remove_tip_popover">
+            <InputGroup>
+              <InputText :placeholder="$t('tips')" v-model.number="remove_tips_amount" />
+              <Button
+                icon="pi pi-check"
+                severity="secondary"
+                :label="$t('save')"
+                @click="removeTip(remove_tips_amount)"
+              />
+            </InputGroup>
+          </Popover>
+        </ButtonGroup>
+      </div>
 
-            <div class="col-6">{{$t('discount')}}</div>
-            <div class="col-6">{{ props.order.discount }}</div>
-
-            <div class="col-6">{{$t('tips')}}</div>
-            <div class="flex col-6 align-items-center gap-2">
-                <div>{{ props.order.tips }}</div>
-                <ButtonGroup>
-                    <Button icon="pi pi-plus" severity="success" :label="$t('add_tip')" @click="toggle_add_tip_popover" />
-                    <Popover ref="add_tip_popover">
-                        <InputGroup>
-                            <InputText :placeholder="$t('tips')" v-model.number="add_tips_amount" />
-                            <Button icon="pi pi-check" severity="success" :label="$t('save')" @click="addTip(add_tips_amount)" />
-                        </InputGroup>
-                    </Popover>
-                    <Button icon="pi pi-minus" severity="secondary" :label="$t('remove_tip')" @click="toggle_remove_tip_popover" />
-                    <Popover ref="remove_tip_popover">
-                        <InputGroup>
-                            <InputText :placeholder="$t('tips')" v-model.number="remove_tips_amount" />
-                            <Button icon="pi pi-check" severity="secondary" :label="$t('save')" @click="removeTip(remove_tips_amount)" />
-                        </InputGroup>
-                    </Popover>
-                </ButtonGroup>
-            </div>
-
-            <div class="col-12" v-if="props.order.delivery_info != null">
-                <h4>Delivery info</h4>
-                <div class="flex items-center gap-2 flex-column">
-                    <div>{{ props.order.delivery_info.receiver_name }}</div>
-                    <div>{{ props.order.delivery_info.address }}</div>
-                    <div>{{ props.order.delivery_info.phone }}</div>
-                </div>
-            </div>
-
-            <div class="col-12 flex flex-column" v-if="Object.keys(props.order.custom_data).length > 0">
-                <h4 class="mb-0">Custom data</h4>
-                <div class="flex flex-column gap-2">
-                    <div v-for="(value, key) in props.order.custom_data" :key="key" class="flex items-center gap-2">
-                        <div class="flex-1">{{ key }}</div>
-                        <div class="flex-1">{{ value }}</div>
-                        <Button icon="pi pi-pencil" severity="info" size="small" @click="openEditDialog(key, value)" />
-                        <Button icon="pi pi-trash" severity="danger" size="small" @click="deleteCustomData($event, key)" />
-                    </div>
-                    <Button icon="pi pi-plus" severity="success" size="small" :label="$t('add')" @click="openAddDialog" class="mt-2" />
-                </div>
-            </div>
-            
-            <Dialog v-model:visible="custom_data_dialog" :header="is_editing ? 'Edit custom data' : 'Add custom data'" modal>
-                <div class="flex flex-column gap-3">
-                    <div class="flex flex-column gap-1">
-                        <label for="cd_key">Key</label>
-                        <InputText id="cd_key" v-model="cd_key" :disabled="is_editing" />
-                    </div>
-                    <div class="flex flex-column gap-1">
-                        <label for="cd_value">Value</label>
-                        <InputText id="cd_value" v-model="cd_value" />
-                    </div>
-                    <div class="flex gap-2 justify-content-end">
-                        <Button label="Cancel" severity="secondary" @click="custom_data_dialog = false" />
-                        <Button label="Save" severity="success" @click="saveCustomData" />
-                    </div>
-                </div>
-            </Dialog>
-            
-
-            <div class="col-12 flex flex-column">
-                <h4>{{$t('actions')}}</h4>
-                <div class="flex gap-3">
-                    <ButtonGroup class="flex">
-                        <Button icon="fa fa-print" severity="secondary" :label="$t('client_receipt')" @click="PrintClientReceipt()" />
-                        <Button icon="fa fa-print" severity="secondary" :label="$t('kitchen_receipt')" @click="PrintKitchenReceipt()" />
-                        <Button v-if="!props.order.is_paid" icon="fa fa-hand-holding-dollar" severity="secondary" :label="$t('collect_money')" @click="collectedMoney()"/>
-                        <Button v-if="props.order.state.toUpperCase() != 'CANCELLED' && props.order.state.toUpperCase() != 'FINISHED'" icon="fa fa-check" severity="secondary" :label="$t('finish')" @click="finishOrder()"/>
-                        <Button v-if="props.order.state.toUpperCase() != 'CANCELLED' && props.order.state.toUpperCase() != 'FINISHED'" severity="secondary" size="small" aria-label="Cancel order" @click.stop="confirmCancelOrder($event)">
-                            {{$t('cancel')}} {{ $t('order') }}
-                        </Button>
-                        <ConfirmPopup></ConfirmPopup>
-                    </ButtonGroup>
-                    <ButtonGroup class="flex">
-                        <Button icon="fa fa-book" severity="secondary" :label="$t('logs')" @click="getOrderLogs()" />
-                    </ButtonGroup>
-                </div>
-
-            </div>
-            <Dialog v-model:visible="order_logs_dialog" modal :header="`#${props.order.display_id} logs`" class="xs:w-12 md:w-10 lg:w-8">
-                <pre>
-                    {{order_logs}}
-                </pre>
-            </Dialog>
+      <div class="col-12" v-if="props.order.delivery_info != null">
+        <h4>{{ $t('delivery_info') }}</h4>
+        <div class="flex items-center gap-2 flex-column">
+          <div>{{ props.order.delivery_info.receiver_name }}</div>
+          <div>{{ props.order.delivery_info.address }}</div>
+          <div>{{ props.order.delivery_info.phone }}</div>
         </div>
+      </div>
+
+      <div class="col-12 flex flex-column" v-if="Object.keys(props.order.custom_data).length > 0">
+        <h4 class="mb-0">{{ $t('custom_data') }}</h4>
+        <div class="flex flex-column gap-2">
+          <div
+            v-for="(value, key) in props.order.custom_data"
+            :key="key"
+            class="flex items-center gap-2"
+          >
+            <div class="flex-1">{{ key }}</div>
+            <div class="flex-1">{{ value }}</div>
+            <Button
+              icon="pi pi-pencil"
+              severity="info"
+              size="small"
+              @click="openEditDialog(key, value)"
+            />
+            <Button
+              icon="pi pi-trash"
+              severity="danger"
+              size="small"
+              @click="deleteCustomData($event, key)"
+            />
+          </div>
+          <Button
+            icon="pi pi-plus"
+            severity="success"
+            size="small"
+            :label="$t('add')"
+            @click="openAddDialog"
+            class="mt-2"
+          />
+        </div>
+      </div>
+
+      <Dialog
+        v-model:visible="custom_data_dialog"
+        :header="is_editing ? $t('edit_custom_data') : $t('add_custom_data')"
+        modal
+      >
+        <div class="flex flex-column gap-3">
+          <div class="flex flex-column gap-1">
+            <label for="cd_key">{{ $t('key') }}</label>
+            <InputText id="cd_key" v-model="cd_key" :disabled="is_editing" />
+          </div>
+          <div class="flex flex-column gap-1">
+            <label for="cd_value">{{ $t('value') }}</label>
+            <InputText id="cd_value" v-model="cd_value" />
+          </div>
+          <div class="flex gap-2 justify-content-end">
+            <Button
+              :label="$t('cancel')"
+              severity="secondary"
+              @click="custom_data_dialog = false"
+            />
+            <Button :label="$t('save')" severity="success" @click="saveCustomData" />
+          </div>
+        </div>
+      </Dialog>
+
+      <div class="col-12 flex flex-column">
+        <h4>{{ $t('actions') }}</h4>
+        <div class="flex gap-3">
+          <ButtonGroup class="flex">
+            <Button
+              icon="fa fa-print"
+              severity="secondary"
+              :label="$t('client_receipt')"
+              @click="PrintClientReceipt()"
+            />
+            <Button
+              icon="fa fa-print"
+              severity="secondary"
+              :label="$t('kitchen_receipt')"
+              @click="PrintKitchenReceipt()"
+            />
+            <Button
+              v-if="!props.order.is_paid"
+              icon="fa fa-hand-holding-dollar"
+              severity="secondary"
+              :label="$t('collect_money')"
+              @click="collectedMoney()"
+            />
+            <Button
+              v-if="
+                props.order.state.toUpperCase() != 'CANCELLED' &&
+                props.order.state.toUpperCase() != 'FINISHED'
+              "
+              icon="fa fa-check"
+              severity="secondary"
+              :label="$t('finish')"
+              @click="finishOrder()"
+            />
+            <Button
+              v-if="
+                props.order.state.toUpperCase() != 'CANCELLED' &&
+                props.order.state.toUpperCase() != 'FINISHED'
+              "
+              severity="secondary"
+              size="small"
+              aria-label="Cancel order"
+              @click.stop="confirmCancelOrder($event)"
+            >
+              {{ $t('cancel') }} {{ $t('order') }}
+            </Button>
+            <ConfirmPopup></ConfirmPopup>
+          </ButtonGroup>
+          <ButtonGroup class="flex">
+            <Button
+              icon="fa fa-book"
+              severity="secondary"
+              :label="$t('logs')"
+              @click="getOrderLogs()"
+            />
+          </ButtonGroup>
+        </div>
+      </div>
+      <Dialog
+        v-model:visible="order_logs_dialog"
+        modal
+        :header="`#${props.order.display_id} logs`"
+        class="xs:w-12 md:w-10 lg:w-8"
+      >
+        <pre>
+                    {{ order_logs }}
+                </pre
+        >
+      </Dialog>
     </div>
+  </div>
 </template>
 
 <script setup lang="ts">
-import {defineProps,getCurrentInstance,computed,defineEmits,ref} from 'vue'
-import Badge from 'primevue/badge';
-import { ButtonGroup } from 'primevue';
-import Button from 'primevue/button';
-import { useConfirm,ConfirmPopup,Popover,InputText,InputGroup,DataTable,Column,Dialog } from "primevue";
+import { defineProps, getCurrentInstance, computed, defineEmits, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
+import Badge from 'primevue/badge'
+import { ButtonGroup } from 'primevue'
+import Button from 'primevue/button'
+import {
+  useConfirm,
+  ConfirmPopup,
+  Popover,
+  InputText,
+  InputGroup,
+  DataTable,
+  Column,
+  Dialog,
+} from 'primevue'
 import axios from 'axios'
-import { useToast } from "primevue/usetoast";
-import OrderItemsInfo from './OrderItemsInfo.vue';
-import Order from '@/classes/Order';
-import { globalStore } from '@/stores';
-import auth from '../services/auth';
+import { useToast } from 'primevue/usetoast'
+import OrderItemsInfo from './OrderItemsInfo.vue'
+import Order from '@/classes/Order'
+import { globalStore } from '@/stores'
+import auth from '../services/auth'
 
-const store = globalStore();
+const store = globalStore()
 
 const toast = useToast()
 
@@ -182,291 +281,359 @@ const cd_value = ref('')
 const is_editing = ref(false)
 const original_key = ref('')
 
-
 const props = defineProps({
-    order: {
-        type: Order,
-        required: true
-    }
+  order: {
+    type: Order,
+    required: true,
+  },
 })
 
-const confirm = useConfirm();
-const { proxy } = getCurrentInstance();
-const emit = defineEmits(['amount_collected','finished','updated','cancelled'])
+const confirm = useConfirm()
+const { proxy } = getCurrentInstance()
+const emit = defineEmits(['amount_collected', 'finished', 'updated', 'cancelled'])
 
-const add_tip_popover = ref();
-const remove_tip_popover = ref();
-const add_tips_amount = ref(0);
-const remove_tips_amount = ref(0);
-
+const add_tip_popover = ref()
+const remove_tip_popover = ref()
+const add_tips_amount = ref(0)
+const remove_tips_amount = ref(0)
 
 const addTip = (amount: number) => {
-    axios.patch(`http://${import.meta.env.VITE_APP_BACKEND_HOST}${import.meta.env.VITE_APP_MODULE_CORE_API_PREFIX}/api/orders/${props.order.id}/addtips?tip_amount=${amount}`,{
+  axios
+    .patch(
+      `http://${import.meta.env.VITE_APP_BACKEND_HOST}${import.meta.env.VITE_APP_MODULE_CORE_API_PREFIX}/api/orders/${props.order.id}/addtips?tip_amount=${amount}`,
+      {
         headers: {
-            Authorization: `Bearer ${auth.accessToken.value}`,
-        }
-    })
-    .then(()=>{
-        toast.add({ severity: 'success', summary: 'Success', detail: 'Tip added',group:'br' });
-        emit('updated')
-        add_tip_popover.value.hide()
+          Authorization: `Bearer ${auth.accessToken.value}`,
+        },
+      },
+    )
+    .then(() => {
+      toast.add({ severity: 'success', summary: 'Success', detail: t('tip_added'), group: 'br' })
+      emit('updated')
+      add_tip_popover.value.hide()
     })
     .catch(() => {
-        toast.add({ severity: 'error', summary: 'Error', detail: 'Failed to perform the request',group:'br' });
-    });
+      toast.add({ severity: 'error', summary: 'Error', detail: t('request_failed'), group: 'br' })
+    })
 }
 
-
 const removeTip = (amount: number) => {
-    axios.patch(`http://${import.meta.env.VITE_APP_BACKEND_HOST}${import.meta.env.VITE_APP_MODULE_CORE_API_PREFIX}/api/orders/${props.order.id}/removetips?tip_amount=${amount}`, {
+  axios
+    .patch(
+      `http://${import.meta.env.VITE_APP_BACKEND_HOST}${import.meta.env.VITE_APP_MODULE_CORE_API_PREFIX}/api/orders/${props.order.id}/removetips?tip_amount=${amount}`,
+      {
         headers: {
-            Authorization: `Bearer ${auth.accessToken.value}`,
-        }
-    })
-    .then(()=>{
-        toast.add({ severity: 'success', summary: 'Success', detail: 'Tip removed',group:'br' });
-        emit('updated')
-        remove_tip_popover.value.hide()
+          Authorization: `Bearer ${auth.accessToken.value}`,
+        },
+      },
+    )
+    .then(() => {
+      toast.add({ severity: 'success', summary: 'Success', detail: t('tip_removed'), group: 'br' })
+      emit('updated')
+      remove_tip_popover.value.hide()
     })
     .catch(() => {
-        toast.add({ severity: 'error', summary: 'Error', detail: 'Failed to perform the request',group:'br' });
-    });
+      toast.add({ severity: 'error', summary: 'Error', detail: t('request_failed'), group: 'br' })
+    })
 }
 
 const toggle_add_tip_popover = (event) => {
-    add_tip_popover.value.toggle(event);
+  add_tip_popover.value.toggle(event)
 }
 
 const toggle_remove_tip_popover = (event) => {
-    remove_tip_popover.value.toggle(event);
+  remove_tip_popover.value.toggle(event)
 }
 
 const openEditDialog = (key: string, value: string) => {
-    cd_key.value = key
-    cd_value.value = value
-    is_editing.value = true
-    original_key.value = key
-    custom_data_dialog.value = true
+  cd_key.value = key
+  cd_value.value = value
+  is_editing.value = true
+  original_key.value = key
+  custom_data_dialog.value = true
 }
 
 const openAddDialog = () => {
-    cd_key.value = ''
-    cd_value.value = ''
-    is_editing.value = false
-    original_key.value = ''
-    custom_data_dialog.value = true
+  cd_key.value = ''
+  cd_value.value = ''
+  is_editing.value = false
+  original_key.value = ''
+  custom_data_dialog.value = true
 }
 
 const deleteCustomData = (event: Event, key: string) => {
-    confirm.require({
-        target: event.currentTarget,
-        message: 'Are you sure you want to delete this custom data entry?',
-        icon: 'pi pi-exclamation-triangle',
-        rejectProps: {
-            label: 'Cancel',
-            severity: 'secondary',
-            outlined: true
-        },
-        acceptProps: {
-            label: 'Delete',
-            severity: 'danger'
-        },
-        accept: () => {
-            const updatedData = {...props.order.custom_data}
-            delete updatedData[key]
-            saveCustomDataChanges(updatedData)
-        },
-        reject: () => {}
-    });
+  confirm.require({
+    target: event.currentTarget,
+    message: t('confirm_delete_custom_data'),
+    icon: 'pi pi-exclamation-triangle',
+    rejectProps: {
+      label: t('cancel'),
+      severity: 'secondary',
+      outlined: true,
+    },
+    acceptProps: {
+      label: t('delete'),
+      severity: 'danger',
+    },
+    accept: () => {
+      const updatedData = { ...props.order.custom_data }
+      delete updatedData[key]
+      saveCustomDataChanges(updatedData)
+    },
+    reject: () => {},
+  })
 }
 
 const saveCustomData = () => {
-    const updatedData = {...props.order.custom_data}
-    if (is_editing.value && original_key.value) {
-        delete updatedData[original_key.value]
-    }
-    updatedData[cd_key.value] = cd_value.value
-    saveCustomDataChanges(updatedData)
+  const updatedData = { ...props.order.custom_data }
+  if (is_editing.value && original_key.value) {
+    delete updatedData[original_key.value]
+  }
+  updatedData[cd_key.value] = cd_value.value
+  saveCustomDataChanges(updatedData)
 }
 
 const saveCustomDataChanges = (data: Record<string, string>) => {
-    axios.patch(`http://${import.meta.env.VITE_APP_BACKEND_HOST}${import.meta.env.VITE_APP_MODULE_CORE_API_PREFIX}/api/orders/${props.order.id}/customdata`, {
-        data: data
-    }, {
+  axios
+    .patch(
+      `http://${import.meta.env.VITE_APP_BACKEND_HOST}${import.meta.env.VITE_APP_MODULE_CORE_API_PREFIX}/api/orders/${props.order.id}/customdata`,
+      {
+        data: data,
+      },
+      {
         headers: {
-            Authorization: `Bearer ${auth.accessToken.value}`,
-        }
-    })
-    .then(()=>{
-        toast.add({ severity: 'success', summary: 'Success', detail: 'Custom data updated',group:'br' });
-        custom_data_dialog.value = false
-        emit('updated')
+          Authorization: `Bearer ${auth.accessToken.value}`,
+        },
+      },
+    )
+    .then(() => {
+      toast.add({
+        severity: 'success',
+        summary: 'Success',
+        detail: t('custom_data_updated'),
+        group: 'br',
+      })
+      custom_data_dialog.value = false
+      emit('updated')
     })
     .catch(() => {
-        toast.add({ severity: 'error', summary: 'Error', detail: 'Failed to perform the request',group:'br' });
-    });
+      toast.add({ severity: 'error', summary: 'Error', detail: t('request_failed'), group: 'br' })
+    })
 }
 
-
 const getOrderLogs = () => {
-    axios.get(`http://${import.meta.env.VITE_APP_BACKEND_HOST}${import.meta.env.VITE_APP_MODULE_CORE_API_PREFIX}/api/orders/${props.order.id}/logs`, {
+  axios
+    .get(
+      `http://${import.meta.env.VITE_APP_BACKEND_HOST}${import.meta.env.VITE_APP_MODULE_CORE_API_PREFIX}/api/orders/${props.order.id}/logs`,
+      {
         headers: {
-            Authorization: `Bearer ${auth.accessToken.value}`
-        }
-    })
-    .then((response)=>{
-        order_logs.value = response.data.data
-        order_logs_dialog.value = true
+          Authorization: `Bearer ${auth.accessToken.value}`,
+        },
+      },
+    )
+    .then((response) => {
+      order_logs.value = response.data.data
+      order_logs_dialog.value = true
     })
     .catch((err) => {
-        toast.add({ severity: 'error', summary: 'Error '+err.response.status, detail: err.response.data,group:'br' });
-    });
+      toast.add({
+        severity: 'error',
+        summary: 'Error ' + err.response.status,
+        detail: err.response.data,
+        group: 'br',
+      })
+    })
 }
 
 const finishOrder = () => {
-    axios.post(`http://${import.meta.env.VITE_APP_BACKEND_HOST}${import.meta.env.VITE_APP_MODULE_CORE_API_PREFIX}/api/orders/${props.order.id}/finish`,{}, {
+  axios
+    .post(
+      `http://${import.meta.env.VITE_APP_BACKEND_HOST}${import.meta.env.VITE_APP_MODULE_CORE_API_PREFIX}/api/orders/${props.order.id}/finish`,
+      {},
+      {
         headers: {
-            Authorization: `Bearer ${auth.accessToken.value}`,
-        }
-    })
-    .then(()=>{
-        toast.add({ severity: 'success', summary: 'Success', detail: 'Order finished',group:'br' });
-        emit('finished')
+          Authorization: `Bearer ${auth.accessToken.value}`,
+        },
+      },
+    )
+    .then(() => {
+      toast.add({
+        severity: 'success',
+        summary: 'Success',
+        detail: t('order_finished'),
+        group: 'br',
+      })
+      emit('finished')
     })
     .catch(() => {
-        toast.add({ severity: 'error', summary: 'Error', detail: 'Failed to perform the request',group:'br' });
-    });
+      toast.add({ severity: 'error', summary: 'Error', detail: t('request_failed'), group: 'br' })
+    })
 }
 
 const collectedMoney = () => {
-    axios.post(`http://${import.meta.env.VITE_APP_BACKEND_HOST}${import.meta.env.VITE_APP_MODULE_CORE_API_PREFIX}/api/orders/${props.order.id}/pay`,{}, {
+  axios
+    .post(
+      `http://${import.meta.env.VITE_APP_BACKEND_HOST}${import.meta.env.VITE_APP_MODULE_CORE_API_PREFIX}/api/orders/${props.order.id}/pay`,
+      {},
+      {
         headers: {
-            Authorization: `Bearer ${auth.accessToken.value}`,
-        }
-    })
-    .then(()=>{
-        toast.add({ severity: 'success', summary: 'Success', detail: 'Money collected',group:'br' });
-        emit('amount_collected')
+          Authorization: `Bearer ${auth.accessToken.value}`,
+        },
+      },
+    )
+    .then(() => {
+      toast.add({
+        severity: 'success',
+        summary: 'Success',
+        detail: t('money_collected'),
+        group: 'br',
+      })
+      emit('amount_collected')
     })
     .catch(() => {
-        toast.add({ severity: 'error', summary: 'Error', detail: 'Failed to perform the request',group:'br' });
-    });
+      toast.add({ severity: 'error', summary: 'Error', detail: t('request_failed'), group: 'br' })
+    })
 }
 
 const PrintKitchenReceipt = () => {
-    axios.post(`http://${import.meta.env.VITE_APP_BACKEND_HOST}${import.meta.env.VITE_APP_MODULE_CORE_API_PREFIX}/api/orders/${props.order.id}/printkitchenreceipt`,{}, {
+  axios
+    .post(
+      `http://${import.meta.env.VITE_APP_BACKEND_HOST}${import.meta.env.VITE_APP_MODULE_CORE_API_PREFIX}/api/orders/${props.order.id}/printkitchenreceipt`,
+      {},
+      {
         headers: {
-            Authorization: `Bearer ${auth.accessToken.value}`,
-            "Accept-Language": proxy.$i18n.locale
-        }
-    })
-    .then(()=>{
-        toast.add({ severity: 'success', summary: 'Success', detail: 'Print signal sent',group:'br' });
+          Authorization: `Bearer ${auth.accessToken.value}`,
+          'Accept-Language': proxy.$i18n.locale,
+        },
+      },
+    )
+    .then(() => {
+      toast.add({
+        severity: 'success',
+        summary: 'Success',
+        detail: t('print_signal_sent'),
+        group: 'br',
+      })
     })
     .catch(() => {
-        toast.add({ severity: 'error', summary: 'Error', detail: 'Failed to perform the request',group:'br' });
-    });
+      toast.add({ severity: 'error', summary: 'Error', detail: t('request_failed'), group: 'br' })
+    })
 }
 
 const PrintClientReceipt = () => {
-    axios.post(`http://${import.meta.env.VITE_APP_BACKEND_HOST}${import.meta.env.VITE_APP_MODULE_CORE_API_PREFIX}/api/orders/${props.order.id}/printclientreceipt`,{}, {
+  axios
+    .post(
+      `http://${import.meta.env.VITE_APP_BACKEND_HOST}${import.meta.env.VITE_APP_MODULE_CORE_API_PREFIX}/api/orders/${props.order.id}/printclientreceipt`,
+      {},
+      {
         headers: {
-            Authorization: `Bearer ${auth.accessToken.value}`,
-            "Accept-Language": proxy.$i18n.locale
-        }
-    })
-    .then(()=>{
-        toast.add({ severity: 'success', summary: 'Success', detail: 'Print signal sent',group:'br' });
+          Authorization: `Bearer ${auth.accessToken.value}`,
+          'Accept-Language': proxy.$i18n.locale,
+        },
+      },
+    )
+    .then(() => {
+      toast.add({
+        severity: 'success',
+        summary: 'Success',
+        detail: t('print_signal_sent'),
+        group: 'br',
+      })
     })
     .catch(() => {
-        toast.add({ severity: 'error', summary: 'Error', detail: 'Failed to perform the request',group:'br' });
-    });
+      toast.add({ severity: 'error', summary: 'Error', detail: t('request_failed'), group: 'br' })
+    })
 }
 
 const confirmCancelOrder = (event) => {
-    confirm.require({
-        target: event.currentTarget,
-        message: 'Are you sure you want to cancel this order ?',
-        icon: 'pi pi-exclamation-triangle',
-        rejectProps: {
-            label: 'Cancel',
-            severity: 'secondary',
-            outlined: true
-        },
-        acceptProps: {
-            label: 'Yes'
-        },
-        accept: () => {
-            
-            axios.post(`http://${import.meta.env.VITE_APP_BACKEND_HOST}${import.meta.env.VITE_APP_MODULE_CORE_API_PREFIX}/api/orders/${props.order.id}/cancel`, {},{
-                headers: {
-                    Authorization: `Bearer ${auth.accessToken.value}`
-                }
-            })
-            .then(()=>{
-                toast.add({ severity: 'success', summary: 'Success', detail: 'Order cancelled successfully',group:'br' });
-                emit('cancelled')
-            })
-            .catch(() => {
-                toast.add({ severity: 'error', summary: 'Error', detail: 'Failed to cancel order',group:'br' });
-            });
-
-            
-        },
-        reject: () => {
-            
-        }
-    });
-  }
+  confirm.require({
+    target: event.currentTarget,
+    message: t('confirm_cancel_order'),
+    icon: 'pi pi-exclamation-triangle',
+    rejectProps: {
+      label: t('cancel'),
+      severity: 'secondary',
+      outlined: true,
+    },
+    acceptProps: {
+      label: t('yes'),
+    },
+    accept: () => {
+      axios
+        .post(
+          `http://${import.meta.env.VITE_APP_BACKEND_HOST}${import.meta.env.VITE_APP_MODULE_CORE_API_PREFIX}/api/orders/${props.order.id}/cancel`,
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${auth.accessToken.value}`,
+            },
+          },
+        )
+        .then(() => {
+          toast.add({
+            severity: 'success',
+            summary: 'Success',
+            detail: t('order_cancelled_success'),
+            group: 'br',
+          })
+          emit('cancelled')
+        })
+        .catch(() => {
+          toast.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: t('order_cancel_failed'),
+            group: 'br',
+          })
+        })
+    },
+    reject: () => {},
+  })
+}
 
 const payment_status: any = computed(() => {
-    if (props.order.is_paid){
-        return {
-            title:"PAID",
-            severity:"success"
-        }
-    }
-
+  if (props.order.is_paid) {
     return {
-        title:"UNPAID",
-        severity:"warn"
+      title: t('paid'),
+      severity: 'success',
     }
+  }
+
+  return {
+    title: t('unpaid'),
+    severity: 'warn',
+  }
 })
 
-const order_status : any = computed(() => {
-
-if (props.order.state == "" || props.order.state == "pending" ){
+const order_status: any = computed(() => {
+  if (props.order.state == '' || props.order.state == 'pending') {
     return {
-        title:"PENDING",
-        severity:"secondary"
+      title: t('pending'),
+      severity: 'secondary',
     }
-}
+  }
 
-
-if (props.order.state == "cancelled" ){
+  if (props.order.state == 'cancelled') {
     return {
-        title:"CANCELLED",
-        severity:"danger"
+      title: t('cancelled'),
+      severity: 'danger',
     }
-}
+  }
 
-if (props.order.state == "in_progress" ){
+  if (props.order.state == 'in_progress') {
     return {
-        title:"INPROGRESS",
-        severity:"info"
+      title: t('in_progress'),
+      severity: 'info',
     }
-}
+  }
 
-if (props.order.state == "finished" ){
+  if (props.order.state == 'finished') {
     return {
-        title:"FINISHED",
-        severity:"success"
+      title: t('finished'),
+      severity: 'success',
     }
-}
+  }
 
-return {}
-
+  return {}
 })
-
-
 </script>

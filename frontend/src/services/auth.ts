@@ -1,6 +1,5 @@
-import { ref,  getCurrentInstance } from 'vue'
+import { ref, getCurrentInstance } from 'vue'
 import { useRouter } from 'vue-router'
-
 
 const TOKEN_KEY = 'nutrix_token'
 const USER_KEY = 'nutrix_user'
@@ -24,7 +23,7 @@ const isAuthenticated = ref(false)
 function loadFromStorage() {
   const token = localStorage.getItem(TOKEN_KEY)
   const userStr = localStorage.getItem(USER_KEY)
-  
+
   if (token && userStr) {
     accessToken.value = token
     currentUser.value = JSON.parse(userStr)
@@ -41,20 +40,23 @@ export const auth = {
 
   async login(username: string, password: string): Promise<boolean> {
     try {
-      const response = await fetch(`http://${import.meta.env.VITE_APP_BACKEND_HOST}${import.meta.env.VITE_APP_MODULE_CORE_API_PREFIX}/api/auth/login`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      const response = await fetch(
+        `http://${import.meta.env.VITE_APP_BACKEND_HOST}${import.meta.env.VITE_APP_MODULE_CORE_API_PREFIX}/api/auth/login`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ username, password }),
         },
-        body: JSON.stringify({ username, password }),
-      })
+      )
 
       if (!response.ok) {
         return false
       }
 
       const data: LoginResponse = await response.json()
-      
+
       accessToken.value = data.token
       currentUser.value = data.user
       isAuthenticated.value = true
@@ -84,7 +86,7 @@ export const auth = {
       }
 
       const data: LoginResponse = await response.json()
-      
+
       accessToken.value = data.token
       currentUser.value = data.user
       isAuthenticated.value = true
@@ -107,7 +109,7 @@ export const auth = {
     try {
       const response = await fetch('/api/auth/me', {
         headers: {
-          'Authorization': `Bearer ${accessToken.value}`,
+          Authorization: `Bearer ${accessToken.value}`,
         },
       })
 

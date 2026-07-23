@@ -138,3 +138,26 @@ func TestSettings_JSON(t *testing.T) {
 		t.Errorf("Id = %v, want %v", decoded.Id, settings.Id)
 	}
 }
+
+func TestJSONFloat_Unmarshal_Number(t *testing.T) {
+	input := `{"sale_price": 12.5}`
+	var result struct {
+		SalePrice JSONFloat `json:"sale_price"`
+	}
+	if err := json.Unmarshal([]byte(input), &result); err != nil {
+		t.Fatalf("Unmarshal failed: %v", err)
+	}
+	if float64(result.SalePrice) != 12.5 {
+		t.Errorf("SalePrice = %v, want 12.5", result.SalePrice)
+	}
+}
+
+func TestJSONFloat_MarshalZero(t *testing.T) {
+	result, err := json.Marshal(JSONFloat(0))
+	if err != nil {
+		t.Fatalf("MarshalJSON(0) failed: %v", err)
+	}
+	if string(result) != "0" {
+		t.Errorf("MarshalJSON(0) = %s, want \"0\"", string(result))
+	}
+}

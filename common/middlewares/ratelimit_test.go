@@ -93,3 +93,25 @@ func TestRateLimitMiddleware(t *testing.T) {
 		t.Errorf("Third request: status = %v, want %v", w3.Code, http.StatusTooManyRequests)
 	}
 }
+
+func TestNewRateLimiter_ZeroWindow(t *testing.T) {
+	defer func() {
+		if r := recover(); r != nil {
+			t.Logf("NewRateLimiter(1, 0) panicked as expected: %v", r)
+			return
+		}
+	}()
+
+	rl := NewRateLimiter(1, 0)
+	if rl == nil {
+		t.Fatal("NewRateLimiter returned nil")
+	}
+
+	if !rl.allow("127.0.0.1") {
+		t.Error("First request should be allowed even with zero window")
+	}
+
+	if rl.allow("127.0.0.1") {
+		t.Error("Second request should be blocked with limit 1")
+	}
+}

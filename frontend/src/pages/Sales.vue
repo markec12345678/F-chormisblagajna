@@ -33,7 +33,7 @@
                                 <Column expander style="width: 5rem" />
                                 <Column sortable field="date" :header="$t('date')">
                                     <template #body="slotProps">
-                                        <i class="pi pi-exclamation-circle" v-tooltip.top="'has refunds'" v-if="slotProps.data.refunds?.length > 0" style="margin-right:0.5rem;color:red"></i>                                            
+                                        <i class="pi pi-exclamation-circle" v-tooltip.top="$t('has_refunds')" v-if="slotProps.data.refunds?.length > 0" style="margin-right:0.5rem;color:red"></i>                                            
                                         {{ slotProps.data.date }}
                                     </template>
                                 </Column>
@@ -62,9 +62,9 @@
                                 <template #expansion="slotProps">
                                     <DataTable v-model:expandedRows="expandedSalesLogOrderItems" :value="slotProps.data.orders">
                                         <Column expander style="width: 5rem" />
-                                        <Column sortable field="order.display_id" header="Id">
+                                        <Column sortable field="order.display_id" :header="$t('id')">
                                             <template #body="slotProps">
-                                                <i class="pi pi-exclamation-circle" v-tooltip.top="'has refunds'" v-if="orders_refunds[slotProps.data.id]?.refunds.length > 0" style="margin-right:0.5rem;color:red"></i>                                            
+                                                <i class="pi pi-exclamation-circle" v-tooltip.top="$t('has_refunds')" v-if="orders_refunds[slotProps.data.id]?.refunds.length > 0" style="margin-right:0.5rem;color:red"></i>                                            
                                                 {{ slotProps.data.order.display_id }}
                                             </template>
                                         </Column>
@@ -118,18 +118,17 @@ import Column from 'primevue/column'
 import {Line,Pie} from 'vue-chartjs'
 import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale,PointElement,LineElement,ArcElement,Filler} from 'chart.js'
 import Card from "primevue/card";
-import {getCurrentInstance, ref} from 'vue'
+import { ref } from 'vue'
 import axios from 'axios'
 import SalesLogTableItems from '@/components/SalesLogTableItems.vue'
-import { $dt } from '@primevue/themes';
+
 import {Badge, Button, Tag} from 'primevue';
 import { useI18n } from 'vue-i18n'
 import auth from '../services/auth';
 
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale,PointElement,LineElement,ArcElement, Filler)
 
-const { t } = useI18n() 
-const {proxy} = getCurrentInstance()
+const { t } = useI18n()
 
 const sales_log = ref([])
 const orders_refunds = ref({})
@@ -290,7 +289,7 @@ const setChartOptions = () => {
 }
 
 const export_sales = (first=salesTableFirstIndex.value,rows=salesTableRowsPerPage.value) => {
-    let page_number = Math.floor(first/rows) + 1
+    const page_number = Math.floor(first/rows) + 1
 
 
     axios.get(`http://${import.meta.env.VITE_APP_BACKEND_HOST}${import.meta.env.VITE_APP_MODULE_CORE_API_PREFIX}/api/logs/salesperday/exportcsv?page[number]=${page_number}&page[size]=${rows}`, {
@@ -325,7 +324,7 @@ const export_sales = (first=salesTableFirstIndex.value,rows=salesTableRowsPerPag
 const loadSales = (first=salesTableFirstIndex.value,rows=salesTableRowsPerPage.value) => {
 
 
-    let page_number = Math.floor(first/rows) + 1
+    const page_number = Math.floor(first/rows) + 1
 
 
     axios.get(`http://${import.meta.env.VITE_APP_BACKEND_HOST}${import.meta.env.VITE_APP_MODULE_CORE_API_PREFIX}/api/logs/salesperday?page[number]=${page_number}&page[size]=${rows}`, {
@@ -335,7 +334,7 @@ const loadSales = (first=salesTableFirstIndex.value,rows=salesTableRowsPerPage.v
     })
     .then(response => {
 
-        let temp_sales_log = []
+        const temp_sales_log = []
         chartLabels.value = []
         chartCost.value = []
         chartSales.value = []
@@ -372,7 +371,7 @@ const loadSales = (first=salesTableFirstIndex.value,rows=salesTableRowsPerPage.v
                         productPieChartColors.value.push('#'+(Math.floor(Math.random()*16777215).toString(16)).padStart(6, '0'));
                     }else {
 
-                        let index = productPieChartLabels.value.indexOf(response.data.data[i].orders[j].order.items[k].product.name)
+                        const index = productPieChartLabels.value.indexOf(response.data.data[i].orders[j].order.items[k].product.name)
                         productPieChartSales.value[index] += response.data.data[i].orders[j].order.items[k].quantity
                     }   
                 }
@@ -382,7 +381,7 @@ const loadSales = (first=salesTableFirstIndex.value,rows=salesTableRowsPerPage.v
 
             for (let j=0;j<response.data.data[i].refunds.length;j++){
 
-                let refund = response.data.data[i].refunds[j]
+                const refund = response.data.data[i].refunds[j]
 
                 if (orders_refunds.value[`${response.data.data[i].refunds[j].order_id}`]){
                     orders_refunds.value[`${response.data.data[i].refunds[j].order_id}`].refunds.push(refund)

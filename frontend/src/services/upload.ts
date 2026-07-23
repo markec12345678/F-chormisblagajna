@@ -9,7 +9,7 @@ type ProgressEventHandler = (progressEvent: AxiosProgressEvent) => void;
 upload_svc.uploadProductImage = (product_id: String,file: File,backendURL: string,progressLoadingFunc: ProgressEventHandler) =>  {
     
 
-        let formData = new FormData();
+        const formData = new FormData();
         formData.append('file', file);
         formData.append('type', file.type);
 

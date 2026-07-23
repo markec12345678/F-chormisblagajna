@@ -3,7 +3,7 @@
     <div class="setup-card">
       <div class="flex justify-content-end">
         <a href="https://nutrixpos.com/userguide/installation.html" target="_blank">
-            <Button icon="pi pi-info-circle" class="p-button-text" />
+          <Button icon="pi pi-info-circle" class="p-button-text" />
         </a>
       </div>
       <!-- Logo / Icon -->
@@ -11,20 +11,20 @@
         <i class="pi pi-database"></i>
       </div>
 
-      <h1 class="setup-title">Welcome to NutrixPOS</h1>
+      <h1 class="setup-title">{{ $t('welcome_to_nutrix') }}</h1>
       <p class="setup-subtitle">
-        No database connection has been configured yet.<br />
-        Please provide your MongoDB connection details below.
+        {{ $t('no_db_configured') }}<br />
+        {{ $t('provide_db_details') }}
       </p>
 
       <form class="setup-form" @submit.prevent="submit">
         <!-- Host -->
         <div class="field">
-          <label for="host">Host</label>
+          <label for="host">{{ $t('host') }}</label>
           <InputText
             id="host"
             v-model="form.host"
-            placeholder="e.g. localhost"
+            :placeholder="$t('host_placeholder')"
             :class="{ 'p-invalid': errors.host }"
             class="w-full"
           />
@@ -33,12 +33,12 @@
 
         <!-- Port -->
         <div class="field">
-          <label for="port">Port</label>
+          <label for="port">{{ $t('port') }}</label>
           <InputNumber
             id="port"
             v-model="form.port"
             :useGrouping="false"
-            placeholder="e.g. 27017"
+            :placeholder="$t('port_placeholder')"
             :class="{ 'p-invalid': errors.port }"
             class="w-full"
           />
@@ -47,11 +47,11 @@
 
         <!-- Database -->
         <div class="field">
-          <label for="database">Database name</label>
+          <label for="database">{{ $t('database_name') }}</label>
           <InputText
             id="database"
             v-model="form.database"
-            placeholder="e.g. nutrix"
+            :placeholder="$t('database_placeholder')"
             :class="{ 'p-invalid': errors.database }"
             class="w-full"
           />
@@ -60,11 +60,11 @@
 
         <!-- Database -->
         <div class="field">
-          <label for="username">Username</label>
+          <label for="username">{{ $t('username') }}</label>
           <InputText
             id="username"
             v-model="form.username"
-            placeholder="e.g. webadmin"
+            :placeholder="$t('username_placeholder')"
             :class="{ 'p-invalid': errors.username }"
             class="w-full"
           />
@@ -73,12 +73,12 @@
 
         <!-- Database -->
         <div class="field">
-          <label for="password">Password</label>
+          <label for="password">{{ $t('password') }}</label>
           <InputText
             id="password"
             v-model="form.password"
             type="password"
-            placeholder="Your database user password"
+            :placeholder="$t('password_placeholder')"
             :class="{ 'p-invalid': errors.password }"
             class="w-full"
           />
@@ -87,28 +87,30 @@
 
         <!-- Database -->
         <div class="field">
-          <label for="password">Confirm Password</label>
+          <label for="password">{{ $t('confirm_password') }}</label>
           <InputText
             id="confirm_password"
             v-model="form.confirm_password"
             type="password"
-            placeholder="Enter your password again"
+            :placeholder="$t('confirm_password_placeholder')"
             :class="{ 'p-invalid': errors.confirm_password }"
             class="w-full"
           />
-          <small v-if="errors.confirm_password" class="p-error">{{ errors.confirm_password }}</small>
+          <small v-if="errors.confirm_password" class="p-error">{{
+            errors.confirm_password
+          }}</small>
         </div>
 
         <!-- Success banner -->
         <div v-if="saved" class="success-banner mb-2 mt-4">
           <i class="pi pi-check-circle"></i>
-          Configuration saved! The server is setup — please restart the application to apply the new settings.
+          {{ $t('config_saved_restart') }}
         </div>
 
         <!-- Connection Test Success banner -->
         <div v-if="testSuccess && !saved" class="success-banner mb-2 mt-4">
           <i class="pi pi-check-circle"></i>
-          Connection successful! You can now save the configuration.
+          {{ $t('connection_successful') }}
         </div>
 
         <!-- Error banner -->
@@ -120,10 +122,14 @@
         <div v-if="!saved" class="flex flex-column gap-1 mt-1">
           <Button
             type="button"
-            label="Test Connection"
+            :label="$t('test_connection')"
             icon="pi pi-bolt"
             class="submit-btn p-button-outlined"
-            style="background: transparent; border: 1px solid rgba(255, 255, 255, 0.4) !important; color: #1a2a3a;"
+            style="
+              background: transparent;
+              border: 1px solid rgba(255, 255, 255, 0.4) !important;
+              color: #1a2a3a;
+            "
             :loading="testing"
             :disabled="loading || testing || saved"
             @click="testConnection"
@@ -131,7 +137,7 @@
 
           <Button
             type="submit"
-            label="Save & Continue"
+            :label="$t('save_and_continue')"
             icon="pi pi-arrow-right"
             iconPos="right"
             class="submit-btn"
@@ -140,7 +146,12 @@
           />
         </div>
 
-        <Button v-if="saved" class="submit-btn mt-2" label="Let's go 🚀" @click="router.push({ path: '/home' })" />
+        <Button
+          v-if="saved"
+          class="submit-btn mt-2"
+          :label="$t('lets_go')"
+          @click="router.push({ path: '/home' })"
+        />
       </form>
     </div>
   </div>
@@ -149,11 +160,13 @@
 <script setup lang="ts">
 import '../styles/setup-shared.css'
 import { ref, reactive, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 import InputText from 'primevue/inputtext'
 import InputNumber from 'primevue/inputnumber'
 import Button from 'primevue/button'
 import axios from 'axios'
 import { useRouter } from 'vue-router'
+const { t } = useI18n()
 const router = useRouter()
 
 const apiUrl = `http://${import.meta.env.VITE_APP_BACKEND_HOST}`
@@ -167,8 +180,6 @@ const form = reactive({
   confirm_password: '',
 })
 
-
-
 const errors = reactive({
   host: '',
   port: '',
@@ -180,7 +191,7 @@ const errors = reactive({
 
 const loading = ref(false)
 const testing = ref(false)
-const saved   = ref(false)
+const saved = ref(false)
 const testSuccess = ref(false)
 const serverError = ref('')
 
@@ -189,12 +200,19 @@ watch(form, () => {
 })
 
 function validate(): boolean {
-  errors.host = form.host.trim() ? '' : 'Host is required'
-  errors.port = form.port && form.port > 0 ? '' : 'A valid port number is required'
-  errors.database = form.database.trim() ? '' : 'Database name is required'
-  errors.confirm_password = form.password == form.confirm_password ? '' : 'Passwords do not match'
+  errors.host = form.host.trim() ? '' : t('host_required')
+  errors.port = form.port && form.port > 0 ? '' : t('port_invalid')
+  errors.database = form.database.trim() ? '' : t('database_required')
+  errors.confirm_password = form.password == form.confirm_password ? '' : t('passwords_no_match')
 
-  return !errors.host && !errors.port && !errors.database && !errors.username && !errors.password && !errors.confirm_password
+  return (
+    !errors.host &&
+    !errors.port &&
+    !errors.database &&
+    !errors.username &&
+    !errors.password &&
+    !errors.confirm_password
+  )
 }
 
 async function testConnection() {
@@ -206,16 +224,15 @@ async function testConnection() {
 
   try {
     await axios.post(`${apiUrl}/api/setup/test-connection`, {
-      host:     form.host.trim(),
-      port:     form.port,
+      host: form.host.trim(),
+      port: form.port,
       database: form.database.trim(),
       username: form.username.trim(),
-      password: form.password
+      password: form.password,
     })
     testSuccess.value = true
   } catch (err: any) {
-    serverError.value =
-      err?.response?.data || 'Failed to connect to database. Check the credentials.'
+    serverError.value = err?.response?.data || t('db_connection_failed')
     testSuccess.value = false
   } finally {
     testing.value = false
@@ -230,21 +247,18 @@ async function submit() {
 
   try {
     await axios.post(`${apiUrl}/api/setup/config`, {
-      host:     form.host.trim(),
-      port:     form.port,
+      host: form.host.trim(),
+      port: form.port,
       database: form.database.trim(),
       username: form.username.trim(),
-      password: form.password
+      password: form.password,
     })
     saved.value = true
     testSuccess.value = false
   } catch (err: any) {
-    serverError.value =
-      err?.response?.data || 'Failed to save configuration. Check the backend logs.'
+    serverError.value = err?.response?.data || t('config_save_failed')
   } finally {
     loading.value = false
   }
 }
 </script>
-
-

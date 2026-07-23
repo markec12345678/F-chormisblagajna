@@ -33,15 +33,21 @@
 }
 
 @keyframes fadeUp {
-  from { opacity: 0; transform: translateY(24px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .setup-icon {
   width: 64px;
   height: 64px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #DCDB7A 0%, #EAD60B 100%);
+  background: linear-gradient(135deg, #dcdb7a 0%, #ead60b 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -51,7 +57,7 @@
 
 .setup-icon .pi {
   font-size: 1.8rem;
-  color: #2E4762;
+  color: #2e4762;
 }
 
 .setup-title {
@@ -95,7 +101,9 @@
   color: #1a2a3a;
   border-radius: 0.6rem !important;
   padding: 0.65rem 0.9rem !important;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
 }
 
 :deep(.p-inputtext:focus),
@@ -127,7 +135,9 @@
   font-weight: 600 !important;
   padding: 0.75rem !important;
   font-size: 1rem !important;
-  transition: opacity 0.2s, transform 0.15s !important;
+  transition:
+    opacity 0.2s,
+    transform 0.15s !important;
 }
 
 .submit-btn:hover:not(:disabled) {

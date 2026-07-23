@@ -1,19 +1,18 @@
-$sm:10px;
-$md:960px;
-$lg:1500px !default;
-$xl:2000px;
+$sm: 10px;
+$md: 960px;
+$lg: 1500px !default;
+$xl: 2000px;
 
 $breakpoints: (
-    'sm': $sm,
-    'md': $md,
-    'lg': $lg,
-    'xl': $xl
+  'sm': $sm,
+  'md': $md,
+  'lg': $lg,
+  'xl': $xl,
 ) !default;
-
 
 // @media (max-width: $sm) {
 //   // Styles for small screens
-  
+
 // }
 
 // @media (min-width: $sm + 1) and (max-width: $md) {
@@ -32,7 +31,6 @@ $breakpoints: (
 //   // Styles for extra-extra-large screens
 // }
 
-
 // $primary-color:  #20232a;
 // $primary-color-text: white;
 // $secondary-color: #00763B;
@@ -40,9 +38,6 @@ $breakpoints: (
 // :root {
 //     --p-button-primary-color: #001F3E
 // }
-
-
-
 
 // .p-button-primary, .p-button {
 //   background: $primary-color;
@@ -67,4 +62,4 @@ $breakpoints: (
 //     margin-bottom:0px;
 // }
 
-@use 'primeflex/primeflex.scss'
+@use 'primeflex/primeflex.scss';

@@ -1,6 +1,7 @@
 package helpers
 
 import (
+	"fmt"
 	"os"
 	"testing"
 )
@@ -45,6 +46,35 @@ func TestRandStringBytesMaskImprSrc(t *testing.T) {
 			}
 		}
 	})
+}
+
+func TestRandStringBytesMaskImprSrc_ValidLength(t *testing.T) {
+	lengths := []int{1, 4, 7, 8, 15, 16, 32, 63, 64, 128, 256}
+	for _, n := range lengths {
+		t.Run(fmt.Sprintf("len_%d", n), func(t *testing.T) {
+			result, err := RandStringBytesMaskImprSrc(n)
+			if err != nil {
+				t.Fatalf("RandStringBytesMaskImprSrc(%d) returned error: %v", n, err)
+			}
+			if len(result) != n {
+				t.Errorf("RandStringBytesMaskImprSrc(%d) returned string of length %d, want %d", n, len(result), n)
+			}
+		})
+	}
+}
+
+func TestRandStringBytesMaskImprSrc_SpecialChars(t *testing.T) {
+	for i := 0; i < 200; i++ {
+		result, err := RandStringBytesMaskImprSrc(64)
+		if err != nil {
+			t.Fatalf("iteration %d: unexpected error: %v", i, err)
+		}
+		for j, c := range result {
+			if !((c >= '0' && c <= '9') || (c >= 'a' && c <= 'f')) {
+				t.Errorf("iteration %d, index %d: got char %q, expected only hex chars [0-9a-f]", i, j, c)
+			}
+		}
+	}
 }
 
 func TestResolveOsEnvPath(t *testing.T) {

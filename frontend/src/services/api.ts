@@ -12,7 +12,7 @@ async function api<T>(url: string, options: ApiOptions = {}): Promise<T> {
   }
 
   if (!skipAuth && auth.accessToken.value) {
-    (headers as Record<string, string>)['Authorization'] = `Bearer ${auth.accessToken.value}`
+    ;(headers as Record<string, string>)['Authorization'] = `Bearer ${auth.accessToken.value}`
   }
 
   const response = await fetch(url, {
