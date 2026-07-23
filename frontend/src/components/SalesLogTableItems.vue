@@ -1,5 +1,5 @@
 <template>
-  <DataTable v-model:expandedRows="expandedSalesLogOrderItemComponents" :value="items">
+  <DataTable v-model:expandedRows="expandedSalesLogOrderItemComponents" :value="localItems">
     <Column expander style="width: 5rem" />
     <Column sortable field="ItemName" :header="$t('name')">
       <template #body="slotProps">
@@ -99,7 +99,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, ref } from 'vue'
+import { ref } from 'vue'
 import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
 import { Badge } from 'primevue'
@@ -108,14 +108,14 @@ const props = defineProps(['items', 'order_refunds'])
 const expandedSalesLogOrderItemComponents = ref([])
 
 const items_refunds = ref({})
-const items = ref([])
+const localItems = ref([])
 
 const init = () => {
-  items.value = props.items
+  localItems.value = props.items
 
-  items.value.forEach((item, itemIndex) => {
+  localItems.value.forEach((item, itemIndex) => {
     item.components.forEach((component, componentIndex) => {
-      items.value[itemIndex].components[componentIndex].item_id = item.item_id
+      localItems.value[itemIndex].components[componentIndex].item_id = item.item_id
     })
   })
 

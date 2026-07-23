@@ -27,6 +27,7 @@
 import QueueOrder from '@/components/QueueOrder.vue'
 import axios from 'axios';
 import {ref,watch} from 'vue';
+import Order from '@/classes/Order';
 import { useToast } from "primevue/usetoast";
 import { Notification} from '@/classes/Notification';
 import { globalStore } from '@/stores';
@@ -44,7 +45,13 @@ const notifications = ref<Notification[]>([])
 const orders = ref([])
 const openedDialogs = ref(0)
 
-const chats = ref<any[]>([])
+interface Chat {
+  type: string
+  message: string
+  topic_name: string
+}
+
+const chats = ref<Chat[]>([])
 
 let socket : WebSocket
 
@@ -52,7 +59,7 @@ let socket : WebSocket
 const loading = ref(true)
 const { t, locale,setLocaleMessage } = useI18n({ useScope: 'global' })
 
-const dynamic_columns = ref<Array<Array<any>>>([])
+const dynamic_columns = ref<Order[][]>([])
 const prepareLayout = () => {
     const screenWidth = window.innerWidth;
     dynamic_columns.value = []

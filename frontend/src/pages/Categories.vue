@@ -211,6 +211,7 @@ import { useToast } from 'primevue/usetoast'
 import { useConfirm } from 'primevue/useconfirm'
 import { globalStore } from '@/stores'
 import auth from '../services/auth'
+import type { Category, DataTablePageEvent } from '@/types'
 
 const { t } = useI18n()
 const store = globalStore()
@@ -218,22 +219,22 @@ const store = globalStore()
 const confirm = useConfirm()
 const toast = useToast()
 
-const new_category = ref<any>({})
+const new_category = ref<Partial<Category>>({})
 const new_cateogry_product_dialog = ref(false)
 const new_category_error = ref('')
 
-const categories = ref<any[]>([])
+const categories = ref<Category[]>([])
 const categoriesTableTotalRecords = ref(0)
 const isCategoriesTableLoading = ref(false)
 const categoriesTableRowsPerPage = ref(50)
 const categoryAddDialog = ref(false)
 
-const categoryToEdit = ref<any>({})
+const categoryToEdit = ref<Partial<Category>>({})
 const categoryEditDialog = ref(false)
 const add_editted_product_dialog = ref(false)
 const category_edit_error = ref('')
 
-const prepareCategoryToEdit = (product: any) => {
+const prepareCategoryToEdit = (product: Category) => {
   categoryToEdit.value = JSON.parse(JSON.stringify(product))
 
   for (let i = 0; i < categoryToEdit.value.products?.length; i++) {
@@ -243,12 +244,12 @@ const prepareCategoryToEdit = (product: any) => {
   categoryEditDialog.value = true
 }
 
-const updatCategoriesTableRowsPerPage = (event: any) => {
+const updatCategoriesTableRowsPerPage = (event: DataTablePageEvent) => {
   getCategories(event.first, event.rows)
 }
 
 const submitCategory = () => {
-  new_category_error.value = new_category.value.name?.trim() ? '' : proxy.$t('validation_required')
+  new_category_error.value = new_category.value.name?.trim() ? '' : t('validation_required')
 
   if (new_category_error.value) return
 
@@ -322,7 +323,7 @@ const deleteCategory = (category_id: string) => {
 const updateCategory = () => {
   category_edit_error.value = categoryToEdit.value.name?.trim()
     ? ''
-    : proxy.$t('validation_required')
+    : t('validation_required')
 
   if (category_edit_error.value) return
 
@@ -378,19 +379,23 @@ const confirmDeleteCategory = (event, category_id) => {
   })
 }
 
-const newCategoryAddProduct = (product: any) => {
+const newCategoryAddProduct = (product: Product) => {
   product.index = new_category.value.products ? new_category.value.products.length : 0
-  new_category.value.products
-    ? new_category.value.products.push(product)
-    : (new_category.value.products = [product])
+  if (new_category.value.products) {
+    new_category.value.products.push(product)
+  } else {
+    new_category.value.products = [product]
+  }
   new_cateogry_product_dialog.value = false
 }
 
-const addEdittedProduct = (product: any) => {
+const addEdittedProduct = (product: Product) => {
   product.index = categoryToEdit.value.products ? categoryToEdit.value.products.length : 0
-  categoryToEdit.value.products
-    ? categoryToEdit.value.products.push(product)
-    : (categoryToEdit.value.products = [product])
+  if (categoryToEdit.value.products) {
+    categoryToEdit.value.products.push(product)
+  } else {
+    categoryToEdit.value.products = [product]
+  }
   add_editted_product_dialog.value = false
 }
 

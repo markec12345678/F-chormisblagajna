@@ -21,26 +21,28 @@
 </template>
 
 <script setup lang="ts">
-import { ref, getCurrentInstance } from 'vue'
+import { ref } from 'vue'
 import Dropdown from 'primevue/dropdown'
 import axios from 'axios'
 import { useI18n } from 'vue-i18n'
 import Button from 'primevue/button'
 import { globalStore } from '../stores'
 import auth from '../services/auth'
+import { useToast } from 'primevue/usetoast'
+import type { Language } from '@/types'
 
-const { proxy } = getCurrentInstance()
 const store = globalStore()
+const toast = useToast()
 
 const changedLang = ref(false)
 
 const { t, locale, setLocaleMessage } = useI18n({ useScope: 'global' })
 
-const selectedLang: any = ref({ language: 'English', code: 'en' })
+const selectedLang = ref<Language>({ language: 'English', code: 'en' })
 const languages = ref([{ language: 'English', code: 'en' }])
 
 const changedLanguage = () => {
-  if (proxy.$i18n.locale != selectedLang.value.code) {
+  if (locale.value != selectedLang.value.code) {
     changedLang.value = true
   } else {
     changedLang.value = false
@@ -63,7 +65,7 @@ const applyLang = () => {
       store.setOrientation('rtl')
     })
     .catch(() => {
-      proxy.$toast.add({
+      toast.add({
         severity: 'error',
         summary: 'Error',
         detail: t('language_load_error'),
@@ -87,7 +89,7 @@ const getAvailableLanguages = () => {
       languages.value = response.data.data
     })
     .catch((error) => {
-      proxy.$toast.add({
+      toast.add({
         severity: 'error',
         summary: 'Error',
         detail: error.response.data.error,

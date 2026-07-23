@@ -74,7 +74,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, defineProps, computed } from 'vue'
 
 import Button from 'primevue/button'

@@ -166,9 +166,10 @@ async function submit() {
     setTimeout(() => {
       router.push({ path: '/' })
     }, 1500)
-  } catch (err: any) {
+  } catch (err) {
+    const data = axios.isAxiosError(err) ? err.response?.data : undefined
     serverError.value =
-      err?.response?.data?.error || err?.response?.data?.message || t('admin_create_failed')
+      data?.error || data?.message || t('admin_create_failed')
   } finally {
     loading.value = false
   }

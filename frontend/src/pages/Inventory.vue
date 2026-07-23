@@ -69,7 +69,7 @@
                         </FloatLabel>
                         <Button icon="pi pi-plus" :label="$t('add_entry')" class="my-1" @click="addNewEntry(entries_dialog_material.id)" severity="info" raised />
                     </div>
-                    <DataTable @page="updatEntriesTableRowsPerPage" :lazy="true" :totalRecords="entriesTableTotalRecords" :loading="isEntriesTableLoading"  paginatorPosition="both"  paginator :rows="entriesTableRowsPerPage" :rowsPerPageOptions="[50, 100, 500]"stripedRows :value="entries_dialog_material.entries" v-model:expandedRows="expandedEntryRows">
+                    <DataTable @page="updatEntriesTableRowsPerPage" :lazy="true" :totalRecords="entriesTableTotalRecords" :loading="isEntriesTableLoading"  paginatorPosition="both"  paginator :rows="entriesTableRowsPerPage" :rowsPerPageOptions="[50, 100, 500]" stripedRows :value="entries_dialog_material.entries" v-model:expandedRows="expandedEntryRows">
                         <Column expander style="width: 5rem" />
                         <Column field="company" :header="$t('company')"></Column>
                         <Column field="quantity" :header="$t('quantity')" sortable></Column>
@@ -184,6 +184,7 @@ import {Divider} from 'primevue'
 import { globalStore } from '@/stores';
 import auth from '../services/auth';
   
+import type { DataTablePageEvent } from '@/types'
 import { ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useToast } from "primevue/usetoast";
@@ -245,7 +246,7 @@ const isLogsTableLoading = ref(true)
   const material_logs_id = ref("")
 
 
-const updatEntriesTableRowsPerPage = (event: any) => {
+const updatEntriesTableRowsPerPage = (event: DataTablePageEvent) => {
     loadEntries(event.first,event.rows)
 }
 
@@ -433,12 +434,12 @@ const confirmDeleteMaterial = (material_id: string) => {
 
 
   const submitNewComponent = () => {
-      component_errors.value.name = new_component_name.value?.trim() ? '' : proxy.$t('validation_required')
-      component_errors.value.unit = new_component_unit.value?.trim() ? '' : proxy.$t('validation_required')
+      component_errors.value.name = new_component_name.value?.trim() ? '' : t('validation_required')
+      component_errors.value.unit = new_component_unit.value?.trim() ? '' : t('validation_required')
 
       if (component_errors.value.name || component_errors.value.unit) return
 
-      const entries : any = []
+      const entries: { company: string; quantity: number; purchase_price: number }[] = []
       new_component_entries.value.forEach((entry) => {
           entries.push({
             company: entry.company,

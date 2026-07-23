@@ -121,6 +121,7 @@ import { useI18n } from 'vue-i18n'
 import OrderView from '@/components/OrderView.vue'
 import { globalStore } from '@/stores'
 import auth from '../services/auth'
+import type { OrderListItem, DataTablePageEvent } from '@/types'
 
 const { t } = useI18n()
 const store = globalStore()
@@ -131,20 +132,20 @@ const toast = useToast()
 const ordersTableTotalRecords = ref(0)
 const isOrdersTableLoading = ref(false)
 const ordersTableRowsPerPage = ref(50)
-const orders = ref<any[]>([])
+const orders = ref<OrderListItem[]>([])
 const ordersSearchText = ref('')
 
-const orderToDisplay = ref<any>({})
+const orderToDisplay = ref<Partial<OrderListItem>>({})
 const order_details_dialog = ref(false)
 
-const orderStateSeverity = ref<any>({
+const orderStateSeverity = ref<Record<string, string>>({
   pending: 'secondary',
   in_progress: 'info',
   finished: 'success',
   cancelled: 'danger',
 })
 
-const updatOrdersTableRowsPerPage = (event: any) => {
+const updatOrdersTableRowsPerPage = (event: DataTablePageEvent) => {
   loadOrders(event.first, event.rows)
 }
 

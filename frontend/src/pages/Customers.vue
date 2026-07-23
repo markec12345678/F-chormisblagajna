@@ -164,12 +164,13 @@ import { useConfirm } from 'primevue/useconfirm'
 // import { Material } from '@/classes/OrderItem';
 import { globalStore } from '../stores'
 import auth from '../services/auth'
+import type { Customer, DataTablePageEvent } from '@/types'
 
 const { t } = useI18n()
 const store = globalStore()
 const confirm = useConfirm()
 
-const customerToEdit = ref<any>({})
+const customerToEdit = ref<Partial<Customer>>({})
 const customerEditDialog = ref(false)
 const customer_add_errors = ref({ name: '' })
 const customer_edit_errors = ref({ name: '' })
@@ -237,7 +238,7 @@ const confirmDeleteCustomer = (event, customer_id) => {
   })
 }
 
-const prepareCustomerToEdit = (customer: any) => {
+const prepareCustomerToEdit = (customer: Customer) => {
   customerToEdit.value = JSON.parse(JSON.stringify(customer))
   customerEditDialog.value = true
 }
@@ -245,7 +246,7 @@ const prepareCustomerToEdit = (customer: any) => {
 const updateCustomer = () => {
   customer_edit_errors.value.name = customerToEdit.value.name?.trim()
     ? ''
-    : proxy.$t('validation_required')
+    : t('validation_required')
 
   if (customer_edit_errors.value.name) return
 
@@ -265,7 +266,7 @@ const updateCustomer = () => {
       toast.add({
         severity: 'success',
         summary: t('customer_updated'),
-        detail: proxy.$t('done'),
+        detail: t('done'),
         group: 'br',
         life: 3000,
       })
@@ -286,7 +287,7 @@ const updateCustomer = () => {
 const submitCustomer = () => {
   customer_add_errors.value.name = new_customer_name.value?.trim()
     ? ''
-    : proxy.$t('validation_required')
+    : t('validation_required')
 
   if (customer_add_errors.value.name) return
 
@@ -312,7 +313,7 @@ const submitCustomer = () => {
       toast.add({
         severity: 'success',
         summary: t('customer_added'),
-        detail: proxy.$t('done'),
+        detail: t('done'),
         group: 'br',
       })
       new_customer_id.value = response.data.data.id
@@ -329,7 +330,7 @@ const submitCustomer = () => {
     })
 }
 
-const updatCustomersTableRowsPerPage = (event: any) => {
+const updatCustomersTableRowsPerPage = (event: DataTablePageEvent) => {
   loadCustomers(event.first, event.rows)
 }
 

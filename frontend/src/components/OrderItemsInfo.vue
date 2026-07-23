@@ -94,11 +94,11 @@ const props = defineProps({
   },
 })
 
-const order_items_status: any = computed(() => {
-  const statuses = {}
+const order_items_status = computed<Record<string, { title: string; severity: string }>>(() => {
+  const statuses: Record<string, { title: string; severity: string }> = {}
 
   props.order.items.forEach((item) => {
-    let item_status = {}
+    let item_status = { title: '', severity: 'secondary' }
 
     if (item.status == '') {
       item_status = {

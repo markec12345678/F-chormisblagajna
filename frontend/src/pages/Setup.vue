@@ -231,8 +231,9 @@ async function testConnection() {
       password: form.password,
     })
     testSuccess.value = true
-  } catch (err: any) {
-    serverError.value = err?.response?.data || t('db_connection_failed')
+  } catch (err) {
+    const data = axios.isAxiosError(err) ? err.response?.data : undefined
+    serverError.value = data || t('db_connection_failed')
     testSuccess.value = false
   } finally {
     testing.value = false
@@ -255,8 +256,9 @@ async function submit() {
     })
     saved.value = true
     testSuccess.value = false
-  } catch (err: any) {
-    serverError.value = err?.response?.data || t('config_save_failed')
+  } catch (err) {
+    const data = axios.isAxiosError(err) ? err.response?.data : undefined
+    serverError.value = data || t('config_save_failed')
   } finally {
     loading.value = false
   }

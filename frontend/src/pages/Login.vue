@@ -115,8 +115,8 @@ async function login() {
     } else {
       serverError.value = t('invalid_credentials')
     }
-  } catch (err: any) {
-    serverError.value = err?.response?.data?.error || t('login_failed')
+  } catch {
+    serverError.value = t('login_failed')
   } finally {
     loading.value = false
   }

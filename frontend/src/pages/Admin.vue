@@ -116,21 +116,25 @@ import Button from 'primevue/button'
 import { useI18n } from 'vue-i18n'
 import { globalStore } from '@/stores'
 import axios from 'axios'
-import OverlayPanel from 'primevue/overlaypanel'
 import ProgressSpinner from 'primevue/progressspinner'
 import { useRoute } from 'vue-router'
 const { proxy } = getCurrentInstance()
 const route = useRoute()
 
 const store = globalStore()
-const user_profile_op = ref()
 
 const app_version = ref('')
 const version_dialog_visible = ref(false)
 
 app_version.value = import.meta.env.VITE_APP_APP_VERSION || ''
 
-const user: any = computed(() => {
+interface MenuNode {
+  key: string
+  link?: string
+  children?: MenuNode[]
+}
+
+const user = computed(() => {
   return proxy.$auth.currentUser.value
 })
 
@@ -145,10 +149,6 @@ const sidemenuNodeSelect = (node) => {
 }
 
 // const selected_list_item = ref ({ name: 'Inventory', icon:'inbox', link:'inventory' })
-
-const user_profile_toggle = (event: any) => {
-  user_profile_op.value.toggle(event)
-}
 
 const expandAll = () => {
   for (const node of menu_tree.value) {
@@ -171,7 +171,7 @@ const expandNode = (node) => {
 const expandedKeys = ref({})
 const selectionKeys = ref({})
 
-const findKeyByLink = (nodes: any[], link: string): string | null => {
+const findKeyByLink = (nodes: MenuNode[], link: string): string | null => {
   for (const node of nodes) {
     if (node.link === link) return node.key
     if (node.children) {

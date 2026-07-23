@@ -995,6 +995,7 @@ import NotificationView from '@/components/NotificationView.vue'
 import OverlayPanel from 'primevue/overlaypanel'
 import { Notification } from '@/classes/Notification'
 import { ref, watch, computed, getCurrentInstance, nextTick, useTemplateRef } from 'vue'
+import type { Category, Customer, OrderListItem, PaymentSource } from '@/types'
 import StashedOrder from '@/components/StashedOrder.vue'
 import InlineMessage from 'primevue/inlinemessage'
 import MainSearchResultView from '@/components/MainSearchResultView.vue'
@@ -1014,9 +1015,58 @@ import { ToggleButton, Drawer, Avatar, ButtonGroup, Select } from 'primevue'
 import { globalStore } from '@/stores'
 import auth from '@/services/auth'
 
+interface ChatMessage {
+  message: string
+  sender_name: string
+  user_sub: string
+  date: string
+}
+
+interface CustomDataItem {
+  key: string
+  value: string
+}
+
+interface OrderDetailStep {
+  number: number
+  label: string
+}
+
+interface DeliveryInfoData {
+  name: string
+  address: string
+  phone: string
+}
+
+interface NavbarLink {
+  label: { title: string; plural: boolean }
+  icon: string
+  link: string
+  authority: string[]
+  focused: boolean
+}
+
+interface SubmitOrderPayload {
+  items: OrderItem[]
+  discount: number
+  is_auto_start: boolean
+  is_auto_finish: boolean
+  is_dine_in: boolean
+  is_take_away: boolean
+  is_delivery: boolean
+  is_paid: boolean
+  is_pay_later: boolean
+  tips: number
+  payment_source: string
+  custom_data: Record<string, string>
+  comment: string
+  customer: Customer | null
+  delivery_info: { receiver_name: string; address: string; phone: string } | null
+}
+
 const app_version = ref('')
 const version_dialog_visible = ref(false)
-const payment_sources = ref<any[]>([])
+const payment_sources = ref<PaymentSource[]>([])
 
 const { t } = useI18n()
 const { proxy } = getCurrentInstance()
@@ -1038,7 +1088,7 @@ const new_order_delivery_customer = ref([])
 const pick_customer_dialog = ref(false)
 const new_custom_data_value = ref('')
 const new_custom_data_key = ref('')
-const custom_data: any = ref([])
+const custom_data = ref<CustomDataItem[]>([])
 const drawer_visible = ref(false)
 
 const toast = useToast()
@@ -1046,7 +1096,7 @@ const itemToEditIndex = ref(0)
 const edit_item_dialog = ref(false)
 const is_order_valid = ref(true)
 const chat_text = ref('')
-const chats = ref<any[]>([])
+const chats = ref<ChatMessage[]>([])
 const has_new_message = ref(false)
 const chat_container = useTemplateRef('chat_container')
 const mainSearchText = ref('')
@@ -1076,16 +1126,16 @@ const chats_op = ref()
 const current_orders_op = ref()
 const mainsearch_op = ref()
 
-const mainSearchResult = ref<any[]>([])
+const mainSearchResult = ref<OrderListItem[]>([])
 
 const discount_op = ref()
 
-const order_details_steps: any = ref([
+const order_details_steps = ref<OrderDetailStep[]>([
   { number: 1, label: t('main_details') },
   { number: 3, label: t('confirmation') },
 ])
 
-const delivery_info = ref<any>({ name: '', address: '', phone: '' })
+const delivery_info = ref<DeliveryInfoData>({ name: '', address: '', phone: '' })
 
 const toggleDarkMode = () => {
   store.toggleDarkMode()
@@ -1211,7 +1261,7 @@ const orderToShowAmountCollected = () => {
   getCurrentOrders()
 }
 
-const mainSearchTextChanged = (event: any) => {
+const mainSearchTextChanged = (event: KeyboardEvent) => {
   if (mainSearchText.value != '') {
     mainsearch_op.value.show(event)
 
@@ -1318,19 +1368,19 @@ const BackStashedOrderToCheckout = async (stashed_order_index: number) => {
     })
 }
 
-const notifications_toggle = (event: any) => {
+const notifications_toggle = (event: MouseEvent) => {
   notifications_op.value.toggle(event)
 }
 
-const stashed_toggle = (event: any) => {
+const stashed_toggle = (event: MouseEvent) => {
   stashed_orders_op.value.toggle(event)
 }
 
-const paylater_toggle = (event: any) => {
+const paylater_toggle = (event: MouseEvent) => {
   current_orders_op.value.toggle(event)
 }
 
-const chats_toggle = async (event: any) => {
+const chats_toggle = async (event: MouseEvent) => {
   has_new_message.value = false
   chats_op.value.toggle(event)
   await nextTick()
@@ -1616,7 +1666,7 @@ const notifications_severity_counter = computed(() => {
 })
 
 const searchtext = ref('')
-const categories: any = ref([])
+const categories = ref<Category[]>([])
 
 const orderItems = ref<OrderItem[]>([])
 
@@ -1693,12 +1743,12 @@ const getCategories = async () => {
 getCategories()
 
 const submitOrder = () => {
-  const custom_data_map: any = {}
-  custom_data.value.forEach((item: any) => {
+  const custom_data_map: Record<string, string> = {}
+  custom_data.value.forEach((item) => {
     custom_data_map[item.key] = item.value
   })
 
-  const order: any = {
+  const order: SubmitOrderPayload = {
     items: orderItems.value,
     discount: discount.value,
     is_auto_start: is_auto_start_order.value,
@@ -1880,7 +1930,7 @@ watch(selectedCategory, (category) => {
 })
 
 const navbar_links = computed(() => {
-  const links: any[] = [
+  const links: NavbarLink[] = [
     {
       label: { title: 'cashier', plural: false },
       icon: 'pi pi-desktop',

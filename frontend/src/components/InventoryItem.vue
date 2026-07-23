@@ -9,7 +9,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 defineProps({
   name: { type: String, default: '' },
   quantity: { type: [String, Number], default: 0 },

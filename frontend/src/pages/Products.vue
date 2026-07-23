@@ -447,16 +447,18 @@ import PickMaterial from '@/components/PickMaterial.vue'
 import PickProduct from '@/components/PickProduct.vue'
 import { useConfirm } from 'primevue/useconfirm'
 import { Image, Message, ToggleSwitch } from 'primevue'
+import type { FileUploadBeforeSendEvent } from 'primevue/fileupload'
 import { Form } from '@primevue/forms'
 // import { Material } from '@/classes/OrderItem';
 import { globalStore } from '@/stores'
+import type { ProductItem, ProductItemMaterial, ProductItemSubProduct, DataTablePageEvent } from '@/types'
 import auth from '../services/auth'
 
 const { proxy } = getCurrentInstance()
 const { t } = useI18n()
 const confirm = useConfirm()
 
-const productToEdit = ref<any>({})
+const productToEdit = ref<ProductItem>({} as ProductItem)
 const productEditDialog = ref(false)
 const edit_material_dialog = ref(false)
 const edit_subproduct_dialog = ref(false)
@@ -502,8 +504,8 @@ const new_product_id = ref('')
 const add_subproduct_dialog = ref(false)
 // const new_product_materials = ref<Material[]>([])
 // const new_product_subproducts = ref([])
-const materials = ref<any[]>([])
-const sub_products = ref<any[]>([])
+const materials = ref<ProductItemMaterial[]>([])
+const sub_products = ref<ProductItemSubProduct[]>([])
 
 const add_material_dialog = ref(false)
 
@@ -516,11 +518,11 @@ const toast = useToast()
 const newProductImageUpload = ref(null)
 const editProductImageUpload = ref(null)
 
-const beforeNewProductImageUpload = (event: any) => {
+const beforeNewProductImageUpload = (event: FileUploadBeforeSendEvent) => {
   event.xhr.setRequestHeader('Authorization', 'Bearer ' + auth.accessToken.value)
 }
 
-const beforeEditProductImageUpload = (event: any) => {
+const beforeEditProductImageUpload = (event: FileUploadBeforeSendEvent) => {
   event.xhr.setRequestHeader('Authorization', 'Bearer ' + auth.accessToken.value)
 }
 
@@ -603,7 +605,7 @@ const confirmDeleteProduct = (event, product_id) => {
   })
 }
 
-const prepareProductToEdit = (product: any) => {
+const prepareProductToEdit = (product: ProductItem) => {
   productToEdit.value = JSON.parse(JSON.stringify(product))
 
   for (let i = 0; i < productToEdit.value.materials?.length; i++) {
@@ -642,7 +644,7 @@ const updateProduct = () => {
 
       editProductImageUpload.value?.upload()
 
-      productToEdit.value = {}
+      productToEdit.value = {} as ProductItem
       loadProducts()
       // Optionally, refresh the product list or clear inputs
     })
@@ -720,7 +722,7 @@ const removeEditMaterial = (index) => {
   })
 }
 
-const addMaterial = (material: any) => {
+const addMaterial = (material: ProductItemMaterial) => {
   add_material_dialog.value = false
   edit_material_dialog.value = false
   let exists = false
@@ -738,13 +740,13 @@ const addMaterial = (material: any) => {
   }
 }
 
-const addSubProduct = (product: any) => {
+const addSubProduct = (product: ProductItemSubProduct) => {
   product.quantity = 1
   product.index = sub_products.value.length
   sub_products.value.push(product)
 }
 
-const addEdittedMaterial = (material: any) => {
+const addEdittedMaterial = (material: ProductItemMaterial) => {
   add_material_dialog.value = false
   edit_material_dialog.value = false
   let exists = false
@@ -761,13 +763,13 @@ const addEdittedMaterial = (material: any) => {
   }
 }
 
-const addEdittedSubProduct = (product: any) => {
+const addEdittedSubProduct = (product: ProductItemSubProduct) => {
   product.quantity = 1
   product.index = productToEdit.value.sub_products.length
   productToEdit.value.sub_products.push(product)
 }
 
-const updatProductsTableRowsPerPage = (event: any) => {
+const updatProductsTableRowsPerPage = (event: DataTablePageEvent) => {
   loadProducts(event.first, event.rows)
 }
 

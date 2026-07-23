@@ -129,7 +129,7 @@
   </main>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed, ref, onMounted } from 'vue'
 import Toast from 'primevue/toast'
 import Dialog from 'primevue/dialog'

@@ -233,16 +233,15 @@ import InputNumber from 'primevue/inputnumber'
 import Divider from 'primevue/divider'
 import Button from 'primevue/button'
 import { useToast } from 'primevue/usetoast'
-import { getCurrentInstance, ref } from 'vue'
+import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { globalStore } from '../stores'
 import { RadioButton, Badge, Select, ToggleSwitch, Skeleton, InlineMessage } from 'primevue'
 import auth from '../services/auth'
-
-const { proxy } = getCurrentInstance()
+import type { OrderQueue, Language, PaymentSource } from '@/types'
 
 const stock_alert_treshold = ref(0)
-const order_queues = ref<any>({})
+const order_queues = ref<OrderQueue[]>([])
 
 const new_queue_prefix = ref('')
 const new_queue_next = ref(1)
@@ -260,17 +259,17 @@ const settingsError = ref('')
 const store = globalStore()
 
 const new_payment_source = ref('')
-const payment_sources = ref<Array<any>>([{ name: 'Cash' }, { name: 'Card' }])
+const payment_sources = ref<PaymentSource[]>([{ name: 'Cash' }, { name: 'Card' }])
 
 const changedLang = ref(false)
 
 const { t, locale, setLocaleMessage } = useI18n({ useScope: 'global' })
 
-const selectedLang: any = ref({ language: 'English', code: 'en' })
+const selectedLang = ref<Language>({ language: 'English', code: 'en' })
 const languages = ref([{ language: 'English', code: 'en' }])
 
 const changedLanguage = () => {
-  if (proxy.$i18n.locale != selectedLang.value.code) {
+  if (locale.value != selectedLang.value.code) {
     changedLang.value = true
   } else {
     changedLang.value = false

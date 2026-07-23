@@ -145,11 +145,12 @@ const changePassword = async () => {
     currentPassword.value = ''
     newPassword.value = ''
     confirmPassword.value = ''
-  } catch (error: any) {
+  } catch (err) {
+    const msg = axios.isAxiosError(err) ? err.response?.data : undefined
     toast.add({
       severity: 'error',
       summary: 'Error',
-      detail: error.response?.data || t('password_change_failed'),
+      detail: msg || t('password_change_failed'),
     })
   } finally {
     saving.value = false
