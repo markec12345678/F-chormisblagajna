@@ -21,11 +21,12 @@ Blagajniški sistem za restavracije in trgovine. Go backend (MongoDB) + Vue 3 SP
 - 🛒 **Naročila** — submit, start, finish, pay, cancel, refund, tips
 - 👥 **Stranke** — CRUD zgodovina naročil
 - 🔄 **HubSync** — sinhronizacija z oddaljenim strežnikom
-- 🌍 **Več jezikov** — dinamični paketi (SLO, EN, AR)
+- 🌍 **Več jezikov** — dinamični paketi (SLO, EN, AR) + 130+ i18n ključev
 - 🖨️ **Thermal printer** — Handlebars template za ESC/POS
 - 🔐 **Auth** — JWT / Zitadel OIDC / NoAuth
 - 👤 **Več vlog** — superuser, admin, cashier, chef
 - 🌙 **Dark mode** + **RTL** podpora
+- 🛡️ **ErrorBoundary** — graceful napaka ob crashing komponentah
 
 ## Tech Stack
 
@@ -37,8 +38,11 @@ Blagajniški sistem za restavracije in trgovine. Go backend (MongoDB) + Vue 3 SP
 | Build | Vite 6 + viteSingleFile |
 | State | Pinia |
 | Auth | JWT (HS256) / Zitadel OIDC |
+| i18n | vue-i18n (130+ ključev, SLO/EN/AR) |
 | CI/CD | GitHub Actions (golangci-lint) |
 | Container | Docker (multi-stage, non-root) |
+| Linting | ESLint + Prettier + oxlint |
+| Testi | vitest (frontend) + go test (backend) |
 
 ## Hitri začetek
 
@@ -106,19 +110,22 @@ cd frontend && npm run build
 ### Testi
 
 ```bash
-# Backend
+# Backend (7 paketov z testi)
 go test -race ./...
 
-# Frontend
+# Frontend (4 testne datoteke, 11 testov)
 cd frontend && npm run test:unit
 ```
+
+**Backend testi:** config, helpers, middlewares (ratelimit), auth/middlewares, core/models, core/dto
+**Frontend testi:** ErrorBoundary, InventoryItem, Notification, OrderItem
 
 ### CI/CD
 
 GitHub Actions pipeline (.github/workflows/ci.yml):
-- **Backend**: vet, golangci-lint, test, build, govulncheck
-- **Frontend**: type-check, lint, test, build
-- **Docker**: multi-stage build + cache
+- **Backend**: vet, golangci-lint, test (race + coverage), build, govulncheck
+- **Frontend**: type-check, lint (ESLint + oxlint), test (vitest), build
+- **Docker**: multi-stage build + cache (depends on backend + frontend)
 
 ## Arhitektura
 
@@ -174,6 +181,9 @@ main.go
 | `.github/workflows/ci.yml` | CI/CD pipeline |
 | `Dockerfile` | Multi-stage build |
 | `docker-compose.yaml` | Pos + frontend + MongoDB |
+| `frontend/eslint.config.ts` | ESLint + Prettier + oxlint |
+| `frontend/.prettierrc.json` | Prettier konfiguracija |
+| `frontend/vitest.config.ts` | Vitest konfiguracija |
 
 ## Licenca
 

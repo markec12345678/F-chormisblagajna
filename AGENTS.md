@@ -128,10 +128,13 @@ http.Error(w, "failed to get data", http.StatusInternalServerError)
 - `github.com/nutrixpos/melody` - WebSocket
 
 ## Testing
-- Tests in: `common/config`, `common/middlewares`, `modules/auth/middlewares`
+- Backend tests: `common/config`, `common/helpers`, `common/middlewares`, `modules/auth/middlewares`, `modules/core/models`, `modules/core/dto`
 - Rate limiter: `common/middlewares/ratelimit.go` with sliding window
-- Frontend tests: `frontend/src/__tests__/`
-- Run: `go test -race ./...`
+- Frontend tests: `frontend/src/__tests__/` (ErrorBoundary, InventoryItem, Notification, OrderItem)
+- Run backend: `$env:GOTOOLCHAIN = "auto"; & "C:\go\bin\go.exe" test -count=1 -timeout 120s ./...`
+- Run frontend: `cd frontend && npx vitest run`
+- Frontend lint: `cd frontend && npx eslint . --fix`
+- Frontend format: `cd frontend && npx prettier --write src/`
 
 ## CI/CD
 - GitHub Actions: `.github/workflows/ci.yml`
@@ -141,6 +144,18 @@ http.Error(w, "failed to get data", http.StatusInternalServerError)
 ## Entities
 - `Material`, `Component` and `Inventory Item` are the same entity
 - `Product` and `Recipe` are the same entity
+
+## Frontend i18n
+- All UI strings use `$t()` in templates and `t()` in script via `useI18n()`
+- Fallback keys defined in `frontend/src/main.ts` (130+ keys)
+- Languages: SLO (primary), EN (fallback), AR (RTL)
+- When adding new UI strings, add key to main.ts fallback first
+
+## Frontend Components
+- `ErrorBoundary.vue` — wraps RouterView in App.vue, catches child component errors with retry
+- `InventoryItem.vue` — props interface (no self-recursion)
+- `QueueOrder.vue`, `OrderView.vue`, `MainSearchResultView.vue` — order workflow
+- `MealCard.vue` — product display with inventory consumption toggle
 
 ## API http schema
 When calling the backend api from the frontend vue app, make sure to include the VITE_APP_BACKEND_HOST and VITE_APP_MODULE_CORE_API_PREFIX env vars in the request path
