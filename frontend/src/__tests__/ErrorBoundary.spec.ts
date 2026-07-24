@@ -43,4 +43,33 @@ describe('ErrorBoundary', () => {
     expect(typeof wrapper.vm.error).toBe('object')
     expect(typeof wrapper.vm.reset).toBe('function')
   })
+
+  it('has null error initially', () => {
+    const wrapper = mount(ErrorBoundary, {
+      global: { plugins: [PrimeVue, i18n] },
+      slots: { default: '<div>Content</div>' },
+    })
+    expect(wrapper.vm.error).toBeNull()
+  })
+
+  it('reset sets error back to null', () => {
+    const wrapper = mount(ErrorBoundary, {
+      global: { plugins: [PrimeVue, i18n] },
+      slots: { default: '<div>Content</div>' },
+    })
+    wrapper.vm.reset()
+    expect(wrapper.vm.error).toBeNull()
+  })
+
+  it('renders multiple slot children', () => {
+    const wrapper = mount(ErrorBoundary, {
+      global: { plugins: [PrimeVue, i18n] },
+      slots: {
+        default: '<div class="a">A</div><div class="b">B</div>',
+      },
+    })
+    expect(wrapper.find('.a').exists()).toBe(true)
+    expect(wrapper.find('.b').exists()).toBe(true)
+    expect(wrapper.find('.error-boundary').exists()).toBe(false)
+  })
 })

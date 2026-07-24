@@ -88,4 +88,53 @@ describe('MealCard', () => {
     const overlay = wrapper.find('.w-full.h-full')
     expect(overlay.exists()).toBe(false)
   })
+
+  it('shows possible availability text', () => {
+    const wrapper = mount(MealCard, {
+      props: {
+        item: {
+          name: 'Burger',
+          price: 10,
+          image_url: '',
+          enable_inventory_consumption: true,
+          availability: 3,
+        },
+      },
+      global: { plugins: [PrimeVue, i18n], stubs },
+    })
+    expect(wrapper.text()).toContain('Possible')
+  })
+
+  it('does not render overlay when availability is undefined', () => {
+    const wrapper = mount(MealCard, {
+      props: {
+        item: {
+          name: 'No Data',
+          price: 3,
+          image_url: '',
+          enable_inventory_consumption: true,
+        },
+      },
+      global: { plugins: [PrimeVue, i18n], stubs },
+    })
+    const overlay = wrapper.find('.w-full.h-full')
+    expect(overlay.exists()).toBe(false)
+  })
+
+  it('emits add when mealcard is clicked', async () => {
+    const wrapper = mount(MealCard, {
+      props: {
+        item: {
+          name: 'Fries',
+          price: 4,
+          image_url: '',
+          enable_inventory_consumption: false,
+          availability: 10,
+        },
+      },
+      global: { plugins: [PrimeVue, i18n], stubs },
+    })
+    await wrapper.find('.mealcard').trigger('click')
+    expect(wrapper.emitted('add')).toBeTruthy()
+  })
 })
