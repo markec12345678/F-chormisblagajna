@@ -99,4 +99,22 @@ describe('Categories', () => {
       expect(wrapper.text()).toContain('Add Category')
     })
   })
+
+  it('calls API on mount', async () => {
+    mount(Categories, {
+      global: { plugins: [i18n, ToastService, ConfirmationService], stubs },
+    })
+    await vi.waitFor(() => {
+      expect(mockGet).toHaveBeenCalled()
+    })
+  })
+
+  it('renders datatable structure', async () => {
+    const wrapper = mount(Categories, {
+      global: { plugins: [i18n, ToastService, ConfirmationService], stubs },
+    })
+    await vi.waitFor(() => {
+      expect(wrapper.find('.datatable-stub').exists()).toBe(true)
+    })
+  })
 })

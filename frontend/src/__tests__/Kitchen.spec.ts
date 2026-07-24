@@ -112,4 +112,53 @@ describe('Kitchen', () => {
       expect(wrapper.findAll('p').length).toBeGreaterThan(0)
     })
   })
+
+  it('renders orders after loading', async () => {
+    mockGet.mockImplementation((url: string) => {
+      if (url.includes('/settings')) {
+        return Promise.resolve({ data: { data: { language: { code: 'en' } } } })
+      }
+      if (url.includes('/languages/')) {
+        return Promise.resolve({ data: { data: { code: 'en', pack: {}, orientation: 'ltr' } } })
+      }
+      if (url.includes('/orders')) {
+        return Promise.resolve({
+          data: {
+            data: [
+              { id: 'o1', display_id: 'D-1', state: 'pending', items: [], is_paid: false },
+              { id: 'o2', display_id: 'D-2', state: 'in_progress', items: [], is_paid: false },
+            ],
+          },
+        })
+      }
+      return Promise.resolve({ data: { data: null } })
+    })
+
+    const wrapper = mount(Kitchen, {
+      global: { plugins: [i18n, ToastService], stubs },
+    })
+
+    await vi.waitFor(() => {
+      expect(wrapper.find('.spinner-stub').exists()).toBe(false)
+      expect(wrapper.findAll('.queue-order-stub').length).toBe(2)
+    })
+  })
+
+  it('signs out on 401 error', async () => {
+    const auth = (await import('@/services/auth')).default
+    mockGet.mockImplementation((url: string) => {
+      if (url.includes('/settings')) {
+        return Promise.reject({ response: { status: 401 } })
+      }
+      return Promise.resolve({ data: { data: null } })
+    })
+
+    mount(Kitchen, {
+      global: { plugins: [i18n, ToastService], stubs },
+    })
+
+    await vi.waitFor(() => {
+      expect(auth.signOut).toHaveBeenCalled()
+    })
+  })
 })
