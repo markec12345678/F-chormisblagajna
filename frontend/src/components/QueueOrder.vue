@@ -153,10 +153,7 @@
                 />
                 <Button
                   v-if="index == items.length - 1"
-                  @click="
-                    startOrder()
-                    visible = false
-                  "
+                  @click="startAndClose()"
                   :label="$t('start')"
                   :disabled="!isValid"
                   severity="success"
@@ -406,6 +403,11 @@ const isValid: boolean = computed(() => {
 
   return valid
 })
+
+const startAndClose = () => {
+  startOrder()
+  visible.value = false
+}
 
 const init = () => {
   if (props.order.started_at != null) {

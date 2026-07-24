@@ -34,10 +34,7 @@
               :label="$t('return')"
               severity="warn"
               aria-label="refund"
-              @click="
-                itemToRefund = slotProps.data
-                item_refund_dialog = true
-              "
+              @click="startRefund(slotProps.data)"
               v-if="order_items_status[slotProps.data.id].title != t('refunded')"
             >
               <span class="pi pi-undo"></span>
@@ -84,6 +81,11 @@ import { Badge } from 'primevue'
 const expandedRows = ref([])
 const itemToRefund = ref<OrderItem>()
 const item_refund_dialog = ref(false)
+
+const startRefund = (data: OrderItem) => {
+  itemToRefund.value = data
+  item_refund_dialog.value = true
+}
 
 const emit = defineEmits(['updated'])
 
