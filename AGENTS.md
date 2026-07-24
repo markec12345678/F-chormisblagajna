@@ -129,10 +129,11 @@ http.Error(w, "failed to get data", http.StatusInternalServerError)
 
 ## Testing
 - Backend tests (9 packages, 85 tests): `common/config`, `common/helpers`, `common/middlewares` (ratelimit), `common/userio`, `modules/auth/middlewares` (jwt, bcrypt), `modules/auth/models`, `modules/core/middlewares` (CORS), `modules/core/models`, `modules/core/dto`
-- Frontend tests (17 files, 73 tests): `frontend/src/__tests__/`
+- Frontend tests (26 files, 114 tests): `frontend/src/__tests__/`
   - Components: ErrorBoundary, InventoryItem, Notification, Order, OrderItem, AddCustomer, MealCard
   - Complex: QueueOrder, OrderView, StashedOrder
-  - Pages: Settings, Categories, Customers, Orders, Kitchen, Languages, Profile
+  - Pages: Settings, Categories, Customers, Orders, Kitchen, Languages, Profile, Home, Login, Sales, Products, Inventory, NoAccessView, AdminSetup, Setup, Hubsync
+  - Not testable (uses `getCurrentInstance()`/`proxy.$auth`): Admin, Users
 - Run backend: `$env:GOTOOLCHAIN = "auto"; & "C:\go\bin\go.exe" test -count=1 -timeout 120s ./...`
 - Run frontend: `cd frontend && npx vitest run`
 - Frontend lint: `cd frontend && npx eslint . --fix`
