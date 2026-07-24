@@ -130,7 +130,10 @@ http.Error(w, "failed to get data", http.StatusInternalServerError)
 ## Testing
 - Backend tests: `common/config`, `common/helpers`, `common/middlewares`, `modules/auth/middlewares`, `modules/core/models`, `modules/core/dto`
 - Rate limiter: `common/middlewares/ratelimit.go` with sliding window
-- Frontend tests: `frontend/src/__tests__/` (ErrorBoundary, InventoryItem, Notification, OrderItem)
+- Frontend tests: `frontend/src/__tests__/` — 10 files, 48 tests
+  - Backend: ErrorBoundary, InventoryItem, Notification
+  - Components: Order, OrderItem, AddCustomer, MealCard
+  - New: QueueOrder, OrderView, StashedOrder
 - Run backend: `$env:GOTOOLCHAIN = "auto"; & "C:\go\bin\go.exe" test -count=1 -timeout 120s ./...`
 - Run frontend: `cd frontend && npx vitest run`
 - Frontend lint: `cd frontend && npx eslint . --fix`
