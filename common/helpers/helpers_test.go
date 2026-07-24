@@ -94,4 +94,40 @@ func TestResolveOsEnvPath(t *testing.T) {
 			t.Error("ResolveOsEnvPath should handle plain paths")
 		}
 	})
+
+	t.Run("windows_percent_style", func(t *testing.T) {
+		os.Setenv("TEST_WIN_PATH", "/opt/app")
+		defer os.Unsetenv("TEST_WIN_PATH")
+
+		result := ResolveOsEnvPath("%TEST_WIN_PATH%/data")
+		if result == "" {
+			t.Error("ResolveOsEnvPath should expand Windows-style %VAR% paths")
+		}
+	})
+
+	t.Run("multiple_vars", func(t *testing.T) {
+		os.Setenv("TEST_BASE", "/base")
+		os.Setenv("TEST_SUB", "sub")
+		defer os.Unsetenv("TEST_BASE")
+		defer os.Unsetenv("TEST_SUB")
+
+		result := ResolveOsEnvPath("$TEST_BASE/$TEST_SUB/file")
+		if result == "" {
+			t.Error("ResolveOsEnvPath should handle multiple vars")
+		}
+	})
+
+	t.Run("empty_path", func(t *testing.T) {
+		result := ResolveOsEnvPath("")
+		if result == "" {
+			t.Error("ResolveOsEnvPath should handle empty path")
+		}
+	})
+
+	t.Run("no_vars", func(t *testing.T) {
+		result := ResolveOsEnvPath("some/plain/path")
+		if result == "" {
+			t.Error("ResolveOsEnvPath should return non-empty for plain path")
+		}
+	})
 }
