@@ -65,8 +65,7 @@ export const auth = {
       localStorage.setItem(USER_KEY, JSON.stringify(data.user))
 
       return true
-    } catch (error) {
-      console.error('Login failed:', error)
+    } catch {
       return false
     }
   },
@@ -95,8 +94,7 @@ export const auth = {
       localStorage.setItem(USER_KEY, JSON.stringify(data.user))
 
       return true
-    } catch (error) {
-      console.error('Registration failed:', error)
+    } catch {
       return false
     }
   },
@@ -123,8 +121,7 @@ export const auth = {
       localStorage.setItem(USER_KEY, JSON.stringify(user))
 
       return user
-    } catch (error) {
-      console.error('Get current user failed:', error)
+    } catch {
       return null
     }
   },

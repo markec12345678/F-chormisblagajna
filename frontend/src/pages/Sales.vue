@@ -311,12 +311,7 @@ const export_sales = (first=salesTableFirstIndex.value,rows=salesTableRowsPerPag
         link.remove();
         window.URL.revokeObjectURL(url);
     })
-    .catch((error) => {
-        // Handle request or server errors
-        console.error('Download failed:', error.message);
-        if (error.response) {
-            console.error('Server Status:', error.response.status);
-        }
+    .catch(() => {
     });
 }
 

@@ -20,7 +20,9 @@ func NewRateLimiter(limit int, window time.Duration) *rateLimiter {
 		window:   window,
 	}
 
-	go rl.cleanup()
+	if window > 0 {
+		go rl.cleanup()
+	}
 
 	return rl
 }
