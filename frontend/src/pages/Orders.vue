@@ -57,19 +57,14 @@
                       icon="pi pi-times"
                       severity="secondary"
                       aria-label="Remove"
-                      @click="
-                        confirmCancelOrder($event, slotProps.data.display_id, slotProps.data.id)
-                      "
+                      @click="confirmCancelOrder($event, slotProps.data.display_id, slotProps.data.id)"
                     />
                     <Button
                       v-tooltip.top="'details'"
                       icon="pi pi-book"
                       severity="secondary"
                       aria-label="Remove"
-                      @click="
-                        orderToDisplay = slotProps.data
-                        order_details_dialog = true
-                      "
+                      @click="showOrderDetails(slotProps.data)"
                     />
                   </ButtonGroup>
                 </template>
@@ -83,10 +78,7 @@
               :breakpoints="{ '1199px': '90vw', '575px': '90vw' }"
             >
               <OrderView
-                @updated="
-                  loadOrders()
-                  order_details_dialog = false
-                "
+                @updated="handleOrderUpdated()"
                 @cancelled="cancelOrderDisplayed()"
                 @finished="finishOrderDisplayed()"
                 @amount_collected="orderToShowAmountCollected()"
@@ -167,6 +159,16 @@ const orderToShowAmountCollected = () => {
   }
 
   loadOrders()
+}
+
+const showOrderDetails = (data: OrderListItem) => {
+  orderToDisplay.value = data
+  order_details_dialog.value = true
+}
+
+const handleOrderUpdated = () => {
+  loadOrders()
+  order_details_dialog.value = false
 }
 
 const cancelOrder = (order_id: string) => {

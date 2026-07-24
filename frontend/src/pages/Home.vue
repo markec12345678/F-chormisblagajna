@@ -49,10 +49,7 @@
         >
           <MainSearchResultView
             class="mt-2"
-            @view-order-pressed="
-              order_to_show = result
-              order_details_dialog = true
-            "
+            @view-order-pressed="showOrderDetails(result)"
             v-for="(result, index) in mainSearchResult"
             :key="index"
             :order="result"
@@ -80,10 +77,7 @@
           <h4 class="m-2" style="color: #c2c2c2">{{ t('current_orders') }}</h4>
           <MainSearchResultView
             class="mt-2"
-            @view-order-pressed="
-              order_to_show = result
-              order_details_dialog = true
-            "
+            @view-order-pressed="showOrderDetails(result)"
             v-for="(result, index) in inProgressOrders"
             :key="index"
             :order="result"
@@ -142,11 +136,7 @@
                 :item="item"
                 class="m-1 lg:m-2"
                 style="width: 9rem"
-                @addwithcomment="
-                  visible = true
-                  idwithcomment = item.id
-                  namewithcomment = item.name
-                "
+                @addwithcomment="openAddWithComment(item)"
                 @add="addItem(item)"
               />
             </div>
@@ -185,10 +175,7 @@
                         style="width: 2rem; height: 2rem"
                         aria-label="Edit"
                         severity="secondary"
-                        @click="
-                          itemToEditIndex = index
-                          edit_item_dialog = true
-                        "
+                        @click="startEditItem(index)"
                         class="mr-1"
                       />
                       <ButtonGroup>
@@ -524,14 +511,7 @@
                       <Button
                         class="mt-2"
                         :label="$t('add')"
-                        @click="
-                          custom_data.push({
-                            key: new_custom_data_key,
-                            value: new_custom_data_value,
-                          })
-                          new_custom_data_key = ''
-                          new_custom_data_value = ''
-                        "
+                        @click="addCustomDataItem()"
                       />
                     </div>
                   </div>
@@ -667,11 +647,7 @@
                     :label="$t('back')"
                     :icon="`pi pi-arrow-${store.orientation == 'rtl' ? 'right' : 'left'}`"
                     :iconPos="`${store.orientation == 'rtl' ? 'right' : 'left'}`"
-                    @click="
-                      order_details_steps.length == 3
-                        ? activateCallback('2')
-                        : activateCallback('1')
-                    "
+                    @click="order_details_steps.length == 3 ? activateCallback('2') : activateCallback('1')"
                     severity="secondary"
                   />
                   <Button
@@ -686,12 +662,7 @@
         </Stepper>
         <Dialog v-model:visible="pick_customer_dialog">
           <PickCustomer
-            @returnCustomer="
-              (customer) => {
-                new_order_delivery_customer = [customer]
-                pick_customer_dialog = false
-              }
-            "
+            @returnCustomer="handleReturnCustomer"
           />
         </Dialog>
       </Dialog>
@@ -741,10 +712,7 @@
               text
               aria-label="Signout"
               :label="t('signout')"
-              @click="
-                auth.signOut()
-                $router.push('/login')
-              "
+              @click="handleSignout()"
             />
           </div>
         </div>
@@ -1236,6 +1204,41 @@ const toggle_discount_popover = (event) => {
 const user = computed(() => {
   return auth.currentUser.value
 })
+
+const showOrderDetails = (order: Order) => {
+  order_to_show.value = order
+  order_details_dialog.value = true
+}
+
+const openAddWithComment = (item: ProductItem) => {
+  visible.value = true
+  idwithcomment.value = item.id
+  namewithcomment.value = item.name
+}
+
+const startEditItem = (index: number) => {
+  itemToEditIndex.value = index
+  edit_item_dialog.value = true
+}
+
+const addCustomDataItem = () => {
+  custom_data.value.push({
+    key: new_custom_data_key.value,
+    value: new_custom_data_value.value,
+  })
+  new_custom_data_key.value = ''
+  new_custom_data_value.value = ''
+}
+
+const handleReturnCustomer = (customer: Customer) => {
+  new_order_delivery_customer.value = [customer]
+  pick_customer_dialog.value = false
+}
+
+const handleSignout = () => {
+  auth.signOut()
+  router.push('/login')
+}
 
 const finishOrderDisplayed = () => {
   if (order_to_show.value) {

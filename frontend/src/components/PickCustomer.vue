@@ -45,10 +45,7 @@
     <AddCustomer
       @update:visible="(x) => (add_customer_dialog = x)"
       :visible="add_customer_dialog"
-      @customer-added="
-        add_customer_dialog = false
-        GetCustomers()
-      "
+      @customer-added="handleCustomerAdded"
     />
   </div>
 </template>
@@ -77,6 +74,11 @@ const emit = defineEmits(['returnCustomer'])
 
 const returnCustomer = (customer) => {
   emit('returnCustomer', customer)
+}
+
+const handleCustomerAdded = () => {
+  add_customer_dialog.value = false
+  GetCustomers()
 }
 
 const GetCustomers = (page_number = 1, page_size = 9999999999) => {

@@ -9,14 +9,16 @@
       :label="$t('relogin')"
       severity="info"
       class="mt-2"
-      @click="
-        auth.signOut()
-        window.location.href = '/login'
-      "
+      @click="handleRelogin"
     />
   </div>
 </template>
 <script setup lang="ts">
 import Button from 'primevue/button'
 import auth from '@/services/auth'
+
+function handleRelogin() {
+  auth.signOut()
+  window.location.href = '/login'
+}
 </script>

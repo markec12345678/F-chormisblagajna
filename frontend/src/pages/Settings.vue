@@ -56,11 +56,7 @@
 
                   <Button
                     :label="$t('add')"
-                    @click="
-                      order_queues.push({ prefix: new_queue_prefix, next: new_queue_next })
-                      new_queue_prefix = ''
-                      new_queue_next = 1
-                    "
+                    @click="addQueue()"
                   />
                 </div>
               </div>
@@ -144,10 +140,7 @@
                   <InputText v-model="new_payment_source" class="mx-2" />
                   <Button
                     :label="$t('add')"
-                    @click="
-                      payment_sources.push({ name: new_payment_source })
-                      new_payment_source = ''
-                    "
+                    @click="addPaymentSource()"
                   />
                 </div>
               </div>
@@ -260,6 +253,17 @@ const store = globalStore()
 
 const new_payment_source = ref('')
 const payment_sources = ref<PaymentSource[]>([{ name: 'Cash' }, { name: 'Card' }])
+
+const addQueue = () => {
+  order_queues.value.push({ prefix: new_queue_prefix.value, next: new_queue_next.value })
+  new_queue_prefix.value = ''
+  new_queue_next.value = 1
+}
+
+const addPaymentSource = () => {
+  payment_sources.value.push({ name: new_payment_source.value })
+  new_payment_source.value = ''
+}
 
 const changedLang = ref(false)
 

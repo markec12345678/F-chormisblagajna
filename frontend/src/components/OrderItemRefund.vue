@@ -120,10 +120,7 @@
         <Button
           icon="pi pi-times"
           severity="secondary"
-          @click="
-            products_to_add.splice(index, 1)
-            added_products_quantities.splice(index, 1)
-          "
+          @click="removeProductToAdd(index)"
         />
       </div>
     </div>
@@ -164,6 +161,11 @@ const products_to_add = ref<Array<Product>>([])
 const added_products_quantities = ref([])
 
 const item_destination = ref('inventory')
+
+const removeProductToAdd = (index: number) => {
+  products_to_add.value.splice(index, 1)
+  added_products_quantities.value.splice(index, 1)
+}
 
 const props = defineProps({
   item: {
