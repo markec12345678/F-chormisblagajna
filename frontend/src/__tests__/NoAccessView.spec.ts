@@ -53,7 +53,10 @@ const i18n = createI18n({
 })
 
 const stubs = {
-  Button: { template: '<button class="btn-stub" @click="$emit(\'click\')">{{ label }}</button>', props: ['label', 'severity', 'class'] },
+  Button: {
+    template: '<button class="btn-stub" @click="$emit(\'click\')">{{ label }}</button>',
+    props: ['label', 'severity', 'class'],
+  },
   Toast: { template: '<div />' },
 }
 

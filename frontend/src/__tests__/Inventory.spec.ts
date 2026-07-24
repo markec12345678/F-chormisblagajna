@@ -96,24 +96,54 @@ const i18n = createI18n({
 
 const stubs = {
   DataTable: {
-    template: '<div class="datatable-stub"><slot name="header"/><slot name="empty"/><slot/><slot name="expansion"/></div>',
-    props: ['value', 'stripedRows', 'tableStyle', 'class', 'loading', 'paginator', 'rows', 'lazy', 'totalRecords'],
+    template:
+      '<div class="datatable-stub"><slot name="header"/><slot name="empty"/><slot/><slot name="expansion"/></div>',
+    props: [
+      'value',
+      'stripedRows',
+      'tableStyle',
+      'class',
+      'loading',
+      'paginator',
+      'rows',
+      'lazy',
+      'totalRecords',
+    ],
     emits: ['page', 'rowExpand'],
   },
-  Column: { template: '<div class="column-stub"/>', props: ['field', 'header', 'sortable', 'style'] },
-  Button: { template: '<button class="btn-stub">{{ label }}</button>', props: ['label', 'icon', 'severity', 'rounded', 'raised', 'aria-label', 'class'] },
-  Dialog: { template: '<div class="dialog-stub" v-if="visible"><slot name="header"/><slot/><template v-if="$slots.footer"><slot name="footer"/></template></div>', props: ['visible', 'modal', 'header', 'style', 'breakpoints'] },
-  InputText: { template: '<input class="input-text-stub" />', props: ['modelValue', 'id', 'type', 'placeholder', 'aria-describedby', 'class'] },
+  Column: {
+    template: '<div class="column-stub"/>',
+    props: ['field', 'header', 'sortable', 'style'],
+  },
+  Button: {
+    template: '<button class="btn-stub">{{ label }}</button>',
+    props: ['label', 'icon', 'severity', 'rounded', 'raised', 'aria-label', 'class'],
+  },
+  Dialog: {
+    template:
+      '<div class="dialog-stub" v-if="visible"><slot name="header"/><slot/><template v-if="$slots.footer"><slot name="footer"/></template></div>',
+    props: ['visible', 'modal', 'header', 'style', 'breakpoints'],
+  },
+  InputText: {
+    template: '<input class="input-text-stub" />',
+    props: ['modelValue', 'id', 'type', 'placeholder', 'aria-describedby', 'class'],
+  },
   ButtonGroup: { template: '<div class="btn-group-stub"><slot/></div>' },
   Tag: { template: '<span class="tag-stub">{{ value }}</span>', props: ['value', 'severity'] },
   ConfirmDialog: { template: '<div class="confirm-dialog-stub" />' },
   FloatLabel: { template: '<div class="float-label-stub"><slot/></div>' },
-  Calendar: { template: '<input class="calendar-stub" />', props: ['modelValue', 'showIcon', 'inputId'] },
+  Calendar: {
+    template: '<input class="calendar-stub" />',
+    props: ['modelValue', 'showIcon', 'inputId'],
+  },
   Divider: { template: '<hr class="divider-stub" />' },
   Toast: { template: '<div />' },
   Tooltip: { template: '<span class="tooltip-stub"><slot/></span>' },
   EditMaterial: { template: '<div class="edit-material-stub" />', props: ['material'] },
-  MaterialLogsOrderItemsTable: { template: '<div class="material-logs-order-items-table-stub" />', props: ['items', 'order_item_index'] },
+  MaterialLogsOrderItemsTable: {
+    template: '<div class="material-logs-order-items-table-stub" />',
+    props: ['items', 'order_item_index'],
+  },
 }
 
 describe('Inventory', () => {

@@ -321,9 +321,7 @@ const deleteCategory = (category_id: string) => {
 }
 
 const updateCategory = () => {
-  category_edit_error.value = categoryToEdit.value.name?.trim()
-    ? ''
-    : t('validation_required')
+  category_edit_error.value = categoryToEdit.value.name?.trim() ? '' : t('validation_required')
 
   if (category_edit_error.value) return
 

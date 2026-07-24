@@ -59,13 +59,23 @@ const stubs = {
       '<div class="datatable-stub"><slot name="header" /><slot name="empty" /><slot /></div>',
     props: ['value', 'loading', 'totalRecords', 'rows', 'paginator', 'stripedRows'],
   },
-  Column: { template: '<div class="column-stub"><slot name="body" /></div>', props: ['field', 'header', 'sortable'] },
+  Column: {
+    template: '<div class="column-stub"><slot name="body" /></div>',
+    props: ['field', 'header', 'sortable'],
+  },
   Dialog: {
-    template: '<div class="dialog-stub" v-if="visible"><slot/><template v-if="$slots.footer"><slot name="footer"/></template></div>',
+    template:
+      '<div class="dialog-stub" v-if="visible"><slot/><template v-if="$slots.footer"><slot name="footer"/></template></div>',
     props: ['visible', 'modal', 'header', 'style', 'breakpoints'],
   },
-  InputText: { template: '<input class="input-text-stub" />', props: ['modelValue', 'id', 'aria-describedby'] },
-  Button: { template: '<button class="btn-stub" @click="$emit(\'click\')">{{ label }}</button>', props: ['label', 'icon', 'severity'] },
+  InputText: {
+    template: '<input class="input-text-stub" />',
+    props: ['modelValue', 'id', 'aria-describedby'],
+  },
+  Button: {
+    template: '<button class="btn-stub" @click="$emit(\'click\')">{{ label }}</button>',
+    props: ['label', 'icon', 'severity'],
+  },
   ButtonGroup: { template: '<div class="btn-group-stub"><slot/></div>' },
   ConfirmPopup: { template: '<div />' },
 }

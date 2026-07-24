@@ -451,7 +451,12 @@ import type { FileUploadBeforeSendEvent } from 'primevue/fileupload'
 import { Form } from '@primevue/forms'
 // import { Material } from '@/classes/OrderItem';
 import { globalStore } from '@/stores'
-import type { ProductItem, ProductItemMaterial, ProductItemSubProduct, DataTablePageEvent } from '@/types'
+import type {
+  ProductItem,
+  ProductItemMaterial,
+  ProductItemSubProduct,
+  DataTablePageEvent,
+} from '@/types'
 import auth from '../services/auth'
 
 const { proxy } = getCurrentInstance()

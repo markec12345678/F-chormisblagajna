@@ -285,9 +285,7 @@ const updateCustomer = () => {
 }
 
 const submitCustomer = () => {
-  customer_add_errors.value.name = new_customer_name.value?.trim()
-    ? ''
-    : t('validation_required')
+  customer_add_errors.value.name = new_customer_name.value?.trim() ? '' : t('validation_required')
 
   if (customer_add_errors.value.name) return
 

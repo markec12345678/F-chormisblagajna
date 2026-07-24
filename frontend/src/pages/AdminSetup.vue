@@ -168,8 +168,7 @@ async function submit() {
     }, 1500)
   } catch (err) {
     const data = axios.isAxiosError(err) ? err.response?.data : undefined
-    serverError.value =
-      data?.error || data?.message || t('admin_create_failed')
+    serverError.value = data?.error || data?.message || t('admin_create_failed')
   } finally {
     loading.value = false
   }

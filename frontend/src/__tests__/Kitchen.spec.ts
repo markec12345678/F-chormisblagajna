@@ -48,19 +48,22 @@ const i18n = createI18n({
   },
 })
 
-vi.stubGlobal('WebSocket', class {
-  send = vi.fn()
-  close = vi.fn()
-  readyState = 1
-  static OPEN = 1
-  onopen: ((...args: any[]) => void) | null = null
-  onmessage: ((...args: any[]) => void) | null = null
-  onerror: ((...args: any[]) => void) | null = null
-  onclose: ((...args: any[]) => void) | null = null
-  constructor() {
-    setTimeout(() => this.onopen?.(), 0)
-  }
-})
+vi.stubGlobal(
+  'WebSocket',
+  class {
+    send = vi.fn()
+    close = vi.fn()
+    readyState = 1
+    static OPEN = 1
+    onopen: ((...args: any[]) => void) | null = null
+    onmessage: ((...args: any[]) => void) | null = null
+    onerror: ((...args: any[]) => void) | null = null
+    onclose: ((...args: any[]) => void) | null = null
+    constructor() {
+      setTimeout(() => this.onopen?.(), 0)
+    }
+  },
+)
 
 const stubs = {
   QueueOrder: { template: '<div class="queue-order-stub" />', props: ['order', 'number'] },

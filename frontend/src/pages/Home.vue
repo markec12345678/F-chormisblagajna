@@ -508,11 +508,7 @@
                       <span>{{ $t('value') }}:</span>
                       <InputText v-model="new_custom_data_value" />
 
-                      <Button
-                        class="mt-2"
-                        :label="$t('add')"
-                        @click="addCustomDataItem()"
-                      />
+                      <Button class="mt-2" :label="$t('add')" @click="addCustomDataItem()" />
                     </div>
                   </div>
                 </div>
@@ -647,7 +643,11 @@
                     :label="$t('back')"
                     :icon="`pi pi-arrow-${store.orientation == 'rtl' ? 'right' : 'left'}`"
                     :iconPos="`${store.orientation == 'rtl' ? 'right' : 'left'}`"
-                    @click="order_details_steps.length == 3 ? activateCallback('2') : activateCallback('1')"
+                    @click="
+                      order_details_steps.length == 3
+                        ? activateCallback('2')
+                        : activateCallback('1')
+                    "
                     severity="secondary"
                   />
                   <Button
@@ -661,9 +661,7 @@
           </StepPanels>
         </Stepper>
         <Dialog v-model:visible="pick_customer_dialog">
-          <PickCustomer
-            @returnCustomer="handleReturnCustomer"
-          />
+          <PickCustomer @returnCustomer="handleReturnCustomer" />
         </Dialog>
       </Dialog>
     </div>

@@ -117,11 +117,7 @@
             aria-describedby="added_product_quantity"
           />
         </div>
-        <Button
-          icon="pi pi-times"
-          severity="secondary"
-          @click="removeProductToAdd(index)"
-        />
+        <Button icon="pi pi-times" severity="secondary" @click="removeProductToAdd(index)" />
       </div>
     </div>
 

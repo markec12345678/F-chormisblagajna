@@ -54,10 +54,7 @@
                   <span>{{ $t('next') }} :</span>
                   <InputNumber v-model="new_queue_next" class="mx-2" :min="1" />
 
-                  <Button
-                    :label="$t('add')"
-                    @click="addQueue()"
-                  />
+                  <Button :label="$t('add')" @click="addQueue()" />
                 </div>
               </div>
             </div>
@@ -138,10 +135,7 @@
                 </div>
                 <div class="flex align-items-center mt-3">
                   <InputText v-model="new_payment_source" class="mx-2" />
-                  <Button
-                    :label="$t('add')"
-                    @click="addPaymentSource()"
-                  />
+                  <Button :label="$t('add')" @click="addPaymentSource()" />
                 </div>
               </div>
             </div>

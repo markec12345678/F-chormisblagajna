@@ -51,7 +51,10 @@ const stubs = {
   InputText: { template: '<input class="input-text-stub" />', props: ['modelValue', 'type'] },
   InputNumber: { template: '<input class="input-number-stub" />', props: ['modelValue', 'mode'] },
   Button: { template: '<button class="btn-stub">{{ label }}</button>', props: ['label'] },
-  ToggleSwitch: { template: '<input type="checkbox" class="toggle-stub" />', props: ['modelValue'] },
+  ToggleSwitch: {
+    template: '<input type="checkbox" class="toggle-stub" />',
+    props: ['modelValue'],
+  },
 }
 
 describe('Hubsync', () => {

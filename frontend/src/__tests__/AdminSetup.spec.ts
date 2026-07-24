@@ -56,8 +56,14 @@ const i18n = createI18n({
 })
 
 const stubs = {
-  InputText: { template: '<input class="input-text-stub" />', props: ['modelValue', 'placeholder', 'type'] },
-  Button: { template: '<button class="btn-stub">{{ label }}</button>', props: ['label', 'icon', 'iconPos', 'loading', 'disabled'] },
+  InputText: {
+    template: '<input class="input-text-stub" />',
+    props: ['modelValue', 'placeholder', 'type'],
+  },
+  Button: {
+    template: '<button class="btn-stub">{{ label }}</button>',
+    props: ['label', 'icon', 'iconPos', 'loading', 'disabled'],
+  },
 }
 
 describe('AdminSetup', () => {

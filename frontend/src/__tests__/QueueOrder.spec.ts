@@ -84,7 +84,11 @@ function createOrder(overrides = {}) {
     items: [
       {
         id: 'item-1',
-        product: { id: 'p1', name: 'Pizza Margherita', materials: [{ id: 'm1', name: 'Flour', quantity: 200, unit: 'g' }] },
+        product: {
+          id: 'p1',
+          name: 'Pizza Margherita',
+          materials: [{ id: 'm1', name: 'Flour', quantity: 200, unit: 'g' }],
+        },
         price: 10,
         quantity: 1,
         comment: '',
@@ -214,8 +218,32 @@ describe('QueueOrder', () => {
   it('renders multiple items with dividers', () => {
     const order = createOrder({
       items: [
-        { id: 'i1', product: { id: 'p1', name: 'Pizza', materials: [] }, price: 10, quantity: 1, comment: '', sale_price: 10, cost: 5, cost_method: 'exact', status: '', materials: [], sub_items: [] },
-        { id: 'i2', product: { id: 'p2', name: 'Pasta', materials: [] }, price: 8, quantity: 1, comment: '', sale_price: 8, cost: 3, cost_method: 'exact', status: '', materials: [], sub_items: [] },
+        {
+          id: 'i1',
+          product: { id: 'p1', name: 'Pizza', materials: [] },
+          price: 10,
+          quantity: 1,
+          comment: '',
+          sale_price: 10,
+          cost: 5,
+          cost_method: 'exact',
+          status: '',
+          materials: [],
+          sub_items: [],
+        },
+        {
+          id: 'i2',
+          product: { id: 'p2', name: 'Pasta', materials: [] },
+          price: 8,
+          quantity: 1,
+          comment: '',
+          sale_price: 8,
+          cost: 3,
+          cost_method: 'exact',
+          status: '',
+          materials: [],
+          sub_items: [],
+        },
       ],
     })
     const wrapper = mount(QueueOrder, {

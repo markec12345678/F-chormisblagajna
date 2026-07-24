@@ -89,23 +89,69 @@ const i18n = createI18n({
 
 const stubs = {
   DataTable: {
-    template: '<div class="datatable-stub"><slot name="header"/><slot name="empty"/><slot/><slot name="expansion"/></div>',
-    props: ['value', 'stripedRows', 'tableStyle', 'class', 'paginator', 'rows', 'lazy', 'totalRecords', 'loading'],
+    template:
+      '<div class="datatable-stub"><slot name="header"/><slot name="empty"/><slot/><slot name="expansion"/></div>',
+    props: [
+      'value',
+      'stripedRows',
+      'tableStyle',
+      'class',
+      'paginator',
+      'rows',
+      'lazy',
+      'totalRecords',
+      'loading',
+    ],
     emits: ['page'],
   },
   Column: { template: '<div class="column-stub"/>', props: ['field', 'header', 'sortable'] },
-  Button: { template: '<button class="btn-stub">{{ label }}</button>', props: ['label', 'icon', 'severity', 'rounded', 'raised', 'aria-label'] },
-  Dialog: { template: '<div class="dialog-stub" v-if="visible"><slot/><template v-if="$slots.footer"><slot name="footer"/></template></div>', props: ['visible', 'modal', 'header', 'style', 'breakpoints'] },
-  InputText: { template: '<input class="input-text-stub" />', props: ['modelValue', 'id', 'name', 'type', 'aria-describedby'] },
-  InputNumber: { template: '<input class="input-number-stub" />', props: ['modelValue', 'min', 'maxFractionDigits', 'mode'] },
-  FileUpload: { template: '<div class="fileupload-stub"><slot name="empty"/></div>', props: ['name', 'fileLimit', 'showCancelButton', 'showUploadButton', 'url', 'accept', 'maxFileSize', 'chooseLabel', 'multiple'] },
+  Button: {
+    template: '<button class="btn-stub">{{ label }}</button>',
+    props: ['label', 'icon', 'severity', 'rounded', 'raised', 'aria-label'],
+  },
+  Dialog: {
+    template:
+      '<div class="dialog-stub" v-if="visible"><slot/><template v-if="$slots.footer"><slot name="footer"/></template></div>',
+    props: ['visible', 'modal', 'header', 'style', 'breakpoints'],
+  },
+  InputText: {
+    template: '<input class="input-text-stub" />',
+    props: ['modelValue', 'id', 'name', 'type', 'aria-describedby'],
+  },
+  InputNumber: {
+    template: '<input class="input-number-stub" />',
+    props: ['modelValue', 'min', 'maxFractionDigits', 'mode'],
+  },
+  FileUpload: {
+    template: '<div class="fileupload-stub"><slot name="empty"/></div>',
+    props: [
+      'name',
+      'fileLimit',
+      'showCancelButton',
+      'showUploadButton',
+      'url',
+      'accept',
+      'maxFileSize',
+      'chooseLabel',
+      'multiple',
+    ],
+  },
   ButtonGroup: { template: '<div class="btn-group-stub"><slot/></div>' },
   ConfirmPopup: { template: '<div class="confirm-popup-stub" />' },
-  ToggleSwitch: { template: '<input type="checkbox" class="toggle-switch-stub" />', props: ['modelValue'] },
+  ToggleSwitch: {
+    template: '<input type="checkbox" class="toggle-switch-stub" />',
+    props: ['modelValue'],
+  },
   Image: { template: '<img class="image-stub" />', props: ['src', 'alt', 'width'] },
-  Message: { template: '<span class="message-stub"><slot/></span>', props: ['severity', 'size', 'variant'] },
+  Message: {
+    template: '<span class="message-stub"><slot/></span>',
+    props: ['severity', 'size', 'variant'],
+  },
   Toast: { template: '<div />' },
-  Form: { template: '<form class="form-stub"><slot :form="formValues"/></form>', props: ['initialValues', 'resolver'] },
+  Form: {
+    template: '<form class="form-stub"><slot :form="formValues"/></form>',
+    props: ['initialValues', 'resolver'],
+  },
   PickMaterial: { template: '<div class="pick-material-stub" />' },
   PickProduct: { template: '<div class="pick-product-stub" />' },
 }

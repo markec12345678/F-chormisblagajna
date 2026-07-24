@@ -5,12 +5,7 @@
   >
     <i class="pi pi-ban mt-8" style="font-size: 4rem; color: #8c737c"></i>
     <h2>{{ $t('access_denied') }}</h2>
-    <Button
-      :label="$t('relogin')"
-      severity="info"
-      class="mt-2"
-      @click="handleRelogin"
-    />
+    <Button :label="$t('relogin')" severity="info" class="mt-2" @click="handleRelogin" />
   </div>
 </template>
 <script setup lang="ts">

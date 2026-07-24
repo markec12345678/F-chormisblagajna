@@ -68,11 +68,23 @@ const stubs = {
   InputNumber: { template: '<input class="input-number-stub" />', props: ['modelValue', 'min'] },
   InputText: { template: '<input class="input-text-stub" />', props: ['modelValue'] },
   Divider: { template: '<hr class="divider-stub" />' },
-  Button: { template: '<button class="btn-stub">{{ label }}</button>', props: ['label', 'icon', 'severity'] },
-  RadioButton: { template: '<input type="radio" class="radio-stub" />', props: ['modelValue', 'value', 'inputId', 'name'] },
+  Button: {
+    template: '<button class="btn-stub">{{ label }}</button>',
+    props: ['label', 'icon', 'severity'],
+  },
+  RadioButton: {
+    template: '<input type="radio" class="radio-stub" />',
+    props: ['modelValue', 'value', 'inputId', 'name'],
+  },
   Badge: { template: '<span class="badge-stub" />', props: ['value', 'size', 'severity'] },
-  Select: { template: '<select class="select-stub" />', props: ['modelValue', 'options', 'optionLabel', 'placeholder'] },
-  ToggleSwitch: { template: '<input type="checkbox" class="toggle-stub" />', props: ['modelValue'] },
+  Select: {
+    template: '<select class="select-stub" />',
+    props: ['modelValue', 'options', 'optionLabel', 'placeholder'],
+  },
+  ToggleSwitch: {
+    template: '<input type="checkbox" class="toggle-stub" />',
+    props: ['modelValue'],
+  },
   Toast: { template: '<div />' },
 }
 

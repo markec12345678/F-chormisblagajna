@@ -35,7 +35,11 @@ const i18n = createI18n({
 })
 
 const stubs = {
-  Dialog: { template: '<div class="dialog-stub"><slot/><template v-if="$slots.footer"><slot name="footer"/></template></div>', props: ['visible', 'modal', 'header'] },
+  Dialog: {
+    template:
+      '<div class="dialog-stub"><slot/><template v-if="$slots.footer"><slot name="footer"/></template></div>',
+    props: ['visible', 'modal', 'header'],
+  },
   InputText: { template: '<input />', props: ['modelValue'] },
   ButtonGroup: { template: '<div class="btn-group"><slot/></div>' },
   Button: { template: '<button>{{ label }}</button>', props: ['label'] },

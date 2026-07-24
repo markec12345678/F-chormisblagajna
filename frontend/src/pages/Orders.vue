@@ -57,7 +57,9 @@
                       icon="pi pi-times"
                       severity="secondary"
                       aria-label="Remove"
-                      @click="confirmCancelOrder($event, slotProps.data.display_id, slotProps.data.id)"
+                      @click="
+                        confirmCancelOrder($event, slotProps.data.display_id, slotProps.data.id)
+                      "
                     />
                     <Button
                       v-tooltip.top="'details'"

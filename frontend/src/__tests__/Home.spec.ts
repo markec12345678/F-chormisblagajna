@@ -151,11 +151,33 @@ const i18n = createI18n({
 })
 
 const stubs = {
-  Toolbar: { template: '<div class="toolbar-stub"><slot name="start"/><slot name="center"/><slot name="end"/></div>' },
-  Button: { template: '<button class="btn-stub">{{ label || "" }}</button>', props: ['label', 'icon', 'severity', 'text', 'outlined', 'size', 'rounded', 'disabled', 'aria-label'] },
-  InputText: { template: '<input class="input-text-stub" />', props: ['modelValue', 'placeholder'] },
+  Toolbar: {
+    template:
+      '<div class="toolbar-stub"><slot name="start"/><slot name="center"/><slot name="end"/></div>',
+  },
+  Button: {
+    template: '<button class="btn-stub">{{ label || "" }}</button>',
+    props: [
+      'label',
+      'icon',
+      'severity',
+      'text',
+      'outlined',
+      'size',
+      'rounded',
+      'disabled',
+      'aria-label',
+    ],
+  },
+  InputText: {
+    template: '<input class="input-text-stub" />',
+    props: ['modelValue', 'placeholder'],
+  },
   Card: { template: '<div class="card-stub"><slot name="content"/></div>' },
-  Dialog: { template: '<div class="dialog-stub" v-if="visible"><slot/></div>', props: ['visible', 'modal', 'header'] },
+  Dialog: {
+    template: '<div class="dialog-stub" v-if="visible"><slot/></div>',
+    props: ['visible', 'modal', 'header'],
+  },
   Badge: { template: '<span class="badge-stub">{{ value }}</span>', props: ['value', 'class'] },
   OverlayPanel: { template: '<div class="overlay-panel-stub"><slot/></div>', props: ['ref'] },
   DataTable: { template: '<div class="datatable-stub"><slot/></div>', props: ['value'] },
@@ -164,9 +186,15 @@ const stubs = {
   ProgressSpinner: { template: '<div class="progress-spinner-stub" />' },
   Chip: { template: '<span class="chip-stub">{{ label }}</span>', props: ['label'] },
   Avatar: { template: '<div class="avatar-stub" />', props: ['icon', 'size'] },
-  ToggleButton: { template: '<input type="checkbox" class="toggle-stub" />', props: ['modelValue', 'onLabel', 'offLabel', 'size', 'class'] },
+  ToggleButton: {
+    template: '<input type="checkbox" class="toggle-stub" />',
+    props: ['modelValue', 'onLabel', 'offLabel', 'size', 'class'],
+  },
   ButtonGroup: { template: '<div class="btn-group-stub"><slot/></div>' },
-  Drawer: { template: '<div class="drawer-stub"><slot name="container"/></div>', props: ['visible'] },
+  Drawer: {
+    template: '<div class="drawer-stub"><slot name="container"/></div>',
+    props: ['visible'],
+  },
   IconField: { template: '<div class="iconfield-stub"><slot/></div>' },
   InputIcon: { template: '<span class="inputicon-stub"><slot/></span>' },
   Slider: { template: '<input type="range" class="slider-stub" />', props: ['modelValue'] },
@@ -175,9 +203,18 @@ const stubs = {
   StepList: { template: '<div class="steplist-stub"><slot/></div>' },
   Step: { template: '<div class="step-stub"><slot/></div>', props: ['value'] },
   StepPanels: { template: '<div class="steppanels-stub"><slot/></div>' },
-  StepPanel: { template: '<div class="steppanel-stub"><slot :activateCallback="() => {}"/></div>', props: ['value'] },
-  Textarea: { template: '<textarea class="textarea-stub" />', props: ['modelValue', 'placeholder'] },
-  Select: { template: '<select class="select-stub" />', props: ['modelValue', 'options', 'optionLabel', 'placeholder'] },
+  StepPanel: {
+    template: '<div class="steppanel-stub"><slot :activateCallback="() => {}"/></div>',
+    props: ['value'],
+  },
+  Textarea: {
+    template: '<textarea class="textarea-stub" />',
+    props: ['modelValue', 'placeholder'],
+  },
+  Select: {
+    template: '<select class="select-stub" />',
+    props: ['modelValue', 'options', 'optionLabel', 'placeholder'],
+  },
   Panel: { template: '<div class="panel-stub"><slot/></div>', props: ['header'] },
   InputGroup: { template: '<div class="input-group-stub"><slot/></div>' },
   InlineMessage: { template: '<div class="inline-msg-stub"><slot/></div>', props: ['severity'] },

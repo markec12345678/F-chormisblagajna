@@ -56,8 +56,19 @@ const i18n = createI18n({
 
 const stubs = {
   DataTable: {
-    template: '<div class="datatable-stub"><slot name="header" /><slot name="empty" /><slot /></div>',
-    props: ['value', 'loading', 'totalRecords', 'rows', 'paginator', 'stripedRows', 'lazy', 'paginatorPosition', 'rowsPerPageOptions'],
+    template:
+      '<div class="datatable-stub"><slot name="header" /><slot name="empty" /><slot /></div>',
+    props: [
+      'value',
+      'loading',
+      'totalRecords',
+      'rows',
+      'paginator',
+      'stripedRows',
+      'lazy',
+      'paginatorPosition',
+      'rowsPerPageOptions',
+    ],
   },
   Column: { template: '<div class="column-stub" />', props: ['field', 'header', 'sortable'] },
   Dialog: {
@@ -65,11 +76,17 @@ const stubs = {
     props: ['visible', 'modal', 'header', 'style', 'breakpoints'],
   },
   Tag: { template: '<span class="tag-stub">{{ value }}</span>', props: ['value', 'severity'] },
-  Button: { template: '<button class="btn-stub" @click="$emit(\'click\')">{{ label }}</button>', props: ['label', 'icon', 'severity'] },
+  Button: {
+    template: '<button class="btn-stub" @click="$emit(\'click\')">{{ label }}</button>',
+    props: ['label', 'icon', 'severity'],
+  },
   ButtonGroup: { template: '<div class="btn-group-stub"><slot/></div>' },
   IconField: { template: '<div class="iconfield-stub"><slot/></div>' },
   InputIcon: { template: '<span class="inputicon-stub"><slot/></span>' },
-  InputText: { template: '<input class="input-text-stub" />', props: ['modelValue', 'placeholder'] },
+  InputText: {
+    template: '<input class="input-text-stub" />',
+    props: ['modelValue', 'placeholder'],
+  },
   ConfirmPopup: { template: '<div />' },
   OrderView: { template: '<div class="orderview-stub" />', props: ['order'] },
 }

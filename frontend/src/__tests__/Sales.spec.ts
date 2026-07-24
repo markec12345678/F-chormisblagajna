@@ -95,13 +95,19 @@ const stubs = {
     emits: ['page'],
   },
   Column: { template: '<div class="column-stub"/>', props: ['field', 'header', 'sortable'] },
-  Button: { template: '<button class="btn-stub">{{ label }}</button>', props: ['label', 'icon', 'severity', 'raised'] },
+  Button: {
+    template: '<button class="btn-stub">{{ label }}</button>',
+    props: ['label', 'icon', 'severity', 'raised'],
+  },
   Card: { template: '<div class="card-stub"><slot name="content"/></div>' },
   Tag: { template: '<span class="tag-stub">{{ value }}</span>', props: ['value', 'severity'] },
   Badge: { template: '<span class="badge-stub">{{ value }}</span>', props: ['value', 'severity'] },
   Toast: { template: '<div />' },
   Tooltip: { template: '<span class="tooltip-stub"><slot/></span>' },
-  SalesLogTableItems: { template: '<div class="sales-log-table-items-stub" />', props: ['items', 'order_refunds'] },
+  SalesLogTableItems: {
+    template: '<div class="sales-log-table-items-stub" />',
+    props: ['items', 'order_refunds'],
+  },
 }
 
 describe('Sales', () => {

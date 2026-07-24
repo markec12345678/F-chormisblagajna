@@ -113,7 +113,10 @@
         </div>
       </div>
 
-      <div class="col-12 flex flex-column" v-if="props.order.custom_data && Object.keys(props.order.custom_data).length > 0">
+      <div
+        class="col-12 flex flex-column"
+        v-if="props.order.custom_data && Object.keys(props.order.custom_data).length > 0"
+      >
         <h4 class="mb-0">{{ $t('custom_data') }}</h4>
         <div class="flex flex-column gap-2">
           <div

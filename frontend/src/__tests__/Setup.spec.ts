@@ -54,9 +54,18 @@ const i18n = createI18n({
 })
 
 const stubs = {
-  InputText: { template: '<input class="input-text-stub" />', props: ['modelValue', 'placeholder', 'type'] },
-  InputNumber: { template: '<input class="input-number-stub" />', props: ['modelValue', 'useGrouping', 'placeholder'] },
-  Button: { template: '<button class="btn-stub">{{ label }}</button>', props: ['label', 'icon', 'iconPos', 'loading', 'disabled'] },
+  InputText: {
+    template: '<input class="input-text-stub" />',
+    props: ['modelValue', 'placeholder', 'type'],
+  },
+  InputNumber: {
+    template: '<input class="input-number-stub" />',
+    props: ['modelValue', 'useGrouping', 'placeholder'],
+  },
+  Button: {
+    template: '<button class="btn-stub">{{ label }}</button>',
+    props: ['label', 'icon', 'iconPos', 'loading', 'disabled'],
+  },
 }
 
 describe('Setup', () => {

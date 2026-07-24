@@ -98,7 +98,19 @@ function createOrder(overrides = {}) {
     id: 'order-1',
     display_id: '#001',
     state: 'pending',
-    items: [{ id: '1', product: { name: 'Pizza', id: 'p1', materials: [], sub_products: [] }, price: 10, quantity: 1, comment: '', sale_price: 10, cost: 5, cost_method: 'exact', status: '' }],
+    items: [
+      {
+        id: '1',
+        product: { name: 'Pizza', id: 'p1', materials: [], sub_products: [] },
+        price: 10,
+        quantity: 1,
+        comment: '',
+        sale_price: 10,
+        cost: 5,
+        cost_method: 'exact',
+        status: '',
+      },
+    ],
     submitted_at: new Date().toISOString(),
     started_at: null,
     comment: 'Extra cheese',
@@ -125,7 +137,10 @@ describe('OrderView', () => {
     const order = createOrder()
     const wrapper = mount(OrderView, {
       props: { order },
-      global: { plugins: [i18n, ToastService, ConfirmationService], stubs: { Dialog: true, Popover: true, ConfirmPopup: true } },
+      global: {
+        plugins: [i18n, ToastService, ConfirmationService],
+        stubs: { Dialog: true, Popover: true, ConfirmPopup: true },
+      },
     })
 
     expect(wrapper.text()).toContain('#001')
@@ -135,7 +150,10 @@ describe('OrderView', () => {
     const order = createOrder()
     const wrapper = mount(OrderView, {
       props: { order },
-      global: { plugins: [i18n, ToastService, ConfirmationService], stubs: { Dialog: true, Popover: true, ConfirmPopup: true } },
+      global: {
+        plugins: [i18n, ToastService, ConfirmationService],
+        stubs: { Dialog: true, Popover: true, ConfirmPopup: true },
+      },
     })
 
     expect(wrapper.text()).toContain('Janez')
@@ -147,7 +165,10 @@ describe('OrderView', () => {
     const order = createOrder({ is_paid: false })
     const wrapper = mount(OrderView, {
       props: { order },
-      global: { plugins: [i18n, ToastService, ConfirmationService], stubs: { Dialog: true, Popover: true, ConfirmPopup: true } },
+      global: {
+        plugins: [i18n, ToastService, ConfirmationService],
+        stubs: { Dialog: true, Popover: true, ConfirmPopup: true },
+      },
     })
 
     expect(wrapper.text()).toContain('Unpaid')
@@ -157,7 +178,10 @@ describe('OrderView', () => {
     const order = createOrder({ is_paid: true })
     const wrapper = mount(OrderView, {
       props: { order },
-      global: { plugins: [i18n, ToastService, ConfirmationService], stubs: { Dialog: true, Popover: true, ConfirmPopup: true } },
+      global: {
+        plugins: [i18n, ToastService, ConfirmationService],
+        stubs: { Dialog: true, Popover: true, ConfirmPopup: true },
+      },
     })
 
     expect(wrapper.text()).toContain('Paid')
@@ -167,7 +191,10 @@ describe('OrderView', () => {
     const order = createOrder({ state: 'pending' })
     const wrapper = mount(OrderView, {
       props: { order },
-      global: { plugins: [i18n, ToastService, ConfirmationService], stubs: { Dialog: true, Popover: true, ConfirmPopup: true } },
+      global: {
+        plugins: [i18n, ToastService, ConfirmationService],
+        stubs: { Dialog: true, Popover: true, ConfirmPopup: true },
+      },
     })
 
     expect(wrapper.text()).toContain('Pending')
@@ -177,7 +204,10 @@ describe('OrderView', () => {
     const order = createOrder({ state: 'in_progress' })
     const wrapper = mount(OrderView, {
       props: { order },
-      global: { plugins: [i18n, ToastService, ConfirmationService], stubs: { Dialog: true, Popover: true, ConfirmPopup: true } },
+      global: {
+        plugins: [i18n, ToastService, ConfirmationService],
+        stubs: { Dialog: true, Popover: true, ConfirmPopup: true },
+      },
     })
 
     expect(wrapper.text()).toContain('In progress')
@@ -187,7 +217,10 @@ describe('OrderView', () => {
     const order = createOrder({ state: 'finished' })
     const wrapper = mount(OrderView, {
       props: { order },
-      global: { plugins: [i18n, ToastService, ConfirmationService], stubs: { Dialog: true, Popover: true, ConfirmPopup: true } },
+      global: {
+        plugins: [i18n, ToastService, ConfirmationService],
+        stubs: { Dialog: true, Popover: true, ConfirmPopup: true },
+      },
     })
 
     expect(wrapper.text()).toContain('Finished')
@@ -197,7 +230,10 @@ describe('OrderView', () => {
     const order = createOrder({ state: 'cancelled' })
     const wrapper = mount(OrderView, {
       props: { order },
-      global: { plugins: [i18n, ToastService, ConfirmationService], stubs: { Dialog: true, Popover: true, ConfirmPopup: true } },
+      global: {
+        plugins: [i18n, ToastService, ConfirmationService],
+        stubs: { Dialog: true, Popover: true, ConfirmPopup: true },
+      },
     })
 
     expect(wrapper.text()).toContain('Cancelled')
@@ -208,7 +244,10 @@ describe('OrderView', () => {
     const order = createOrder({ delivery_info: delivery })
     const wrapper = mount(OrderView, {
       props: { order },
-      global: { plugins: [i18n, ToastService, ConfirmationService], stubs: { Dialog: true, Popover: true, ConfirmPopup: true } },
+      global: {
+        plugins: [i18n, ToastService, ConfirmationService],
+        stubs: { Dialog: true, Popover: true, ConfirmPopup: true },
+      },
     })
 
     expect(wrapper.text()).toContain('Marko')
@@ -219,7 +258,10 @@ describe('OrderView', () => {
     const order = createOrder({ delivery_info: null })
     const wrapper = mount(OrderView, {
       props: { order },
-      global: { plugins: [i18n, ToastService, ConfirmationService], stubs: { Dialog: true, Popover: true, ConfirmPopup: true } },
+      global: {
+        plugins: [i18n, ToastService, ConfirmationService],
+        stubs: { Dialog: true, Popover: true, ConfirmPopup: true },
+      },
     })
 
     expect(wrapper.text()).not.toContain('Delivery info')
@@ -229,7 +271,10 @@ describe('OrderView', () => {
     const order = createOrder({ custom_data: { table: '5', notes: 'window seat' } })
     const wrapper = mount(OrderView, {
       props: { order },
-      global: { plugins: [i18n, ToastService, ConfirmationService], stubs: { Dialog: true, Popover: true, ConfirmPopup: true } },
+      global: {
+        plugins: [i18n, ToastService, ConfirmationService],
+        stubs: { Dialog: true, Popover: true, ConfirmPopup: true },
+      },
     })
 
     expect(wrapper.text()).toContain('table')
@@ -241,7 +286,10 @@ describe('OrderView', () => {
     const order = createOrder({ custom_data: null })
     const wrapper = mount(OrderView, {
       props: { order },
-      global: { plugins: [i18n, ToastService, ConfirmationService], stubs: { Dialog: true, Popover: true, ConfirmPopup: true } },
+      global: {
+        plugins: [i18n, ToastService, ConfirmationService],
+        stubs: { Dialog: true, Popover: true, ConfirmPopup: true },
+      },
     })
 
     expect(wrapper.text()).not.toContain('Custom data')
@@ -251,7 +299,10 @@ describe('OrderView', () => {
     const order = createOrder({ is_paid: false, state: 'in_progress' })
     const wrapper = mount(OrderView, {
       props: { order },
-      global: { plugins: [i18n, ToastService, ConfirmationService], stubs: { Dialog: true, Popover: true, ConfirmPopup: true } },
+      global: {
+        plugins: [i18n, ToastService, ConfirmationService],
+        stubs: { Dialog: true, Popover: true, ConfirmPopup: true },
+      },
     })
 
     expect(wrapper.text()).toContain('Collect money')
@@ -261,7 +312,10 @@ describe('OrderView', () => {
     const order = createOrder({ is_paid: true })
     const wrapper = mount(OrderView, {
       props: { order },
-      global: { plugins: [i18n, ToastService, ConfirmationService], stubs: { Dialog: true, Popover: true, ConfirmPopup: true } },
+      global: {
+        plugins: [i18n, ToastService, ConfirmationService],
+        stubs: { Dialog: true, Popover: true, ConfirmPopup: true },
+      },
     })
 
     expect(wrapper.text()).not.toContain('Collect money')
@@ -271,7 +325,10 @@ describe('OrderView', () => {
     const order = createOrder({ discount: 5, tips: 3.5 })
     const wrapper = mount(OrderView, {
       props: { order },
-      global: { plugins: [i18n, ToastService, ConfirmationService], stubs: { Dialog: true, Popover: true, ConfirmPopup: true } },
+      global: {
+        plugins: [i18n, ToastService, ConfirmationService],
+        stubs: { Dialog: true, Popover: true, ConfirmPopup: true },
+      },
     })
 
     expect(wrapper.text()).toContain('5')
@@ -282,7 +339,10 @@ describe('OrderView', () => {
     const order = createOrder({ comment: 'No onions please' })
     const wrapper = mount(OrderView, {
       props: { order },
-      global: { plugins: [i18n, ToastService, ConfirmationService], stubs: { Dialog: true, Popover: true, ConfirmPopup: true } },
+      global: {
+        plugins: [i18n, ToastService, ConfirmationService],
+        stubs: { Dialog: true, Popover: true, ConfirmPopup: true },
+      },
     })
 
     expect(wrapper.text()).toContain('No onions please')

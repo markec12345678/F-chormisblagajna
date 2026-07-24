@@ -62,13 +62,20 @@ const i18n = createI18n({
 
 const stubs = {
   Card: { template: '<div class="card-stub"><slot name="content" /></div>' },
-  InputText: { template: '<input class="input-text-stub" :disabled="disabled" :value="modelValue" />', props: ['modelValue', 'disabled', 'type', 'id'] },
+  InputText: {
+    template: '<input class="input-text-stub" :disabled="disabled" :value="modelValue" />',
+    props: ['modelValue', 'disabled', 'type', 'id'],
+  },
   Chip: { template: '<span class="chip-stub">{{ label }}</span>', props: ['label'] },
   Divider: { template: '<hr class="divider-stub" />' },
-  Button: { template: '<button class="btn-stub" @click="$emit(\'click\')">{{ label }}</button>', props: ['label', 'icon', 'severity', 'loading'] },
+  Button: {
+    template: '<button class="btn-stub" @click="$emit(\'click\')">{{ label }}</button>',
+    props: ['label', 'icon', 'severity', 'loading'],
+  },
   ButtonGroup: { template: '<div class="btn-group-stub"><slot/></div>' },
   Dialog: {
-    template: '<div class="dialog-stub" v-if="visible"><slot/><template v-if="$slots.footer"><slot name="footer"/></template></div>',
+    template:
+      '<div class="dialog-stub" v-if="visible"><slot/><template v-if="$slots.footer"><slot name="footer"/></template></div>',
     props: ['visible', 'modal', 'header', 'style'],
   },
   Toast: { template: '<div />' },

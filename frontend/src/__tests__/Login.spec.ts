@@ -66,9 +66,19 @@ const i18n = createI18n({
 })
 
 const stubs = {
-  InputText: { template: '<input class="input-text-stub" :id="id" :value="modelValue" @input="$emit(\'update:modelValue\', $event.target.value)" />', props: ['modelValue', 'placeholder', 'id', 'class'] },
-  Password: { template: '<input class="password-stub" type="password" :id="id" :value="modelValue" />', props: ['modelValue', 'placeholder', 'id', 'feedback', 'toggleMask', 'inputClass'] },
-  Button: { template: '<button class="btn-stub" type="submit">{{ label }}</button>', props: ['label', 'icon', 'loading', 'disabled', 'class'] },
+  InputText: {
+    template:
+      '<input class="input-text-stub" :id="id" :value="modelValue" @input="$emit(\'update:modelValue\', $event.target.value)" />',
+    props: ['modelValue', 'placeholder', 'id', 'class'],
+  },
+  Password: {
+    template: '<input class="password-stub" type="password" :id="id" :value="modelValue" />',
+    props: ['modelValue', 'placeholder', 'id', 'feedback', 'toggleMask', 'inputClass'],
+  },
+  Button: {
+    template: '<button class="btn-stub" type="submit">{{ label }}</button>',
+    props: ['label', 'icon', 'loading', 'disabled', 'class'],
+  },
   Divider: { template: '<hr class="divider-stub" />', props: ['align'] },
   RouterLink: { template: '<a class="router-link-stub"><slot/></a>', props: ['to'] },
   Toast: { template: '<div />' },
