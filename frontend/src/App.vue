@@ -82,8 +82,10 @@
           <Button
             :label="
               selected_mode
-                ? `Continue with ${selected_mode === 'kitchen' ? 'Kitchen' : 'Retail'} mode`
-                : 'Select a mode to continue'
+                ? t('continue_with_mode', {
+                    mode: selected_mode === 'kitchen' ? t('kitchen') : $t('retail'),
+                  })
+                : t('select_mode_continue')
             "
             :disabled="!selected_mode || saving_mode"
             :loading="saving_mode"
@@ -155,7 +157,7 @@ const saving_mode = ref(false)
 
 const store = globalStore()
 const orientation = computed(() => store.currentOrientation)
-const { locale, setLocaleMessage } = useI18n({ useScope: 'global' })
+const { t, locale, setLocaleMessage } = useI18n({ useScope: 'global' })
 
 const getSettings = () => {
   return axios

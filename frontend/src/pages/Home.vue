@@ -370,7 +370,7 @@
         :header="$t('add_comment')"
         :style="{ width: '25rem' }"
       >
-        <InputText v-model="comment" placeholder="Comment" class="mb-4" />
+        <InputText v-model="comment" :placeholder="$t('comment')" class="mb-4" />
         <div class="flex justify-content-end gap-2">
           <Button type="button" :label="$t('close')" severity="secondary"></Button>
           <Button type="button" :label="$t('add')" @click="addWithComment()"></Button>
@@ -1141,8 +1141,11 @@ const increaseOrderItemQty = (index: number) => {
   ) {
     toast.add({
       severity: 'warn',
-      summary: 'Insufficient availability',
-      detail: `${orderItems.value[index].product.name} has only ${product?.availability} left`,
+      summary: t('insufficient_availability_summary'),
+      detail: t('only_x_left_detail', {
+        name: orderItems.value[index].product.name,
+        count: product?.availability,
+      }),
       group: 'br',
     })
     return
@@ -1379,7 +1382,7 @@ const BackStashedOrderToCheckout = async (stashed_order_index: number) => {
     .catch(() => {
       toast.add({
         severity: 'error',
-        summary: 'Failed to remove stashed order from db',
+        summary: t('failed_remove_stashed_order'),
         detail: '',
         life: 3000,
         group: 'br',
@@ -1442,7 +1445,7 @@ const getStashedOrders = () => {
     .catch(() => {
       toast.add({
         severity: 'error',
-        summary: 'Failed to get stashed orders',
+        summary: t('failed_load_stashed_orders'),
         detail: '',
         life: 3000,
         group: 'br',
@@ -1487,8 +1490,8 @@ const stashOrder = () => {
       stashedOrders.value.push(response.data.data)
       toast.add({
         severity: 'success',
-        summary: `Order ${order.display_id} stashed successfully !`,
-        detail: 'successfully stashed order !',
+        summary: t('order_stashed_success'),
+        detail: t('order_stashed_detail'),
         life: 3000,
         group: 'br',
       })
@@ -1496,7 +1499,7 @@ const stashOrder = () => {
     .catch(() => {
       toast.add({
         severity: 'error',
-        summary: 'Error Stashing Item',
+        summary: t('error_stashing_item'),
         detail: '',
         life: 3000,
         group: 'br',
@@ -1705,8 +1708,8 @@ const addItem = async (item) => {
   ) {
     toast.add({
       severity: 'warn',
-      summary: 'Insufficient availability',
-      detail: `${item.name} has only ${product?.availability} left`,
+      summary: t('insufficient_availability_summary'),
+      detail: t('only_x_left_detail', { name: item.name, count: product?.availability }),
       group: 'br',
     })
     return
@@ -1815,8 +1818,8 @@ const submitOrder = () => {
       .then(() => {
         toast.add({
           severity: 'success',
-          summary: 'Success',
-          detail: 'Order in progress !',
+          summary: t('success'),
+          detail: t('order_in_progress'),
           life: 3000,
           group: 'br',
         })

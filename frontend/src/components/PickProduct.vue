@@ -28,7 +28,7 @@
               icon="pi pi-plus"
               :label="$t('add')"
               severity="secondary"
-              aria-label="Ddd"
+              aria-label="Add"
               @click="returnProduct(slotProps.data)"
             />
           </ButtonGroup>

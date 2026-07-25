@@ -271,6 +271,11 @@ const i18n = createI18n({
       order_paid_success: 'Successfully paid order',
       about_nutrix_short: 'Nutrix is an open-source restaurant management system',
       select_option: 'Select option',
+      insufficient_availability_summary: 'Insufficient availability',
+      only_x_left_detail: '{name} has only {count} left',
+      order_submitted_success: 'Order in progress!',
+      continue_with_mode: 'Continue with {mode} mode',
+      select_mode_continue: 'Select a mode to continue',
     },
   },
 })
