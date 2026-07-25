@@ -4,7 +4,7 @@
       <div class="col-12 p-0">
         <Toolbar style="border-radius: 0px" class="py-1 lg:py-2">
           <template #start>
-            <div @click="version_dialog_visible = true" style="text-decoration: none; color: gray">
+            <div @click="version_dialog_visible = true" class="no-underline text-gray-400">
               <img
                 src="@/assets/logo.png"
                 alt="logo"
@@ -62,10 +62,7 @@
               @node-select="(node) => sidemenuNodeSelect(node)"
             >
               <template #default="slotProps">
-                <div
-                  style="text-decoration: none; color: inherit"
-                  class="flex align-items-center w-full"
-                >
+                <div class="no-underline flex align-items-center w-full">
                   <div>
                     {{ $t(`${slotProps.node.label.title}`, slotProps.node.label.plural ? 3 : 1) }}
                   </div>
@@ -114,6 +111,7 @@ import { Toolbar, Dialog } from 'primevue'
 import Tree from 'primevue/tree'
 import Button from 'primevue/button'
 import { useI18n } from 'vue-i18n'
+import { useToast } from 'primevue/usetoast'
 import { globalStore } from '@/stores'
 import axios from 'axios'
 import ProgressSpinner from 'primevue/progressspinner'
@@ -342,6 +340,7 @@ const items = ref([
 
 const loading = ref(true)
 const { locale, setLocaleMessage } = useI18n({ useScope: 'global' })
+const toast = useToast()
 
 const loadLanguage = async () => {
   await axios
@@ -392,7 +391,15 @@ const loadLanguage = async () => {
             ]
           }
         })
-        .catch(() => {})
+        .catch(() => {
+          toast.add({
+            severity: 'error',
+            summary: t('failed'),
+            detail: t('request_failed'),
+            life: 3000,
+            group: 'br',
+          })
+        })
       loading.value = false
     })
     .catch((err) => {

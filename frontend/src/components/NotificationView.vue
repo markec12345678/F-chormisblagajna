@@ -4,7 +4,7 @@
       <div class="flex flex-column">
         <h4 class="m-0 mb-1">{{ props.notification.topic_name }}</h4>
         {{ props.notification.description }}
-        <span style="color: gray; font-size: 0.8rem" class="mt-1">{{ timePassed }}</span>
+        <span class="text-gray-400 mt-1" style="font-size: 0.8rem">{{ timePassed }}</span>
       </div>
     </Message>
   </div>

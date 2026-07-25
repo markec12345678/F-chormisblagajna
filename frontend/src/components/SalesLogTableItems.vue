@@ -42,7 +42,15 @@
     <Column sortable field="profit" :header="$t('profit')">
       <template #body="slotProps">
         <div
-          :style="`${slotProps.data.sale_price - slotProps.data.cost - (items_refunds[slotProps.data.item_id]?.refund_amount || 0) + (items_refunds[slotProps.data.item_id]?.inventory_refunds || 0) > 0 ? 'color:green' : 'color:red'}`"
+          :class="
+            slotProps.data.sale_price -
+              slotProps.data.cost -
+              (items_refunds[slotProps.data.item_id]?.refund_amount || 0) +
+              (items_refunds[slotProps.data.item_id]?.inventory_refunds || 0) >
+            0
+              ? 'text-green-500'
+              : 'text-red-500'
+          "
         >
           {{
             slotProps.data.sale_price -

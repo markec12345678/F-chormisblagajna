@@ -1,9 +1,9 @@
 <template>
   <div v-if="error" class="error-boundary">
     <div class="error-content">
-      <i class="pi pi-exclamation-triangle" style="font-size: 3rem; color: #ef4444"></i>
+      <i class="pi pi-exclamation-triangle text-red-500" style="font-size: 3rem"></i>
       <h2>{{ $t('error_occurred') }}</h2>
-      <p style="color: #64748b; max-width: 500px; text-align: center">
+      <p class="text-slate-500" style="max-width: 500px; text-align: center">
         {{ error.message || $t('error_occurred') }}
       </p>
       <Button :label="$t('retry')" @click="reset" class="mt-3" />

@@ -20,6 +20,12 @@
           </IconField>
         </div>
       </template>
+      <template #empty>
+        <div class="flex flex-column align-items-center py-4">
+          <i class="pi pi-inbox text-4xl text-gray-400 mb-2"></i>
+          <span class="text-gray-500">{{ $t('no_results') }}</span>
+        </div>
+      </template>
       <Column field="name" :header="$t('name')"></Column>
       <Column field="quantity" :header="$t('quantity')"></Column>
       <Column field="unit" :header="$t('unit')"></Column>

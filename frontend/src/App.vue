@@ -101,8 +101,8 @@
       <template #content="{ message }">
         <section class="flex p-3 gap-3 w-full bg-black-alpha-90">
           <div
-            style="border-radius: 100%; background-color: white; height: 1.9rem; width: 2rem"
-            class="p-1 flex justify-content-center align-items-center opacity-95"
+            class="bg-white dark:bg-gray-800 p-1 flex justify-content-center align-items-center opacity-95"
+            style="border-radius: 100%; height: 1.9rem; width: 2rem"
           >
             <i
               v-if="message.severity == `success`"
@@ -191,9 +191,25 @@ const getSettings = () => {
           locale.value = response2.data.data.code
           store.setOrientation(response2.data.data.orientation)
         })
-        .catch(() => {})
+        .catch(() => {
+          toast.add({
+            severity: 'error',
+            summary: t('failed'),
+            detail: t('request_failed'),
+            life: 3000,
+            group: 'br',
+          })
+        })
     })
-    .catch(() => {})
+    .catch(() => {
+      toast.add({
+        severity: 'error',
+        summary: t('failed'),
+        detail: t('request_failed'),
+        life: 3000,
+        group: 'br',
+      })
+    })
 }
 
 const saveShopMode = () => {

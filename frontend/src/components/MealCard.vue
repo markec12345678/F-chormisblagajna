@@ -8,8 +8,7 @@
       style="position: absolute; z-index: 99; cursor: not-allowed"
     ></div>
     <div
-      class="mealcard"
-      :style="`overflow: hidden;cursor: pointer;background-color:${store.getColorMode == 'light' ? 'white' : '#27272A'}`"
+      :class="`mealcard overflow-hidden cursor-pointer ${store.getColorMode == 'light' ? 'bg-white' : 'bg-zinc-800'}`"
       @click="$emit('add')"
     >
       <div class="flex flex-column" style="position: relative">
@@ -31,25 +30,21 @@
           <h4 class="m-0 p-1">{{ props.item.name }}</h4>
         </div>
         <p
-          class="mx-1 my-1"
-          :style="`color:${store.getColorMode == 'light' ? 'green' : 'lightgreen'}`"
+          :class="`mx-1 my-1 ${store.getColorMode == 'light' ? 'text-green-500' : 'text-green-300'}`"
         >
           <strong>{{ props.item.price }} {{ $t('egp') }}</strong>
         </p>
 
-        <div
-          class="text-center gap-1 flex align-items-center justify-content-center"
-          style="background-color: #ffd589"
-        >
+        <div class="text-center gap-1 flex align-items-center justify-content-center bg-amber-300">
           <i
             v-tooltip.top="$t('inventory_consumption_disabled')"
             v-if="!props.item.enable_inventory_consumption"
-            class="fa fa-unlink"
-            style="font-size: 1rem; color: indigo; z-index: 99"
+            class="fa fa-unlink text-indigo-500"
+            style="font-size: 1rem; z-index: 99"
           ></i>
           <p
-            class="m-0"
-            :style="`font-size:0.9rem;color:${store.getColorMode == 'light' ? '' : 'black'};text-decoration:${props.item.enable_inventory_consumption ? 'none' : 'line-through'}`"
+            :class="`m-0 ${store.getColorMode == 'dark' ? 'text-black' : ''}`"
+            :style="`font-size:0.9rem;text-decoration:${props.item.enable_inventory_consumption ? 'none' : 'line-through'}`"
           >
             {{
               props.item.availability != undefined

@@ -5,7 +5,7 @@
         <Tag
           v-if="props.order_item_index == index"
           icon="pi pi-arrow-right"
-          style="background-color: #ffdc00"
+          class="bg-yellow-400"
         />
       </template>
     </Column>

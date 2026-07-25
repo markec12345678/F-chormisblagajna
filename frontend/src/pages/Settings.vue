@@ -160,7 +160,7 @@
             <Divider />
             <div class="flex flex-column">
               <h3><i class="pi pi-shop"></i> {{ $t('shop_mode') }}</h3>
-              <p class="mt-0 mb-3" style="color: #94a3b8; font-size: 0.9rem">
+              <p class="mt-0 mb-3 text-slate-400" style="font-size: 0.9rem">
                 {{ $t('shop_mode_description') }}
               </p>
               <div class="flex flex-wrap gap-4">
@@ -176,7 +176,7 @@
                     class="flex align-items-center gap-2"
                     style="cursor: pointer"
                   >
-                    <i class="fa fa-kitchen-set" style="color: #f97316"></i>
+                    <i class="fa fa-kitchen-set text-orange-500"></i>
                     <span>{{ $t('kitchen') }}</span>
                   </label>
                 </div>
@@ -192,7 +192,7 @@
                     class="flex align-items-center gap-2"
                     style="cursor: pointer"
                   >
-                    <i class="pi pi-shopping-cart" style="color: #06b6d4"></i>
+                    <i class="pi pi-shopping-cart text-cyan-500"></i>
                     <span>{{ $t('retail') }}</span>
                   </label>
                 </div>

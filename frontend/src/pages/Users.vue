@@ -28,7 +28,7 @@
               <template #empty>
                 <div class="flex flex-column align-items-center gap-2 py-4">
                   <i class="pi pi-users" style="font-size: 2rem; opacity: 0.3"></i>
-                  <p class="m-0" style="color: #94a3b8">{{ $t('no_results') }}</p>
+                  <p class="m-0 text-slate-400">{{ $t('no_results') }}</p>
                 </div>
               </template>
               <Column sortable field="username" :header="$t('username')"></Column>
