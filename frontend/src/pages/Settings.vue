@@ -18,7 +18,7 @@
             <InlineMessage severity="error" class="w-full">
               {{ settingsError }}
             </InlineMessage>
-            <Button label="Retry" icon="pi pi-refresh" class="mt-2" @click="getSettings()" />
+            <Button :label="$t('retry')" icon="pi pi-refresh" class="mt-2" @click="getSettings()" />
           </div>
           <div v-else class="col-12 flex-column flex">
             <h4><i class="fa fa-boxes-stacked"></i> {{ $t('inventory_item', 3) }}</h4>
