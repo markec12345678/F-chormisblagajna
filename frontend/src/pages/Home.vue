@@ -258,6 +258,7 @@
                           placeholder="0"
                           type="number"
                           class="w-8 h-2rem"
+                          aria-label="$t('discount')"
                         />
                         <p style="font-size: 0.8rem" class="mx-2">{{ t('egp') }}</p>
                       </div>
@@ -439,7 +440,11 @@
                     class="flex m-0 p-0 flex-column mt-4 align-items-start justify-content-start w-full"
                   >
                     <h4>{{ $t('tips') }}</h4>
-                    <InputText :placeholder="$t('tips')" v-model.number="current_order_tip" />
+                    <InputText
+                      :placeholder="$t('tips')"
+                      v-model.number="current_order_tip"
+                      aria-label="$t('tips')"
+                    />
                   </div>
                 </div>
                 <template v-if="store.getShopMode === 'kitchen'">
@@ -553,9 +558,21 @@
               <div class="flex flex-column">
                 <h2 class="mt-0">{{ $t('delivery_info') }}</h2>
                 <div class="flex flex-column mt-3 gap-2">
-                  <InputText v-model="delivery_info.name" :placeholder="$t('name')" />
-                  <InputText v-model="delivery_info.address" :placeholder="$t('address')" />
-                  <InputText v-model="delivery_info.phone" :placeholder="$t('phone')" />
+                  <InputText
+                    v-model="delivery_info.name"
+                    :placeholder="$t('name')"
+                    aria-label="$t('name')"
+                  />
+                  <InputText
+                    v-model="delivery_info.address"
+                    :placeholder="$t('address')"
+                    aria-label="$t('address')"
+                  />
+                  <InputText
+                    v-model="delivery_info.phone"
+                    :placeholder="$t('phone')"
+                    aria-label="$t('phone')"
+                  />
                 </div>
                 <div class="flex pt-6 justify-content-end gap-2">
                   <Button

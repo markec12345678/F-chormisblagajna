@@ -147,24 +147,13 @@
       >
         <div class="p-0">
           <div class="flex flex-column w-8 xl:w-4">
-            <InputText
-              class="m-1"
-              :placeholder="$t('company')"
-              v-model="new_entry_company"
-              aria-describedby="name-help"
-            />
+            <InputText class="m-1" :placeholder="$t('company')" v-model="new_entry_company" />
             <InputText
               class="m-1"
               :placeholder="$t('purchase_quantity')"
               v-model="new_entry_quantity"
-              aria-describedby="name-help"
             />
-            <InputText
-              class="m-1"
-              :placeholder="$t('purchase_price')"
-              v-model="new_entry_price"
-              aria-describedby="name-help"
-            />
+            <InputText class="m-1" :placeholder="$t('purchase_price')" v-model="new_entry_price" />
             <FloatLabel class="mx-1">
               <Calendar
                 inputId="new_entry_expiration_date"
@@ -238,7 +227,6 @@
             <InputText
               id="name"
               v-model="new_component_name"
-              aria-describedby="name-help"
               :class="{ 'p-invalid': component_errors.name }"
             />
             <small class="p-error">{{ component_errors.name }}</small>
@@ -260,19 +248,16 @@
               class="m-1"
               :placeholder="$t('company')"
               v-model="new_component_entry_company"
-              aria-describedby="name-help"
             />
             <InputText
               class="m-1"
               :placeholder="$t('quantity')"
               v-model="new_component_entry_quantity"
-              aria-describedby="name-help"
             />
             <InputText
               class="m-1"
               :placeholder="$t('total_price')"
               v-model="new_component_entry_price"
-              aria-describedby="name-help"
             />
             <div>
               <Button class="mx-1 my-2" :label="$t('add')" @click="addNewComponentEntry()" />

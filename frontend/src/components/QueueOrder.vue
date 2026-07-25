@@ -55,7 +55,13 @@
               />
             </ButtonGroup>
             <ButtonGroup v-if="state == 'in_progress'" class="w-full">
-              <Button icon="pi pi-trash" class="w-3" severity="secondary" />
+              <Button
+                icon="pi pi-trash"
+                class="w-3"
+                severity="secondary"
+                aria-label="$t('remove')"
+                @click="confirmCancel($event)"
+              />
               <ConfirmPopup></ConfirmPopup>
               <Button
                 icon="pi pi-check"
@@ -223,7 +229,7 @@ const props = defineProps(['order', 'number'])
 
 const timePassed = ref('')
 
-const emit = defineEmits(['openedDialog', 'closedDialog', 'finished'])
+const emit = defineEmits(['openedDialog', 'closedDialog', 'finished', 'cancelled'])
 
 watch(props.order.state, (newVal) => {
   state.value = newVal
@@ -316,6 +322,50 @@ const finishOrder = () => {
       emit('closedDialog')
       state.value = 'finished'
     })
+}
+
+const cancelOrder = () => {
+  axios
+    .post(
+      `http://${import.meta.env.VITE_APP_BACKEND_HOST}${import.meta.env.VITE_APP_MODULE_CORE_API_PREFIX}/api/orders/${props.order.id}/cancel`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${auth.accessToken.value}`,
+        },
+      },
+    )
+    .then(() => {
+      state.value = 'cancelled'
+      emit('cancelled')
+    })
+}
+
+const confirmCancel = (event) => {
+  confirm.require({
+    target: event.currentTarget,
+    message: t('confirm_cancel_order'),
+    icon: 'pi pi-exclamation-triangle',
+    rejectProps: {
+      label: t('cancel'),
+      severity: 'secondary',
+      outlined: true,
+    },
+    acceptProps: {
+      label: t('yes'),
+    },
+    accept: async () => {
+      await cancelOrder()
+      toast.add({
+        severity: 'warn',
+        summary: t('order_cancelled_success'),
+        detail: t('order_cancelled_success'),
+        life: 3000,
+        group: 'br',
+      })
+    },
+    reject: () => {},
+  })
 }
 
 const startOrder = () => {
