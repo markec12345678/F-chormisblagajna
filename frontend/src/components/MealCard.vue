@@ -1,6 +1,6 @@
 <template>
   <div
-    :style="`position:relative;${props.item.enable_inventory_consumption && props.item.availability < 1 ? 'filter: grayscale(100%);' : ''}'`"
+    :style="`position:relative;${props.item.enable_inventory_consumption && props.item.availability < 1 ? 'filter: grayscale(100%);' : ''}`"
   >
     <div
       v-if="props.item.enable_inventory_consumption && props.item.availability < 1"
@@ -25,7 +25,7 @@
         <div
           id="logo"
           :style="`background:url(${backend_host}/public/${props.item.image_url}) ;height:7rem;background-size:cover;background-position:center;`"
-          class="w-full"
+          class="w-full mealcard-image"
         ></div>
         <div class="flex align-items-center" style="height: 3rem">
           <h4 class="m-0 p-1">{{ props.item.name }}</h4>
@@ -102,5 +102,17 @@ const toggle = (event) => {
   box-shadow:
     0 1px 2px 0 rgba(0, 0, 0, 0.1),
     0 1px 5px 0 rgba(0, 0, 0, 0.08);
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+}
+.mealcard:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 4px 8px 0 rgba(0, 0, 0, 0.12),
+    0 2px 4px 0 rgba(0, 0, 0, 0.08);
+}
+.mealcard-image {
+  background-color: #f3f4f6;
 }
 </style>

@@ -11,6 +11,57 @@
           <h2 style="color: cadetblue; margin: 0">{{ $t('order', 3) }}: 0</h2>
           <p style="color: #94a3b8; margin: 0">{{ t('new_orders_appear') }}</p>
         </div>
+        <div v-else class="flex flex-column mb-3 px-3">
+          <div class="flex align-items-center gap-2 mb-2">
+            <h2 class="m-0" style="color: cadetblue">{{ $t('order', 3) }}: {{ orders.length }}</h2>
+            <div class="flex gap-1 ml-3">
+              <span class="flex align-items-center gap-1 text-xs">
+                <span
+                  style="
+                    width: 8px;
+                    height: 8px;
+                    border-radius: 50%;
+                    background: #22c55e;
+                    display: inline-block;
+                  "
+                ></span>
+              </span>
+              <span class="flex align-items-center gap-1 text-xs">
+                <span
+                  style="
+                    width: 8px;
+                    height: 8px;
+                    border-radius: 50%;
+                    background: #eab308;
+                    display: inline-block;
+                  "
+                ></span>
+              </span>
+              <span class="flex align-items-center gap-1 text-xs">
+                <span
+                  style="
+                    width: 8px;
+                    height: 8px;
+                    border-radius: 50%;
+                    background: #f97316;
+                    display: inline-block;
+                  "
+                ></span>
+              </span>
+              <span class="flex align-items-center gap-1 text-xs">
+                <span
+                  style="
+                    width: 8px;
+                    height: 8px;
+                    border-radius: 50%;
+                    background: #ef4444;
+                    display: inline-block;
+                  "
+                ></span>
+              </span>
+            </div>
+          </div>
+        </div>
         <div class="flex flex-wrap">
           <div v-for="(column_orders, index) in dynamic_columns" :key="index">
             <div class="flex flex-column gap-1">
@@ -233,8 +284,12 @@ const displayOrders = () => {
     dynamic_columns.value[i] = []
   }
 
-  for (let i = 0; i < orders.value.length; i++) {
-    dynamic_columns.value[i % dynamic_columns.value.length].push(orders.value[i])
+  const sorted = [...orders.value].sort((a, b) => {
+    return new Date(a.submitted_at).getTime() - new Date(b.submitted_at).getTime()
+  })
+
+  for (let i = 0; i < sorted.length; i++) {
+    dynamic_columns.value[i % dynamic_columns.value.length].push(sorted[i])
   }
 }
 

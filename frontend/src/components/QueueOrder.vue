@@ -20,7 +20,7 @@
       </div>
     </div>
     <Card
-      :style="`width: 20rem; overflow: hidden;${state == 'cancelled' ? 'filter:grayscale(1) blur(0.2rem);' : ''}`"
+      :style="`width: 20rem; overflow: hidden; border-left: 4px solid ${urgencyColor};${state == 'cancelled' ? 'filter:grayscale(1) blur(0.2rem);' : ''}`"
     >
       <template #header>
         <!-- <h1 class="m-2">#{{props.number}}</h1> -->
@@ -31,8 +31,15 @@
             {{ props.order.display_id }}
           </h3>
           <div class="col-3 flex justify-content-center align-items-center">
-            <p class="px-2">
-              <strong>{{ timePassed }}</strong>
+            <p
+              class="px-2"
+              :style="
+                urgencyTotalSeconds >= 600
+                  ? 'animation: pulse-urgent 1.5s ease-in-out infinite'
+                  : ''
+              "
+            >
+              <strong :style="`color: ${urgencyColor}`">{{ timePassed }}</strong>
             </p>
           </div>
           <div class="col-9 flex justify-content-center align-items-center">
@@ -394,6 +401,21 @@ const display: boolean = computed(() => {
   return valid
 })
 
+const urgencyTotalSeconds = computed(() => {
+  if (state.value !== 'pending' && state.value !== 'in_progress') return 0
+  const submittedAt = new Date(props.order.submitted_at)
+  const now = new Date()
+  return differenceInSeconds(now, submittedAt)
+})
+
+const urgencyColor = computed(() => {
+  const totalSeconds = urgencyTotalSeconds.value
+  if (totalSeconds >= 600) return '#ef4444'
+  if (totalSeconds >= 300) return '#f97316'
+  if (totalSeconds >= 120) return '#eab308'
+  return '#22c55e'
+})
+
 const isValid: boolean = computed(() => {
   let valid = true
 
@@ -422,4 +444,14 @@ const init = () => {
 init()
 </script>
 
-<style></style>
+<style>
+@keyframes pulse-urgent {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+</style>

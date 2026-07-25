@@ -318,6 +318,8 @@
                   iconPos="right"
                   :disabled="!is_order_valid || orderItems.length == 0"
                   @click="order_additional_details_dialog = true"
+                  size="large"
+                  class="w-full"
                 />
               </div>
             </div>
@@ -654,6 +656,7 @@
                     :label="`${is_auto_start_order ? $t('start') : $t('submit')} ${is_collecting_money ? '( ' + $t('collect') + ' ' + total.toFixed(2) + ` ${$t('egp')} )` : '( ' + $t('pay_later') + ' )'} `"
                     :disabled="!is_order_valid"
                     @click="submitOrder()"
+                    size="large"
                   />
                 </div>
               </div>
