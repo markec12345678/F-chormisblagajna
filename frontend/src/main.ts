@@ -270,6 +270,7 @@ const i18n = createI18n({
       refund_error: 'Refund failed',
       order_paid_success: 'Successfully paid order',
       about_nutrix_short: 'Nutrix is an open-source restaurant management system',
+      select_option: 'Select option',
     },
   },
 })

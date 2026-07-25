@@ -161,7 +161,14 @@
               "
             >
               <div style="height: 65%; overflow: auto">
-                <TransitionGroup name="cart-item" tag="div">
+                <div
+                  v-if="orderItems.length === 0"
+                  class="flex flex-column justify-content-center align-items-center h-full gap-2"
+                >
+                  <i class="pi pi-shopping-cart" style="font-size: 2.5rem; opacity: 0.2"></i>
+                  <p class="m-0 text-sm" style="color: #94a3b8">{{ t('no_results') }}</p>
+                </div>
+                <TransitionGroup v-else name="cart-item" tag="div">
                   <div v-for="(item, index) in orderItems" :key="item.product.id + '_' + index">
                     <div class="flex justify-content-between align-items-center">
                       <div
@@ -742,7 +749,7 @@
                 class="flex align-items-center cursor-pointer p-4 rounded text-surface-700 hover:bg-surface-100 dark:text-surface-0 dark:hover:bg-surface-800 duration-150 transition-colors p-ripple"
               >
                 <i class="pi pi-bell mr-2"></i>
-                <span class="font-medium">Notifications</span>
+                <span class="font-medium">{{ t('notifications') }}</span>
                 <i class="pi pi-chevron-down ml-auto"></i>
               </a>
               <ul
@@ -753,7 +760,7 @@
                     v-ripple
                     class="flex justify-content-center align-items-center cursor-pointer px-4 py-3 rounded text-surface-700 hover:bg-surface-100 dark:text-surface-0 dark:hover:bg-surface-800 duration-150 transition-colors p-ripple"
                   >
-                    <span class="font-medium">Success</span>
+                    <span class="font-medium">{{ t('success') }}</span>
                     <span
                       class="inline-flex items-center justify-center ml-auto text-primary-contrast rounded-full"
                       style="min-width: 1.5rem; height: 1.5rem"
@@ -767,7 +774,7 @@
                     v-ripple
                     class="flex justify-content-center align-items-center cursor-pointer px-4 py-3 rounded text-surface-700 hover:bg-surface-100 dark:text-surface-0 dark:hover:bg-surface-800 duration-150 transition-colors p-ripple"
                   >
-                    <span class="font-medium">Info</span>
+                    <span class="font-medium">{{ t('info') }}</span>
                     <span
                       class="inline-flex items-center justify-center ml-auto text-primary-contrast rounded-full"
                       style="min-width: 1.5rem; height: 1.5rem"
@@ -781,7 +788,7 @@
                     v-ripple
                     class="flex justify-content-center align-items-center cursor-pointer px-4 py-3 rounded text-surface-700 hover:bg-surface-100 dark:text-surface-0 dark:hover:bg-surface-800 duration-150 transition-colors p-ripple"
                   >
-                    <span class="font-medium">Warn</span>
+                    <span class="font-medium">{{ t('warn') }}</span>
                     <span
                       class="inline-flex items-center justify-center ml-auto text-primary-contrast rounded-full"
                       style="min-width: 1.5rem; height: 1.5rem"
@@ -795,7 +802,7 @@
                     v-ripple
                     class="flex justify-content-center align-items-center cursor-pointer px-4 py-3 rounded text-surface-700 hover:bg-surface-100 dark:text-surface-0 dark:hover:bg-surface-800 duration-150 transition-colors p-ripple"
                   >
-                    <span class="font-medium">Danger</span>
+                    <span class="font-medium">{{ t('danger') }}</span>
                     <span
                       class="inline-flex items-center justify-center ml-auto text-primary-contrast rounded-full"
                       style="min-width: 1.5rem; height: 1.5rem"
@@ -833,7 +840,7 @@
                 class="flex items-center align-items-center cursor-pointer px-4 py-3 rounded text-surface-700 hover:bg-surface-100 dark:text-surface-0 dark:hover:bg-surface-800 duration-150 transition-colors p-ripple"
               >
                 <i class="pi pi-comments mr-2"></i>
-                <span class="font-medium">Messages</span>
+                <span class="font-medium">{{ t('messages') }}</span>
                 <span
                   class="inline-flex items-center justify-center ml-auto text-primary-contrast rounded-full"
                   style="min-width: 1.5rem; height: 1.5rem"
@@ -894,7 +901,7 @@
                 class="flex justify-content-center align-items-center cursor-pointer px-4 py-3 rounded text-surface-700 hover:bg-surface-100 dark:text-surface-0 dark:hover:bg-surface-800 duration-150 transition-colors p-ripple"
               >
                 <i class="pi pi-bookmark mr-2"></i>
-                <span class="font-medium">Drafts</span>
+                <span class="font-medium">{{ t('drafts') }}</span>
                 <span
                   class="inline-flex items-center justify-center ml-auto text-primary-contrast rounded-full"
                   style="min-width: 1.5rem; height: 1.5rem"

@@ -63,7 +63,7 @@
           v-model="model.materials[index].entry"
           :options="model.materials[index].material.entries"
           optionLabel="label"
-          placeholder="Select option"
+          :placeholder="$t('select_option')"
           class="w-6"
         />
         <span
