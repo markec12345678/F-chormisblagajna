@@ -45,7 +45,7 @@ const payUnpaidOrder = () => {
     .then(() => {
       toast.add({
         severity: 'success',
-        summary: 'Success',
+        summary: t('success'),
         detail: `Successfully paid order ${props.order.display_id}`,
         life: 3000,
         group: 'br',

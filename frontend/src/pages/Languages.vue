@@ -67,7 +67,7 @@ const applyLang = () => {
     .catch(() => {
       toast.add({
         severity: 'error',
-        summary: 'Error',
+        summary: t('failed'),
         detail: t('language_load_error'),
         life: 3000,
         grpup: 'br',
@@ -91,7 +91,7 @@ const getAvailableLanguages = () => {
     .catch((error) => {
       toast.add({
         severity: 'error',
-        summary: 'Error',
+        summary: t('failed'),
         detail: error.response.data.error,
         life: 3000,
         grpup: 'br',

@@ -534,7 +534,7 @@ const beforeEditProductImageUpload = (event: FileUploadBeforeSendEvent) => {
 const onAdvancedUpload = () => {
   toast.add({
     severity: 'info',
-    summary: 'Success',
+    summary: t('success'),
     detail: `${proxy.$t('image_uploaded')}`,
     life: 3000,
   })
@@ -572,7 +572,7 @@ const deleteProduct = (product_id: string) => {
     .then(() => {
       toast.add({
         severity: 'success',
-        summary: 'Success',
+        summary: t('success'),
         detail: t('product_deleted_success'),
         group: 'br',
         life: 3000,
@@ -582,7 +582,7 @@ const deleteProduct = (product_id: string) => {
     .catch(() => {
       toast.add({
         severity: 'error',
-        summary: 'Error',
+        summary: t('failed'),
         detail: t('product_delete_failed'),
         group: 'br',
         life: 3000,
@@ -640,7 +640,7 @@ const updateProduct = () => {
     .then(() => {
       toast.add({
         severity: 'success',
-        summary: 'Product Updated',
+        summary: t('product_updated'),
         detail: proxy.$t('done'),
         group: 'br',
         life: 3000,
@@ -656,7 +656,7 @@ const updateProduct = () => {
     .catch((error) => {
       toast.add({
         severity: 'error',
-        summary: 'Error',
+        summary: t('failed'),
         detail: error.response?.data?.message || t('error_occurred'),
         group: 'br',
       })
@@ -692,7 +692,7 @@ const submitProduct = () => {
     .then(async (response) => {
       toast.add({
         severity: 'success',
-        summary: 'Product Added',
+        summary: t('product_added'),
         detail: proxy.$t('done'),
         group: 'br',
       })
@@ -706,7 +706,7 @@ const submitProduct = () => {
     .catch((error) => {
       toast.add({
         severity: 'error',
-        summary: 'Error',
+        summary: t('failed'),
         detail: error.response?.data?.data || t('error_occurred'),
         group: 'br',
       })
@@ -805,7 +805,7 @@ const loadProducts = (first = 0, rows = productsTableRowsPerPage.value) => {
       productsTableTotalRecords.value = response.data.meta.total_records
     })
     .catch(() => {
-      toast.add({ severity: 'error', summary: 'Error', detail: t('products_load_failed') })
+      toast.add({ severity: 'error', summary: t('failed'), detail: t('products_load_failed') })
     })
     .finally(() => {
       isProductsTableLoading.value = false

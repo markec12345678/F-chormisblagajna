@@ -115,12 +115,12 @@ onMounted(() => {
 
 const changePassword = async () => {
   if (!currentPassword.value || !newPassword.value || !confirmPassword.value) {
-    toast.add({ severity: 'warn', summary: 'Warning', detail: t('fill_all_fields') })
+    toast.add({ severity: 'warn', summary: t('warn'), detail: t('fill_all_fields') })
     return
   }
 
   if (newPassword.value !== confirmPassword.value) {
-    toast.add({ severity: 'error', summary: 'Error', detail: t('passwords_no_match') })
+    toast.add({ severity: 'error', summary: t('failed'), detail: t('passwords_no_match') })
     return
   }
 
@@ -140,7 +140,7 @@ const changePassword = async () => {
       },
     )
 
-    toast.add({ severity: 'success', summary: 'Success', detail: t('password_changed_success') })
+    toast.add({ severity: 'success', summary: t('success'), detail: t('password_changed_success') })
     passwordDialog.value = false
     currentPassword.value = ''
     newPassword.value = ''
@@ -149,7 +149,7 @@ const changePassword = async () => {
     const msg = axios.isAxiosError(err) ? err.response?.data : undefined
     toast.add({
       severity: 'error',
-      summary: 'Error',
+      summary: t('failed'),
       detail: msg || t('password_change_failed'),
     })
   } finally {

@@ -103,7 +103,7 @@ const save = () => {
     .then(() => {
       toast.add({
         severity: 'success',
-        summary: 'Success',
+        summary: t('success'),
         detail: t('data_saved_success'),
         life: 3000,
         group: 'br',
@@ -112,7 +112,7 @@ const save = () => {
     .catch((err) => {
       toast.add({
         severity: 'error',
-        summary: 'Error ' + err.response.status,
+        summary: t('failed') + ' ' + err.response.status,
         detail: err.response.data,
         group: 'br',
       })
@@ -132,7 +132,7 @@ const getHubsyncInfo = () => {
     .catch((err) => {
       toast.add({
         severity: 'error',
-        summary: 'Error ' + err.response.status,
+        summary: t('failed') + ' ' + err.response.status,
         detail: err.response.data,
         group: 'br',
       })

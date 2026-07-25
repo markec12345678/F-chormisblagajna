@@ -272,7 +272,7 @@ const submitCategory = () => {
       setTimeout(() => {
         toast.add({
           severity: 'success',
-          summary: 'Success',
+          summary: t('success'),
           detail: t('category_added_success'),
           group: 'br',
         })
@@ -281,7 +281,7 @@ const submitCategory = () => {
     .catch(() => {
       toast.add({
         severity: 'error',
-        summary: 'Error',
+        summary: t('failed'),
         detail: t('category_add_failed'),
         group: 'br',
       })
@@ -302,7 +302,7 @@ const deleteCategory = (category_id: string) => {
       setTimeout(() => {
         toast.add({
           severity: 'success',
-          summary: 'Success',
+          summary: t('success'),
           detail: t('category_deleted_success'),
           group: 'br',
         })
@@ -313,7 +313,7 @@ const deleteCategory = (category_id: string) => {
     .catch(() => {
       toast.add({
         severity: 'error',
-        summary: 'Error',
+        summary: t('failed'),
         detail: t('category_delete_failed'),
         group: 'br',
       })
@@ -340,7 +340,7 @@ const updateCategory = () => {
     .then(() => {
       toast.add({
         severity: 'success',
-        summary: 'Success',
+        summary: t('success'),
         detail: t('category_updated_success'),
         group: 'br',
       })
@@ -350,7 +350,7 @@ const updateCategory = () => {
     .catch(() => {
       toast.add({
         severity: 'error',
-        summary: 'Error',
+        summary: t('failed'),
         detail: t('category_update_failed'),
         group: 'br',
       })
@@ -420,7 +420,7 @@ const getCategories = (first = 0, rows = categoriesTableRowsPerPage.value) => {
       categoriesTableTotalRecords.value = response.data.meta.total_records
     })
     .catch(() => {
-      toast.add({ severity: 'error', summary: 'Error', detail: t('categories_load_failed') })
+      toast.add({ severity: 'error', summary: t('failed'), detail: t('categories_load_failed') })
     })
     .finally(() => {
       isCategoriesTableLoading.value = false

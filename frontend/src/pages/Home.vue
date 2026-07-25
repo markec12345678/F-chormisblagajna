@@ -1538,7 +1538,7 @@ const startWebsocket = () => {
         toast.removeGroup('br')
         toast.add({
           severity: 'success',
-          summary: 'Order Finished',
+          summary: t('order_finished'),
           detail: `order ( ${data.order_id} ) finished and is ready to be served !`,
           life: 3000,
           group: 'br',

@@ -49,6 +49,8 @@ import IconField from 'primevue/iconfield'
 import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
 import axios from 'axios'
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
 import { Material, MaterialEntry } from '@/classes/OrderItem'
 import { useToast } from 'primevue/usetoast'
 import auth from '../services/auth'
@@ -83,7 +85,11 @@ const returnMaterial = async (material: Material) => {
       emit('returnMaterial', material)
     })
     .catch(() => {
-      toast.add({ severity: 'error', summary: 'Error', detail: 'Failed to load material entries' })
+      toast.add({
+        severity: 'error',
+        summary: t('failed'),
+        detail: t('failed_load_material_entries'),
+      })
     })
 }
 

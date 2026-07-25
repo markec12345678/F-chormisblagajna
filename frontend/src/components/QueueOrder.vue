@@ -347,7 +347,7 @@ const startOrder = () => {
       toast.removeGroup('br')
       toast.add({
         severity: 'error',
-        summary: 'Error',
+        summary: t('failed'),
         detail: error.response.data.body,
         life: 5000,
         group: 'br',

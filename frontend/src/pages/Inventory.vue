@@ -469,7 +469,7 @@ const loadEntries = (first = 0, rows = entriesTableRowsPerPage.value) => {
       entriesTableTotalRecords.value = response.data.meta.total_records
     })
     .catch(() => {
-      toast.add({ severity: 'error', summary: 'Error', detail: t('products_load_failed') })
+      toast.add({ severity: 'error', summary: t('failed'), detail: t('products_load_failed') })
     })
     .finally(() => {
       isEntriesTableLoading.value = false
@@ -551,7 +551,7 @@ const deleteMaterial = (material_id: string) => {
     .then(() => {
       toast.add({
         severity: 'success',
-        summary: 'Success',
+        summary: t('success'),
         detail: t('material_deleted_success'),
         life: 3000,
       })
@@ -560,7 +560,7 @@ const deleteMaterial = (material_id: string) => {
     .catch(() => {
       toast.add({
         severity: 'error',
-        summary: 'Error',
+        summary: t('failed'),
         detail: t('material_delete_failed'),
         life: 3000,
       })
@@ -587,14 +587,14 @@ const saveEditedMaterial = (material: Material) => {
       edit_material_dialog.value = false
       toast.add({
         severity: 'success',
-        summary: 'Success',
+        summary: t('success'),
         detail: t('material_edited_success'),
         life: 3000,
       })
       loadInventory()
     })
     .catch((error) => {
-      toast.add({ severity: 'error', summary: 'Error', detail: error.message, life: 3000 })
+      toast.add({ severity: 'error', summary: t('failed'), detail: error.message, life: 3000 })
     })
 }
 
@@ -619,7 +619,7 @@ const saveMaterialSettings = () => {
     .then(() => {
       toast.add({
         severity: 'success',
-        summary: 'Success',
+        summary: t('success'),
         detail: t('material_settings_saved'),
         life: 3000,
         group: 'br',
@@ -627,7 +627,7 @@ const saveMaterialSettings = () => {
       material_settings_dialog.value = false
     })
     .catch((error) => {
-      toast.add({ severity: 'error', summary: 'Error', detail: error.message, life: 3000 })
+      toast.add({ severity: 'error', summary: t('failed'), detail: error.message, life: 3000 })
     })
 }
 
@@ -657,7 +657,7 @@ const confirmDeleteEntry = (event, material_id, entry_id) => {
         .then(() => {
           toast.add({
             severity: 'success',
-            summary: 'Done',
+            summary: t('done'),
             detail: t('entry_deleted'),
             life: 3000,
             group: 'br',
@@ -699,7 +699,7 @@ const addNewEntry = (component_id) => {
     .then(() => {
       toast.add({
         severity: 'success',
-        summary: 'Success',
+        summary: t('success'),
         detail: t('entry_saved'),
         life: 3000,
         group: 'br',
@@ -751,7 +751,7 @@ const submitNewComponent = () => {
     .then(() => {
       toast.add({
         severity: 'success',
-        summary: 'Success',
+        summary: t('success'),
         detail: t('component_saved'),
         life: 3000,
         group: 'br',

@@ -186,7 +186,7 @@ const cancelOrder = (order_id: string) => {
     .then(() => {
       toast.add({
         severity: 'success',
-        summary: 'Success',
+        summary: t('success'),
         detail: t('order_cancelled_success'),
         group: 'br',
       })
@@ -202,7 +202,7 @@ const cancelOrder = (order_id: string) => {
     .catch(() => {
       toast.add({
         severity: 'error',
-        summary: 'Error',
+        summary: t('failed'),
         detail: t('order_cancel_failed'),
         group: 'br',
       })

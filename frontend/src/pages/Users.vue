@@ -227,7 +227,7 @@ const loadUsers = () => {
       users.value = response.data
     })
     .catch(() => {
-      toast.add({ severity: 'error', summary: 'Error', detail: t('users_load_failed') })
+      toast.add({ severity: 'error', summary: t('failed'), detail: t('users_load_failed') })
     })
     .finally(() => {
       isUsersLoading.value = false
@@ -261,7 +261,7 @@ const submitUser = () => {
     .catch((error) => {
       toast.add({
         severity: 'error',
-        summary: 'Error',
+        summary: t('failed'),
         detail: error.response?.data?.message || t('error_occurred'),
         group: 'br',
       })
@@ -278,7 +278,7 @@ const deleteUser = (user_id: string) => {
     .then(() => {
       toast.add({
         severity: 'success',
-        summary: 'Success',
+        summary: t('success'),
         detail: t('user_deleted_success'),
         group: 'br',
         life: 3000,
@@ -288,7 +288,7 @@ const deleteUser = (user_id: string) => {
     .catch(() => {
       toast.add({
         severity: 'error',
-        summary: 'Error',
+        summary: t('failed'),
         detail: t('user_delete_failed'),
         group: 'br',
         life: 3000,
@@ -327,7 +327,7 @@ const openPasswordEditDialog = (user) => {
 
 const submitPasswordChange = () => {
   if (!editPassword.value.password) {
-    toast.add({ severity: 'warn', summary: 'Warning', detail: t('enter_new_password') })
+    toast.add({ severity: 'warn', summary: t('warn'), detail: t('enter_new_password') })
     return
   }
 
@@ -347,7 +347,7 @@ const submitPasswordChange = () => {
     .then(() => {
       toast.add({
         severity: 'success',
-        summary: 'Success',
+        summary: t('success'),
         detail: t('password_changed_success'),
         group: 'br',
         life: 3000,
@@ -358,7 +358,7 @@ const submitPasswordChange = () => {
     .catch((error) => {
       toast.add({
         severity: 'error',
-        summary: 'Error',
+        summary: t('failed'),
         detail: error.response?.data?.message || t('password_change_failed'),
         group: 'br',
         life: 3000,

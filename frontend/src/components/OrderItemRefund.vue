@@ -215,14 +215,14 @@ const submitRefund = () => {
     .then(() => {
       toast.add({
         severity: 'success',
-        summary: 'Success',
+        summary: t('success'),
         detail: t('item_refunded'),
         group: 'br',
       })
       emit('finished')
     })
     .catch((err) => {
-      toast.add({ severity: 'error', summary: 'Error', detail: err.response.data, group: 'br' })
+      toast.add({ severity: 'error', summary: t('failed'), detail: err.response.data, group: 'br' })
     })
 }
 

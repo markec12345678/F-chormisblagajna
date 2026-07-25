@@ -116,7 +116,7 @@ const submitCustomer = () => {
     .catch((error) => {
       toast.add({
         severity: 'error',
-        summary: 'Error',
+        summary: t('failed'),
         detail: error.response?.data?.data || t('error_occurred'),
         group: 'br',
       })

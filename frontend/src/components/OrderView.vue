@@ -311,12 +311,17 @@ const addTip = (amount: number) => {
       },
     )
     .then(() => {
-      toast.add({ severity: 'success', summary: 'Success', detail: t('tip_added'), group: 'br' })
+      toast.add({ severity: 'success', summary: t('success'), detail: t('tip_added'), group: 'br' })
       emit('updated')
       add_tip_popover.value.hide()
     })
     .catch(() => {
-      toast.add({ severity: 'error', summary: 'Error', detail: t('request_failed'), group: 'br' })
+      toast.add({
+        severity: 'error',
+        summary: t('failed'),
+        detail: t('request_failed'),
+        group: 'br',
+      })
     })
 }
 
@@ -331,12 +336,22 @@ const removeTip = (amount: number) => {
       },
     )
     .then(() => {
-      toast.add({ severity: 'success', summary: 'Success', detail: t('tip_removed'), group: 'br' })
+      toast.add({
+        severity: 'success',
+        summary: t('success'),
+        detail: t('tip_removed'),
+        group: 'br',
+      })
       emit('updated')
       remove_tip_popover.value.hide()
     })
     .catch(() => {
-      toast.add({ severity: 'error', summary: 'Error', detail: t('request_failed'), group: 'br' })
+      toast.add({
+        severity: 'error',
+        summary: t('failed'),
+        detail: t('request_failed'),
+        group: 'br',
+      })
     })
 }
 
@@ -412,7 +427,7 @@ const saveCustomDataChanges = (data: Record<string, string>) => {
     .then(() => {
       toast.add({
         severity: 'success',
-        summary: 'Success',
+        summary: t('success'),
         detail: t('custom_data_updated'),
         group: 'br',
       })
@@ -420,7 +435,12 @@ const saveCustomDataChanges = (data: Record<string, string>) => {
       emit('updated')
     })
     .catch(() => {
-      toast.add({ severity: 'error', summary: 'Error', detail: t('request_failed'), group: 'br' })
+      toast.add({
+        severity: 'error',
+        summary: t('failed'),
+        detail: t('request_failed'),
+        group: 'br',
+      })
     })
 }
 
@@ -441,7 +461,7 @@ const getOrderLogs = () => {
     .catch((err) => {
       toast.add({
         severity: 'error',
-        summary: 'Error ' + err.response.status,
+        summary: t('failed') + ' ' + err.response.status,
         detail: err.response.data,
         group: 'br',
       })
@@ -462,14 +482,19 @@ const finishOrder = () => {
     .then(() => {
       toast.add({
         severity: 'success',
-        summary: 'Success',
+        summary: t('success'),
         detail: t('order_finished'),
         group: 'br',
       })
       emit('finished')
     })
     .catch(() => {
-      toast.add({ severity: 'error', summary: 'Error', detail: t('request_failed'), group: 'br' })
+      toast.add({
+        severity: 'error',
+        summary: t('failed'),
+        detail: t('request_failed'),
+        group: 'br',
+      })
     })
 }
 
@@ -487,14 +512,19 @@ const collectedMoney = () => {
     .then(() => {
       toast.add({
         severity: 'success',
-        summary: 'Success',
+        summary: t('success'),
         detail: t('money_collected'),
         group: 'br',
       })
       emit('amount_collected')
     })
     .catch(() => {
-      toast.add({ severity: 'error', summary: 'Error', detail: t('request_failed'), group: 'br' })
+      toast.add({
+        severity: 'error',
+        summary: t('failed'),
+        detail: t('request_failed'),
+        group: 'br',
+      })
     })
 }
 
@@ -513,13 +543,18 @@ const PrintKitchenReceipt = () => {
     .then(() => {
       toast.add({
         severity: 'success',
-        summary: 'Success',
+        summary: t('success'),
         detail: t('print_signal_sent'),
         group: 'br',
       })
     })
     .catch(() => {
-      toast.add({ severity: 'error', summary: 'Error', detail: t('request_failed'), group: 'br' })
+      toast.add({
+        severity: 'error',
+        summary: t('failed'),
+        detail: t('request_failed'),
+        group: 'br',
+      })
     })
 }
 
@@ -538,13 +573,18 @@ const PrintClientReceipt = () => {
     .then(() => {
       toast.add({
         severity: 'success',
-        summary: 'Success',
+        summary: t('success'),
         detail: t('print_signal_sent'),
         group: 'br',
       })
     })
     .catch(() => {
-      toast.add({ severity: 'error', summary: 'Error', detail: t('request_failed'), group: 'br' })
+      toast.add({
+        severity: 'error',
+        summary: t('failed'),
+        detail: t('request_failed'),
+        group: 'br',
+      })
     })
 }
 
@@ -575,7 +615,7 @@ const confirmCancelOrder = (event) => {
         .then(() => {
           toast.add({
             severity: 'success',
-            summary: 'Success',
+            summary: t('success'),
             detail: t('order_cancelled_success'),
             group: 'br',
           })
@@ -584,7 +624,7 @@ const confirmCancelOrder = (event) => {
         .catch(() => {
           toast.add({
             severity: 'error',
-            summary: 'Error',
+            summary: t('failed'),
             detail: t('order_cancel_failed'),
             group: 'br',
           })

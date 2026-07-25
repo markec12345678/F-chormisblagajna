@@ -226,8 +226,8 @@ const saveShopMode = () => {
     .catch(() => {
       toast.add({
         severity: 'error',
-        summary: 'Error',
-        detail: 'Failed to save shop mode',
+        summary: t('failed'),
+        detail: t('failed_save_shop_mode'),
         life: 3000,
         group: 'br',
       })
@@ -263,7 +263,7 @@ const init = () => {
       }
     })
     .catch((err) => {
-      toast.add({ severity: 'error', summary: 'Error', detail: err, life: 3000, group: 'br' })
+      toast.add({ severity: 'error', summary: t('failed'), detail: err, life: 3000, group: 'br' })
     })
 }
 

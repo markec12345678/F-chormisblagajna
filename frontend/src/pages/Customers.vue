@@ -200,7 +200,7 @@ const deleteCustomer = (customer_id: string) => {
     .then(() => {
       toast.add({
         severity: 'success',
-        summary: 'Success',
+        summary: t('success'),
         detail: t('customer_deleted_success'),
         group: 'br',
         life: 3000,
@@ -210,7 +210,7 @@ const deleteCustomer = (customer_id: string) => {
     .catch(() => {
       toast.add({
         severity: 'error',
-        summary: 'Error',
+        summary: t('failed'),
         detail: t('customer_delete_failed'),
         group: 'br',
         life: 3000,
@@ -277,7 +277,7 @@ const updateCustomer = () => {
     .catch((error) => {
       toast.add({
         severity: 'error',
-        summary: 'Error',
+        summary: t('failed'),
         detail: error.response?.data?.message || t('error_occurred'),
         group: 'br',
       })
@@ -321,7 +321,7 @@ const submitCustomer = () => {
     .catch((error) => {
       toast.add({
         severity: 'error',
-        summary: 'Error',
+        summary: t('failed'),
         detail: error.response?.data?.data || t('error_occurred'),
         group: 'br',
       })
@@ -359,7 +359,7 @@ const loadCustomers = (first = 0, rows = customersTableRowsPerPage.value) => {
       customersTableTotalRecords.value = response.data.meta.total_records
     })
     .catch(() => {
-      toast.add({ severity: 'error', summary: 'Error', detail: t('customers_load_failed') })
+      toast.add({ severity: 'error', summary: t('failed'), detail: t('customers_load_failed') })
     })
     .finally(() => {
       isCustomersTableLoading.value = false

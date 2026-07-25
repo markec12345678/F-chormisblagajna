@@ -179,6 +179,8 @@ const i18n = createI18n({
       order_stashed_detail: 'Successfully stashed order!',
       error_stashing_item: 'Error Stashing Item',
       order_finished: 'Order Finished',
+      failed_save_shop_mode: 'Failed to save shop mode',
+      failed_load_material_entries: 'Failed to load material entries',
       order_ready_to_serve: 'order is ready to be served!',
       order_in_progress: 'Order in progress!',
       drag_drop_upload: 'Drag and drop files here to upload.',
