@@ -9,13 +9,13 @@
       <InputText id="unit" v-model="edited_material.unit" aria-describedby="unit" />
     </div>
     <div class="col-12 flex">
-      <Button :label="$t('cancel')" severity="secondary" aria-label="Cancel" />
+      <Button :label="$t('cancel')" severity="secondary" aria-label="$t('cancel')" />
       <Button
         class="ml-2"
         severity="primary"
         @click="returnMaterial"
         :label="$t('done')"
-        aria-label="Done"
+        aria-label="$t('done')"
       />
     </div>
   </div>

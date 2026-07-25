@@ -58,30 +58,30 @@
                       :label="$t('history')"
                       @click="loadComponentLogs(slotProps.data.id)"
                       severity="secondary"
-                      aria-label="Save"
+                      aria-label="$t('save')"
                     />
                     <Button
                       icon="fa fa-dolly-flatbed"
                       severity="secondary"
-                      aria-label="ShowEntries"
+                      aria-label="$t('show_entries')"
                       @click="showEntriesDialog(slotProps.data)"
                     />
                     <Button
                       icon="pi pi-pencil"
                       severity="secondary"
                       @click="openEditMaterialDialog(slotProps.data)"
-                      aria-label="Edit"
+                      aria-label="$t('edit')"
                     />
                     <Button
                       icon="pi pi-cog"
                       severity="secondary"
-                      aria-label="Settings"
+                      aria-label="$t('settings')"
                       @click="openMaterialSettingsDialog(slotProps.data)"
                     />
                     <Button
                       icon="pi pi-times"
                       severity="danger"
-                      aria-label="Delete"
+                      aria-label="$t('delete')"
                       @click="confirmDeleteMaterial(slotProps.data.id)"
                     />
                   </ButtonGroup>
@@ -127,13 +127,13 @@
               :label="$t('cancel')"
               @click="material_settings_dialog = false"
               severity="secondary"
-              aria-label="Save"
+              aria-label="$t('save')"
             />
             <Button
               class="ml-2"
               severity="primary"
               :label="$t('save')"
-              aria-label="Save"
+              aria-label="$t('save')"
               @click="saveMaterialSettings"
             />
           </ButtonGroup>
@@ -206,7 +206,7 @@
                     icon="pi pi-times"
                     :label="$t('delete')"
                     severity="secondary"
-                    aria-label="Delete"
+                    aria-label="$t('delete')"
                     @click="(e: Event) => deleteEntryFromEntriesDialog(e, slotProps.data)"
                   />
                 </ButtonGroup>
@@ -293,7 +293,7 @@
                   <Button
                     icon="pi pi-times"
                     severity="secondary"
-                    aria-label="Delete"
+                    aria-label="$t('delete')"
                     @click="removeNewComponentEntry(slotProps.data)"
                   />
                 </ButtonGroup>

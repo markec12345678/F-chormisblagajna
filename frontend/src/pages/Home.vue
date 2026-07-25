@@ -63,7 +63,7 @@
           size="large"
           text
           rounded
-          aria-label="Current"
+          aria-label="$t('current')"
           @click.stop="paylater_toggle"
         >
           <span class="p-button-icon pi pi-hourglass"></span>
@@ -94,7 +94,7 @@
           size="large"
           text
           rounded
-          aria-label="drawer"
+          aria-label="$t('drawer')"
           @click="drawer_visible = true"
         />
       </template>
@@ -188,7 +188,7 @@
                           icon="pi pi-pencil"
                           size="small"
                           style="width: 2rem; height: 2rem"
-                          aria-label="Edit"
+                          aria-label="$t('edit')"
                           severity="secondary"
                           @click="startEditItem(index)"
                           class="mr-1"
@@ -198,7 +198,7 @@
                             icon="pi pi-minus"
                             size="small"
                             style="width: 2rem; height: 2rem"
-                            aria-label="Remove"
+                            aria-label="$t('remove')"
                             severity="secondary"
                             @click="decreaseOrderItemQty(index)"
                           />
@@ -206,7 +206,7 @@
                             icon="pi pi-plus"
                             size="small"
                             style="width: 2rem; height: 2rem"
-                            aria-label="Remove"
+                            aria-label="$t('remove')"
                             severity="secondary"
                             @click="increaseOrderItemQty(index)"
                           />
@@ -228,7 +228,7 @@
                       size="small"
                       severity="secondary"
                       v-tooltip.top="'Draft order for later interactions'"
-                      aria-label="Stash order"
+                      aria-label="$t('stash_order')"
                     />
                     <Button
                       :label="$t('add_discount')"
@@ -295,7 +295,7 @@
                       onIcon="fa fa-print"
                       offIcon="fa fa-print"
                       class="w-36"
-                      aria-label="Do you confirm"
+                      aria-label="$t('do_you_confirm')"
                     />
                     <ToggleButton
                       size="small"
@@ -311,9 +311,9 @@
                       onIcon="fa fa-print"
                       offIcon="fa fa-print"
                       class="w-36 mx-1"
-                      aria-label="Do you confirm"
+                      aria-label="$t('do_you_confirm')"
                     />
-                    <!-- <ToggleButton size="small" v-tooltip.top="'Auto start order and consume components from inventory'" v-model="is_auto_start_order" onLabel="Autostarting" offLabel="Autostart" onIcon="pi pi-check" offIcon="pi pi-play-circle" class="w-36 mx-1" aria-label="Do you confirm" /> -->
+                    <!-- <ToggleButton size="small" v-tooltip.top="'Auto start order and consume components from inventory'" v-model="is_auto_start_order" onLabel="Autostarting" offLabel="Autostart" onIcon="pi pi-check" offIcon="pi pi-play-circle" class="w-36 mx-1" aria-label="$t('do_you_confirm')" /> -->
                     <ToggleButton
                       v-if="store.getShopMode === 'kitchen'"
                       size="small"
@@ -324,7 +324,7 @@
                       onIcon="pi pi-check"
                       offIcon="pi pi-play-circle"
                       class="w-36 mx-1"
-                      aria-label="Do you confirm"
+                      aria-label="$t('do_you_confirm')"
                     />
                   </div>
                 </div>
@@ -409,7 +409,7 @@
                     :offLabel="`Collect (${total.toFixed(2)} EGP)`"
                     :onLabel="`${$t('collecting')} (${(total + (current_order_tip || 0)).toFixed(2)} EGP)`"
                     class="w-15rem h-5rem lg:h-10rem sm:w-40 border-noround"
-                    aria-label="Confirmation"
+                    aria-label="$t('confirmation')"
                   />
                   <ToggleButton
                     v-model="is_pay_later"
@@ -418,7 +418,7 @@
                     :offLabel="$t('pay_later')"
                     :onLabel="$t('paying_later')"
                     class="w-15rem h-5rem lg:h-10rem sm:w-40 border-noround"
-                    aria-label="Confirmation"
+                    aria-label="$t('confirmation')"
                   />
                   <div class="flex flex-column align-items-start justify-content-start mt-4 w-full">
                     <h4 class="mt-0">{{ $t('payment_source') }}</h4>
@@ -450,7 +450,7 @@
                       :offLabel="$t('dine_in')"
                       :onLabel="$t('dine_in')"
                       class="w-15rem h-5rem lg:h-10rem sm:w-40 border-noround"
-                      aria-label="Confirmation"
+                      aria-label="$t('confirmation')"
                     />
                     <ToggleButton
                       v-model="is_take_away"
@@ -459,7 +459,7 @@
                       :offLabel="$t('takeaway')"
                       :onLabel="$t('takeaway')"
                       class="w-15rem h-5rem lg:h-10rem sm:w-40 border-noround"
-                      aria-label="Confirmation"
+                      aria-label="$t('confirmation')"
                     />
                     <ToggleButton
                       v-model="is_delivery"
@@ -468,7 +468,7 @@
                       :offLabel="$t('delivery')"
                       :onLabel="$t('delivery')"
                       class="w-15rem h-5rem lg:h-10rem sm:w-40 border-noround"
-                      aria-label="Confirmation"
+                      aria-label="$t('confirmation')"
                     />
                   </div>
                 </template>
@@ -694,7 +694,7 @@
       strokeWidth="6"
       fill="transparent"
       animationDuration=".5s"
-      aria-label="Custom ProgressSpinner"
+      aria-label="$t('loading')"
     />
   </div>
   <Drawer v-model:visible="drawer_visible">
@@ -718,7 +718,7 @@
               icon="pi pi-user"
               severity="secondary"
               text
-              aria-label="Profile"
+              aria-label="$t('profile')"
               :label="$t('profile')"
               @click="$router.push('/profile')"
             />
@@ -727,7 +727,7 @@
               icon="pi pi-sign-out"
               severity="secondary"
               text
-              aria-label="Signout"
+              aria-label="$t('signout')"
               :label="t('signout')"
               @click="handleSignout()"
             />

@@ -17,7 +17,7 @@
           icon="pi pi-ellipsis-h"
           @click.stop="toggle"
           severity="secondary"
-          aria-label="Save"
+          aria-label="$t('save')"
           style="width: 2rem; height: 2rem; position: absolute; top: 0; right: 0"
           size="small"
           class="m-1"

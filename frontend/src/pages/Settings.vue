@@ -43,7 +43,7 @@
                   <InputNumber v-model="order_queues[index].next" class="mx-2" :min="0" />
                   <Button
                     severity="secondary"
-                    aria-label="Remove"
+                    aria-label="$t('remove')"
                     icon="pi pi-times"
                     @click="order_queues.splice(index, 1)"
                   />
@@ -128,7 +128,7 @@
                   <InputText v-model="payment_sources[index].name" class="mx-2" />
                   <Button
                     severity="secondary"
-                    aria-label="Remove"
+                    aria-label="$t('remove')"
                     icon="pi pi-times"
                     @click="payment_sources.splice(index, 1)"
                   />

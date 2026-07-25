@@ -92,7 +92,7 @@
       strokeWidth="6"
       fill="transparent"
       animationDuration=".5s"
-      aria-label="Custom ProgressSpinner"
+      aria-label="$t('loading')"
     />
   </div>
 </template>

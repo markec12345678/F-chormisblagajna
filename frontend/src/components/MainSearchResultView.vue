@@ -12,7 +12,7 @@
           <Button
             icon="pi pi-book"
             severity="secondary"
-            aria-label="Info"
+            aria-label="$t('info')"
             @click="emit('view-order-pressed')"
           />
         </div>

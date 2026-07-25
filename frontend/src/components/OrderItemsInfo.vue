@@ -33,7 +33,7 @@
               icon="pi pi-undo"
               :label="$t('return')"
               severity="warn"
-              aria-label="refund"
+              aria-label="$t('refund')"
               @click="startRefund(slotProps.data)"
               v-if="order_items_status[slotProps.data.id].title != t('refunded')"
             >

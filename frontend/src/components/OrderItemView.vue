@@ -37,7 +37,7 @@
         icon="pi pi-times"
         size="small"
         style="width: 2rem; height: 2rem"
-        aria-label="Remove"
+        aria-label="$t('remove')"
         severity="secondary"
         @click="removeMaterialByIndex(index)"
       />

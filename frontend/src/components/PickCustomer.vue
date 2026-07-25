@@ -35,7 +35,7 @@
             <Button
               :label="$t('choose')"
               severity="secondary"
-              aria-label="Choose"
+              aria-label="$t('choose')"
               @click="returnCustomer(slotProps.data)"
             />
           </ButtonGroup>

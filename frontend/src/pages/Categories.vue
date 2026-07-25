@@ -51,13 +51,13 @@
                     <Button
                       icon="pi pi-pencil"
                       severity="secondary"
-                      aria-label="Edit"
+                      aria-label="$t('edit')"
                       @click="prepareCategoryToEdit(slotProps.data)"
                     />
                     <Button
                       icon="pi pi-trash"
                       severity="danger"
-                      aria-label="Remove"
+                      aria-label="$t('remove')"
                       @click="confirmDeleteCategory($event, slotProps.data.id)"
                     />
                   </ButtonGroup>
@@ -91,7 +91,7 @@
                         <Button
                           icon="pi pi-times"
                           severity="secondary"
-                          aria-label="Remove"
+                          aria-label="$t('remove')"
                           @click="new_category.products.splice(slotProps.data.index, 1)"
                         />
                       </ButtonGroup>
@@ -112,13 +112,13 @@
               </div>
               <template #footer>
                 <ButtonGroup>
-                  <Button :label="$t('cancel')" severity="secondary" aria-label="Cancel" />
+                  <Button :label="$t('cancel')" severity="secondary" aria-label="$t('cancel')" />
                   <Button
                     class="ml-2"
                     severity="primary"
                     @click="submitCategory"
                     :label="$t('save')"
-                    aria-label="Save"
+                    aria-label="$t('save')"
                   />
                 </ButtonGroup>
               </template>
@@ -150,7 +150,7 @@
                         <Button
                           icon="pi pi-times"
                           severity="secondary"
-                          aria-label="Remove"
+                          aria-label="$t('remove')"
                           @click="categoryToEdit.products.splice(slotProps.data.index, 1)"
                         />
                       </ButtonGroup>
@@ -171,13 +171,13 @@
               </div>
               <template #footer>
                 <ButtonGroup>
-                  <Button :label="$t('cancel')" severity="secondary" aria-label="Cancel" />
+                  <Button :label="$t('cancel')" severity="secondary" aria-label="$t('cancel')" />
                   <Button
                     class="ml-2"
                     severity="primary"
                     @click="updateCategory"
                     :label="$t('save')"
-                    aria-label="Save"
+                    aria-label="$t('save')"
                   />
                 </ButtonGroup>
               </template>

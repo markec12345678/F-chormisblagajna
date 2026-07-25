@@ -20,13 +20,13 @@
     </div>
     <template #footer>
       <ButtonGroup>
-        <Button :label="$t('cancel')" severity="secondary" aria-label="Cancel" />
+        <Button :label="$t('cancel')" severity="secondary" aria-label="$t('cancel')" />
         <Button
           class="ml-2"
           severity="primary"
           @click="submitCustomer"
           :label="$t('save')"
-          aria-label="Save"
+          aria-label="$t('save')"
         />
       </ButtonGroup>
     </template>

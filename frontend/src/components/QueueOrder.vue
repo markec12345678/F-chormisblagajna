@@ -60,7 +60,7 @@
               <Button
                 icon="pi pi-check"
                 class="w-9"
-                aria-label="Finish"
+                aria-label="$t('finish')"
                 :label="$t('finish')"
                 @click="confirmFinish($event)"
                 severity="success"
@@ -88,7 +88,7 @@
                     @click="showProductDetails(item.product)"
                     text
                     rounded
-                    aria-label="Star"
+                    aria-label="$t('star')"
                   />
                 </div>
                 <!-- <h1 class="m-0" style="color:blue">x{{item.quantity}}</h1> -->

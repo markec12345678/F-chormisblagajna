@@ -56,7 +56,7 @@
                       v-tooltip.top="'cancel'"
                       icon="pi pi-times"
                       severity="secondary"
-                      aria-label="Remove"
+                      aria-label="$t('remove')"
                       @click="
                         confirmCancelOrder($event, slotProps.data.display_id, slotProps.data.id)
                       "
@@ -65,7 +65,7 @@
                       v-tooltip.top="'details'"
                       icon="pi pi-book"
                       severity="secondary"
-                      aria-label="Remove"
+                      aria-label="$t('remove')"
                       @click="showOrderDetails(slotProps.data)"
                     />
                   </ButtonGroup>

@@ -48,13 +48,13 @@
                     <Button
                       icon="pi pi-pencil"
                       severity="secondary"
-                      aria-label="Edit"
+                      aria-label="$t('edit')"
                       @click="prepareCustomerToEdit(slotProps.data)"
                     />
                     <Button
                       icon="pi pi-trash"
                       severity="danger"
-                      aria-label="Remove"
+                      aria-label="$t('remove')"
                       @click="confirmDeleteCustomer($event, slotProps.data.id)"
                     />
                   </ButtonGroup>
@@ -88,13 +88,13 @@
               </div>
               <template #footer>
                 <ButtonGroup>
-                  <Button :label="$t('cancel')" severity="secondary" aria-label="Cancel" />
+                  <Button :label="$t('cancel')" severity="secondary" aria-label="$t('cancel')" />
                   <Button
                     class="ml-2"
                     severity="primary"
                     @click="submitCustomer"
                     :label="$t('save')"
-                    aria-label="Save"
+                    aria-label="$t('save')"
                   />
                 </ButtonGroup>
               </template>
@@ -130,13 +130,13 @@
               </div>
               <template #footer>
                 <ButtonGroup>
-                  <Button :label="$t('cancel')" severity="secondary" aria-label="Cancel" />
+                  <Button :label="$t('cancel')" severity="secondary" aria-label="$t('cancel')" />
                   <Button
                     class="ml-2"
                     severity="primary"
                     @click="updateCustomer"
                     :label="$t('save')"
-                    aria-label="Save"
+                    aria-label="$t('save')"
                   />
                 </ButtonGroup>
               </template>

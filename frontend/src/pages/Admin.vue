@@ -89,7 +89,7 @@
       strokeWidth="6"
       fill="transparent"
       animationDuration=".5s"
-      aria-label="Custom ProgressSpinner"
+      aria-label="$t('loading')"
     />
   </div>
   <Dialog v-model:visible="version_dialog_visible" header="Nutrix" :style="{ width: '45rem' }">
