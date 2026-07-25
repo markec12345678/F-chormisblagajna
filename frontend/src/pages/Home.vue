@@ -129,7 +129,7 @@
               <InputIcon v-if="isSearchingProduct" class="pi pi-spin pi-spinner"> </InputIcon>
               <InputText v-model="searchtext" :placeholder="t('search') + ' ' + t('product', 3)" />
             </IconField>
-            <div class="flex flex-wrap">
+            <div class="flex flex-wrap" v-if="products.length > 0">
               <MealCard
                 v-for="(item, index) in products"
                 :key="index"
@@ -139,6 +139,13 @@
                 @addwithcomment="openAddWithComment(item)"
                 @add="addItem(item)"
               />
+            </div>
+            <div
+              v-else
+              class="flex flex-column justify-content-center align-items-center gap-2 py-6"
+            >
+              <i class="pi pi-inbox" style="font-size: 2rem; opacity: 0.3"></i>
+              <p class="m-0 text-sm" style="color: #94a3b8">{{ t('no_results') }}</p>
             </div>
           </template>
         </Card>
@@ -154,52 +161,54 @@
               "
             >
               <div style="height: 65%; overflow: auto">
-                <div v-for="(item, index) in orderItems" :key="index">
-                  <div class="flex justify-content-between align-items-center">
-                    <div
-                      style="background-color: red; width: 0.3rem; height: 2.5rem"
-                      class="mr-2"
-                      v-if="!item.isValid"
-                    >
-                      &nbsp;
-                    </div>
-                    <p class="w-6" style="text-overflow: ellipsis">
-                      <strong>{{ item.product.name }}</strong>
-                    </p>
-                    <P>x{{ item.quantity }}</P>
-                    <p>{{ item.price }} {{ t('egp') }}</p>
-                    <div>
-                      <Button
-                        icon="pi pi-pencil"
-                        size="small"
-                        style="width: 2rem; height: 2rem"
-                        aria-label="Edit"
-                        severity="secondary"
-                        @click="startEditItem(index)"
-                        class="mr-1"
-                      />
-                      <ButtonGroup>
+                <TransitionGroup name="cart-item" tag="div">
+                  <div v-for="(item, index) in orderItems" :key="item.product.id + '_' + index">
+                    <div class="flex justify-content-between align-items-center">
+                      <div
+                        style="background-color: red; width: 0.3rem; height: 2.5rem"
+                        class="mr-2"
+                        v-if="!item.isValid"
+                      >
+                        &nbsp;
+                      </div>
+                      <p class="w-6" style="text-overflow: ellipsis">
+                        <strong>{{ item.product.name }}</strong>
+                      </p>
+                      <p class="m-0">x{{ item.quantity }}</p>
+                      <p>{{ item.price }} {{ t('egp') }}</p>
+                      <div>
                         <Button
-                          icon="pi pi-minus"
+                          icon="pi pi-pencil"
                           size="small"
                           style="width: 2rem; height: 2rem"
-                          aria-label="Remove"
+                          aria-label="Edit"
                           severity="secondary"
-                          @click="decreaseOrderItemQty(index)"
+                          @click="startEditItem(index)"
+                          class="mr-1"
                         />
-                        <Button
-                          icon="pi pi-plus"
-                          size="small"
-                          style="width: 2rem; height: 2rem"
-                          aria-label="Remove"
-                          severity="secondary"
-                          @click="increaseOrderItemQty(index)"
-                        />
-                      </ButtonGroup>
+                        <ButtonGroup>
+                          <Button
+                            icon="pi pi-minus"
+                            size="small"
+                            style="width: 2rem; height: 2rem"
+                            aria-label="Remove"
+                            severity="secondary"
+                            @click="decreaseOrderItemQty(index)"
+                          />
+                          <Button
+                            icon="pi pi-plus"
+                            size="small"
+                            style="width: 2rem; height: 2rem"
+                            aria-label="Remove"
+                            severity="secondary"
+                            @click="increaseOrderItemQty(index)"
+                          />
+                        </ButtonGroup>
+                      </div>
                     </div>
+                    <p class="m-0">{{ item.comment }}</p>
                   </div>
-                  <p class="m-0">{{ item.comment }}</p>
-                </div>
+                </TransitionGroup>
               </div>
               <div class="flex flex-column flex-wrap justify-content-between">
                 <div>
@@ -530,22 +539,22 @@
               value="2"
             >
               <div class="flex flex-column">
-                <h2 class="mt-0">Delivery info</h2>
+                <h2 class="mt-0">{{ $t('delivery_info') }}</h2>
                 <div class="flex flex-column mt-3 gap-2">
-                  <InputText v-model="delivery_info.name" placeholder="Name" />
-                  <InputText v-model="delivery_info.address" placeholder="Address" />
-                  <InputText v-model="delivery_info.phone" placeholder="Phone" />
+                  <InputText v-model="delivery_info.name" :placeholder="$t('name')" />
+                  <InputText v-model="delivery_info.address" :placeholder="$t('address')" />
+                  <InputText v-model="delivery_info.phone" :placeholder="$t('phone')" />
                 </div>
                 <div class="flex pt-6 justify-content-end gap-2">
                   <Button
-                    label="Back"
+                    :label="$t('back')"
                     icon="pi pi-arrow-left"
                     iconPos="left"
                     @click="activateCallback('1')"
                     severity="secondary"
                   />
                   <Button
-                    label="Next"
+                    :label="$t('next')"
                     icon="pi pi-arrow-right"
                     iconPos="right"
                     @click="activateCallback('3')"
@@ -618,22 +627,22 @@
                 </div>
                 <div v-if="is_delivery">
                   <Divider />
-                  <h3>Delivery</h3>
+                  <h3>{{ $t('delivery') }}</h3>
                   <div class="flex flex-column">
                     <div class="flex align-items-start mt-3 gap-1">
-                      <span>Customer:</span>
+                      <span>{{ $t('customer') }}:</span>
                       <p class="my-0">
                         <strong> {{ delivery_info.name }} </strong>
                       </p>
                     </div>
                     <div class="flex align-items-start mt-3 gap-1">
-                      <span>Address:</span>
+                      <span>{{ $t('address') }}:</span>
                       <p class="my-0">
                         <strong> {{ delivery_info.address }} </strong>
                       </p>
                     </div>
                     <div class="flex align-items-start mt-3 gap-1">
-                      <span>Phone:</span>
+                      <span>{{ $t('phone') }}:</span>
                       <p class="my-0">
                         <strong> {{ delivery_info.phone }} </strong>
                       </p>
@@ -1972,5 +1981,21 @@ html,
 body {
   height: 100%;
   margin: 0;
+}
+
+.cart-item-enter-active,
+.cart-item-leave-active {
+  transition: all 0.25s ease;
+}
+.cart-item-enter-from {
+  opacity: 0;
+  transform: translateX(20px);
+}
+.cart-item-leave-to {
+  opacity: 0;
+  transform: translateX(-20px);
+}
+.cart-item-move {
+  transition: transform 0.25s ease;
 }
 </style>

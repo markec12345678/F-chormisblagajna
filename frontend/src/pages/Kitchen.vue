@@ -65,16 +65,18 @@
         <div class="flex flex-wrap">
           <div v-for="(column_orders, index) in dynamic_columns" :key="index">
             <div class="flex flex-column gap-1">
-              <QueueOrder
-                @finished="orderFinished(order)"
-                @openedDialog="openedDialogs++"
-                @closedDialog="openedDialogs--"
-                v-for="(order, i) in column_orders"
-                :key="i"
-                :order="order"
-                :number="i + 1"
-                class="queue-order"
-              />
+              <TransitionGroup name="kitchen-order" tag="div" class="flex flex-column gap-1">
+                <QueueOrder
+                  @finished="orderFinished(order)"
+                  @openedDialog="openedDialogs++"
+                  @closedDialog="openedDialogs--"
+                  v-for="(order, i) in column_orders"
+                  :key="order.id"
+                  :order="order"
+                  :number="i + 1"
+                  class="queue-order"
+                />
+              </TransitionGroup>
             </div>
           </div>
         </div>
@@ -302,5 +304,23 @@ startWebsocket()
 <style>
 .queue-order {
   margin: 5px;
+}
+
+.kitchen-order-enter-active {
+  transition: all 0.4s ease;
+}
+.kitchen-order-leave-active {
+  transition: all 0.3s ease;
+}
+.kitchen-order-enter-from {
+  opacity: 0;
+  transform: scale(0.9) translateY(-10px);
+}
+.kitchen-order-leave-to {
+  opacity: 0;
+  transform: scale(0.9) translateX(20px);
+}
+.kitchen-order-move {
+  transition: transform 0.3s ease;
 }
 </style>
