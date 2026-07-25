@@ -127,6 +127,8 @@
                     @click="submitUser"
                     :label="$t('save')"
                     aria-label="$t('save')"
+                    :loading="isSubmitting"
+                    :disabled="isSubmitting"
                   />
                 </ButtonGroup>
               </template>
@@ -159,6 +161,8 @@
                     @click="submitPasswordChange"
                     :label="$t('save')"
                     aria-label="$t('save')"
+                    :loading="isSubmitting"
+                    :disabled="isSubmitting"
                   />
                 </ButtonGroup>
               </template>
@@ -195,6 +199,7 @@ const { t } = useI18n({ useScope: 'global' })
 const backendUrl = `http://${import.meta.env.VITE_APP_BACKEND_HOST}${import.meta.env.VITE_APP_MODULE_CORE_API_PREFIX}`
 
 const users = ref([])
+const isSubmitting = ref(false)
 const isUsersLoading = ref(true)
 const userAddDialog = ref(false)
 const passwordEditDialog = ref(false)
@@ -241,6 +246,8 @@ const submitUser = () => {
 
   if (user_errors.value.username || user_errors.value.email || user_errors.value.password) return
 
+  isSubmitting.value = true
+
   axios
     .post(`${backendUrl}/api/auth/users`, newUser.value, {
       headers: {
@@ -265,6 +272,9 @@ const submitUser = () => {
         detail: error.response?.data?.message || t('error_occurred'),
         group: 'br',
       })
+    })
+    .finally(() => {
+      isSubmitting.value = false
     })
 }
 
@@ -331,6 +341,8 @@ const submitPasswordChange = () => {
     return
   }
 
+  isSubmitting.value = true
+
   axios
     .post(
       `${backendUrl}/api/auth/users/password`,
@@ -363,6 +375,9 @@ const submitPasswordChange = () => {
         group: 'br',
         life: 3000,
       })
+    })
+    .finally(() => {
+      isSubmitting.value = false
     })
 }
 

@@ -119,6 +119,8 @@
                     @click="submitCategory"
                     :label="$t('save')"
                     aria-label="$t('save')"
+                    :loading="isSubmitting"
+                    :disabled="isSubmitting"
                   />
                 </ButtonGroup>
               </template>
@@ -178,6 +180,8 @@
                     @click="updateCategory"
                     :label="$t('save')"
                     aria-label="$t('save')"
+                    :loading="isSubmitting"
+                    :disabled="isSubmitting"
                   />
                 </ButtonGroup>
               </template>
@@ -227,6 +231,7 @@ const categories = ref<Category[]>([])
 const categoriesTableTotalRecords = ref(0)
 const isCategoriesTableLoading = ref(false)
 const categoriesTableRowsPerPage = ref(50)
+const isSubmitting = ref(false)
 const categoryAddDialog = ref(false)
 
 const categoryToEdit = ref<Partial<Category>>({})
@@ -252,6 +257,8 @@ const submitCategory = () => {
   new_category_error.value = new_category.value.name?.trim() ? '' : t('validation_required')
 
   if (new_category_error.value) return
+
+  isSubmitting.value = true
 
   axios
     .post(
@@ -285,6 +292,9 @@ const submitCategory = () => {
         detail: t('category_add_failed'),
         group: 'br',
       })
+    })
+    .finally(() => {
+      isSubmitting.value = false
     })
 }
 
@@ -325,6 +335,8 @@ const updateCategory = () => {
 
   if (category_edit_error.value) return
 
+  isSubmitting.value = true
+
   axios
     .patch(
       `http://${import.meta.env.VITE_APP_BACKEND_HOST}${import.meta.env.VITE_APP_MODULE_CORE_API_PREFIX}/api/categories/${categoryToEdit.value.id}`,
@@ -354,6 +366,9 @@ const updateCategory = () => {
         detail: t('category_update_failed'),
         group: 'br',
       })
+    })
+    .finally(() => {
+      isSubmitting.value = false
     })
 }
 

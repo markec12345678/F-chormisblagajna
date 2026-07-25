@@ -55,7 +55,7 @@
     <Dialog
       v-model:visible="item_refund_dialog"
       modal
-      :header="`Returning ${itemToRefund?.product.name} | order #${props.order.display_id}`"
+      :header="`${$t('returning')} ${itemToRefund?.product.name} | ${$t('order')} #${props.order.display_id}`"
       :style="{ width: '75rem' }"
       :breakpoints="{ '1199px': '50vw', '575px': '90vw' }"
     >

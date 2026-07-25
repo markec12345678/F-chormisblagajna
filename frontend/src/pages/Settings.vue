@@ -72,9 +72,7 @@
                   value="ℹ"
                   size="small"
                   severity="info"
-                  v-tooltip.top="
-                    'Exact cost of materials will be used for each product during order creation chosen from specific material entry'
-                  "
+                  v-tooltip.top="$t('exact_cost_tooltip')"
                 ></Badge>
               </div>
               <div class="flex items-center gap-2">
@@ -89,9 +87,7 @@
                   value="ℹ"
                   size="small"
                   severity="info"
-                  v-tooltip.top="
-                    'Average cost of materials available in the inventory will be used for each product during order creation, material/s with earliest expiration will be consumed first'
-                  "
+                  v-tooltip.top="$t('average_cost_tooltip')"
                 ></Badge>
               </div>
             </div>

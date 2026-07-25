@@ -239,6 +239,8 @@
                     @click="submitProduct"
                     :label="$t('save')"
                     aria-label="$t('save')"
+                    :loading="isSubmitting"
+                    :disabled="isSubmitting"
                   />
                 </ButtonGroup>
               </template>
@@ -292,7 +294,7 @@
                   :maxFileSize="1000000"
                 >
                   <template #empty>
-                    <span>Drag and drop files to here to upload.</span>
+                    <span>{{ $t('drag_drop_upload') }}</span>
                   </template>
                 </FileUpload>
               </div>
@@ -404,6 +406,8 @@
                     @click="updateProduct"
                     :label="$t('save')"
                     aria-label="$t('save')"
+                    :loading="isSubmitting"
+                    :disabled="isSubmitting"
                   />
                 </ButtonGroup>
               </template>
@@ -505,6 +509,7 @@ const add_product_resolver = ({ values }) => {
   }
 }
 
+const isSubmitting = ref(false)
 const new_product_id = ref('')
 const add_subproduct_dialog = ref(false)
 // const new_product_materials = ref<Material[]>([])
@@ -625,6 +630,8 @@ const prepareProductToEdit = (product: ProductItem) => {
 }
 
 const updateProduct = () => {
+  isSubmitting.value = true
+
   axios
     .patch(
       `http://${import.meta.env.VITE_APP_BACKEND_HOST}${import.meta.env.VITE_APP_MODULE_CORE_API_PREFIX}/api/products/${productToEdit.value.id}`,
@@ -661,10 +668,15 @@ const updateProduct = () => {
         group: 'br',
       })
     })
+    .finally(() => {
+      isSubmitting.value = false
+    })
 }
 
 const submitProduct = () => {
   if (!add_product_form.value.valid) return
+
+  isSubmitting.value = true
 
   const payload = {
     name: add_product_form.value.name.value,
@@ -710,6 +722,9 @@ const submitProduct = () => {
         detail: error.response?.data?.data || t('error_occurred'),
         group: 'br',
       })
+    })
+    .finally(() => {
+      isSubmitting.value = false
     })
 }
 

@@ -235,7 +235,7 @@
       <Dialog
         v-model:visible="order_logs_dialog"
         modal
-        :header="`#${props.order.display_id} logs`"
+        :header="`#${props.order.display_id} ${$t('logs')}`"
         class="xs:w-12 md:w-10 lg:w-8"
       >
         <pre>

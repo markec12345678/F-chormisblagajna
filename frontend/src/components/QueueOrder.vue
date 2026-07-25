@@ -122,7 +122,7 @@
     <Dialog
       v-model:visible="visible"
       modal
-      :header="`Order #${props.order.display_id}`"
+      :header="`${$t('order')} #${props.order.display_id}`"
       :style="{ width: '75rem' }"
       :breakpoints="{ '1199px': '50vw', '575px': '90vw' }"
     >
@@ -297,15 +297,7 @@ const confirmFinish = (event) => {
         group: 'br',
       })
     },
-    reject: () => {
-      toast.add({
-        severity: 'error',
-        summary: t('failed'),
-        detail: t('finish_order_failed'),
-        life: 3000,
-        group: 'br',
-      })
-    },
+    reject: () => {},
   })
 }
 

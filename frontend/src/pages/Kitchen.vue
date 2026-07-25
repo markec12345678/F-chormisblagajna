@@ -204,13 +204,13 @@ const startWebsocket = () => {
         toast.add({
           severity: 'success',
           summary: t('order_finished'),
-          detail: `order with id ( ${data.order_id} ) ${t('order_ready_to_serve')}`,
+          detail: `${t('order_with_id')} ( ${data.order_id} ) ${t('order_ready_to_serve')}`,
           life: 3000,
           group: 'br',
         })
 
         const notification = new Notification()
-        notification.description = `order with id #${data.order_id} ${t('order_ready_to_serve')}`
+        notification.description = `${t('order_with_id')} #${data.order_id} ${t('order_ready_to_serve')}`
         notification.severity = 'success'
         notification.topic_name = t('order_finished')
         notification.type = 'topic_message'

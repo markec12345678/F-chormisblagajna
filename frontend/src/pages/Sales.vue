@@ -431,12 +431,21 @@ const export_sales = (first = salesTableFirstIndex.value, rows = salesTableRowsP
       link.remove()
       window.URL.revokeObjectURL(url)
     })
-    .catch(() => {})
+    .catch(() => {
+      toast.add({
+        severity: 'error',
+        summary: t('failed'),
+        detail: t('request_failed'),
+        life: 3000,
+        group: 'br',
+      })
+    })
 }
 
 const loadSales = (first = salesTableFirstIndex.value, rows = salesTableRowsPerPage.value) => {
   const page_number = Math.floor(first / rows) + 1
 
+  isSalesTableLoading.value = true
   axios
     .get(
       `http://${import.meta.env.VITE_APP_BACKEND_HOST}${import.meta.env.VITE_APP_MODULE_CORE_API_PREFIX}/api/logs/salesperday?page[number]=${page_number}&page[size]=${rows}`,
@@ -456,7 +465,6 @@ const loadSales = (first = salesTableFirstIndex.value, rows = salesTableRowsPerP
       chartProfit.value = []
       productPieChartLabels.value = []
       productPieChartSales.value = []
-      isSalesTableLoading.value = true
       orders_refunds.value = {}
 
       salesTableTotalRecords.value = response.data.meta.total_records
@@ -559,10 +567,19 @@ const loadSales = (first = salesTableFirstIndex.value, rows = salesTableRowsPerP
 
       productPiechartData.value = setProductPieChartData()
       productPiechartOptions.value = setProductPieChartOptions()
-
+    })
+    .catch(() => {
+      toast.add({
+        severity: 'error',
+        summary: t('failed'),
+        detail: t('request_failed'),
+        life: 3000,
+        group: 'br',
+      })
+    })
+    .finally(() => {
       isSalesTableLoading.value = false
     })
-    .catch(() => {})
 }
 
 loadSales()

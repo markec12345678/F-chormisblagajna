@@ -181,6 +181,7 @@ const i18n = createI18n({
       order_finished: 'Order Finished',
       failed_save_shop_mode: 'Failed to save shop mode',
       failed_load_material_entries: 'Failed to load material entries',
+      order_with_id: 'order with id',
       order_ready_to_serve: 'order is ready to be served!',
       order_in_progress: 'Order in progress!',
       drag_drop_upload: 'Drag and drop files here to upload.',
@@ -293,6 +294,16 @@ const i18n = createI18n({
       show_entries: 'Show entries',
       refund: 'Refund',
       loading: 'Loading',
+      order_with_id: 'order with id',
+      logs: 'Logs',
+      returning: 'Returning',
+      draft_order_tooltip: 'Draft order for later interactions',
+      auto_finish_tooltip: 'Auto finish order and consume components from inventory',
+      exact_cost_tooltip:
+        'Exact cost of materials will be used for each product during order creation chosen from specific material entry',
+      average_cost_tooltip:
+        'Average cost of materials available in the inventory will be used for each product during order creation, material/s with earliest expiration will be consumed first',
+      for_more_support: 'For more support & collaboration visit',
     },
   },
 })

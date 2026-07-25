@@ -227,7 +227,7 @@
                       @click="stashOrder"
                       size="small"
                       severity="secondary"
-                      v-tooltip.top="'Draft order for later interactions'"
+                      v-tooltip.top="$t('draft_order_tooltip')"
                       aria-label="$t('stash_order')"
                     />
                     <Button
@@ -317,7 +317,7 @@
                     <ToggleButton
                       v-if="store.getShopMode === 'kitchen'"
                       size="small"
-                      v-tooltip.top="'Auto finish order and consume components from inventory'"
+                      v-tooltip.top="$t('auto_finish_tooltip')"
                       v-model="is_auto_finish_order"
                       :onLabel="$t('auto_finishing')"
                       :offLabel="$t('auto_finish')"
@@ -372,7 +372,12 @@
       >
         <InputText v-model="comment" :placeholder="$t('comment')" class="mb-4" />
         <div class="flex justify-content-end gap-2">
-          <Button type="button" :label="$t('close')" severity="secondary"></Button>
+          <Button
+            type="button"
+            :label="$t('close')"
+            severity="secondary"
+            @click="visible = false"
+          ></Button>
           <Button type="button" :label="$t('add')" @click="addWithComment()"></Button>
         </div>
       </Dialog>
@@ -406,8 +411,8 @@
                     v-model="is_collecting_money"
                     onIcon="fa fa-hand-holding-dollar"
                     offIcon="fa fa-hand-holding-dollar"
-                    :offLabel="`Collect (${total.toFixed(2)} EGP)`"
-                    :onLabel="`${$t('collecting')} (${(total + (current_order_tip || 0)).toFixed(2)} EGP)`"
+                    :offLabel="`${$t('collect')} (${total.toFixed(2)} ${$t('egp')})`"
+                    :onLabel="`${$t('collecting')} (${(total + (current_order_tip || 0)).toFixed(2)} ${$t('egp')})`"
                     class="w-15rem h-5rem lg:h-10rem sm:w-40 border-noround"
                     aria-label="$t('confirmation')"
                   />
@@ -670,7 +675,8 @@
                   />
                   <Button
                     :label="`${is_auto_start_order ? $t('start') : $t('submit')} ${is_collecting_money ? '( ' + $t('collect') + ' ' + total.toFixed(2) + ` ${$t('egp')} )` : '( ' + $t('pay_later') + ' )'} `"
-                    :disabled="!is_order_valid"
+                    :disabled="!is_order_valid || isSubmitting"
+                    :loading="isSubmitting"
                     @click="submitOrder()"
                     size="large"
                   />
@@ -938,22 +944,17 @@
   </Drawer>
   <Dialog v-model:visible="version_dialog_visible" header="Nutrix" :style="{ width: '45rem' }">
     <p class="text-justify">
-      Nutrix is an open-source restaurant management system designed to make managing your
-      restaurant easy and efficient. It's built with modern web technologies and provides a simple
-      and intuitive interface to manage your menu, orders, customers, and more. Nutrix is completely
-      free and open source under the GPL-2 license, meaning you have complete control over the
-      system and can modify it to suit your needs. With Nutrix, you can focus on what matters most -
-      providing great food and service to your customers.
+      {{ $t('about_nutrix') }}
     </p>
     <p>
-      For more support & collaboration visit &nbsp;<a
+      {{ $t('for_more_support') }} &nbsp;<a
         style="font-size: large"
         href="https://nutrixpos.com"
         target="_blank"
         ><i class="pi pi-external-link mr-2"></i>https://nutrixpos.com
       </a>
     </p>
-    <p>version / commit hash : {{ app_version }}</p>
+    <p>{{ $t('version_info') }} {{ app_version }}</p>
   </Dialog>
 </template>
 
@@ -1079,6 +1080,7 @@ const drawer_visible = ref(false)
 const toast = useToast()
 const itemToEditIndex = ref(0)
 const edit_item_dialog = ref(false)
+const isSubmitting = ref(false)
 const is_order_valid = ref(true)
 const chat_text = ref('')
 const chats = ref<ChatMessage[]>([])
@@ -1539,15 +1541,15 @@ const startWebsocket = () => {
         toast.add({
           severity: 'success',
           summary: t('order_finished'),
-          detail: `order ( ${data.order_id} ) finished and is ready to be served !`,
+          detail: `${t('order')} ( ${data.order_id} ) ${t('order_finished_detail')}`,
           life: 3000,
           group: 'br',
         })
 
         const notification = new Notification()
-        notification.description = `order (${data.order_id}) finished and is ready to be served !`
+        notification.description = `${t('order')} (${data.order_id}) ${t('order_finished_detail')}`
         notification.severity = 'success'
-        notification.topic_name = 'Order Finished'
+        notification.topic_name = t('order_finished')
         notification.type = 'topic_message'
         notification.date = data.date
         notifications.value.push(notification)
@@ -1797,6 +1799,7 @@ const submitOrder = () => {
   }
 
   if (orderItems.value.length > 0) {
+    isSubmitting.value = true
     axios
       .post(
         `http://${import.meta.env.VITE_APP_BACKEND_HOST}${import.meta.env.VITE_APP_MODULE_CORE_API_PREFIX}/api/orders`,
@@ -1831,9 +1834,20 @@ const submitOrder = () => {
         is_delivery.value = false
         is_take_away.value = false
         order_additional_details_dialog.value = false
+        orderItems.value = []
       })
-
-    orderItems.value = []
+      .catch(() => {
+        toast.add({
+          severity: 'error',
+          summary: t('failed'),
+          detail: t('request_failed'),
+          life: 3000,
+          group: 'br',
+        })
+      })
+      .finally(() => {
+        isSubmitting.value = false
+      })
   }
 }
 

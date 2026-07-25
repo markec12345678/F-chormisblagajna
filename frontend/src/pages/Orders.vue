@@ -53,7 +53,7 @@
                 <template #body="slotProps">
                   <ButtonGroup>
                     <Button
-                      v-tooltip.top="'cancel'"
+                      v-tooltip.top="$t('cancel')"
                       icon="pi pi-times"
                       severity="secondary"
                       aria-label="$t('remove')"
@@ -62,7 +62,7 @@
                       "
                     />
                     <Button
-                      v-tooltip.top="'details'"
+                      v-tooltip.top="$t('details')"
                       icon="pi pi-book"
                       severity="secondary"
                       aria-label="$t('remove')"

@@ -95,6 +95,8 @@
                     @click="submitCustomer"
                     :label="$t('save')"
                     aria-label="$t('save')"
+                    :loading="isSubmitting"
+                    :disabled="isSubmitting"
                   />
                 </ButtonGroup>
               </template>
@@ -137,6 +139,8 @@
                     @click="updateCustomer"
                     :label="$t('save')"
                     aria-label="$t('save')"
+                    :loading="isSubmitting"
+                    :disabled="isSubmitting"
                   />
                 </ButtonGroup>
               </template>
@@ -175,6 +179,7 @@ const customerEditDialog = ref(false)
 const customer_add_errors = ref({ name: '' })
 const customer_edit_errors = ref({ name: '' })
 
+const isSubmitting = ref(false)
 const customerAddDialog = ref(false)
 const new_customer_name = ref('')
 const new_customer_phone = ref('')
@@ -250,6 +255,8 @@ const updateCustomer = () => {
 
   if (customer_edit_errors.value.name) return
 
+  isSubmitting.value = true
+
   axios
     .patch(
       `http://${import.meta.env.VITE_APP_BACKEND_HOST}${import.meta.env.VITE_APP_MODULE_CORE_API_PREFIX}/api/customers/${customerToEdit.value.id}`,
@@ -282,12 +289,17 @@ const updateCustomer = () => {
         group: 'br',
       })
     })
+    .finally(() => {
+      isSubmitting.value = false
+    })
 }
 
 const submitCustomer = () => {
   customer_add_errors.value.name = new_customer_name.value?.trim() ? '' : t('validation_required')
 
   if (customer_add_errors.value.name) return
+
+  isSubmitting.value = true
 
   const payload = {
     name: new_customer_name.value,
@@ -325,6 +337,9 @@ const submitCustomer = () => {
         detail: error.response?.data?.data || t('error_occurred'),
         group: 'br',
       })
+    })
+    .finally(() => {
+      isSubmitting.value = false
     })
 }
 
