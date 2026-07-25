@@ -63,10 +63,9 @@
                 <Column sortable field="date" :header="$t('date')">
                   <template #body="slotProps">
                     <i
-                      class="pi pi-exclamation-circle"
+                      class="pi pi-exclamation-circle mr-2 text-red-500"
                       v-tooltip.top="$t('has_refunds')"
                       v-if="slotProps.data.refunds?.length > 0"
-                      style="margin-right: 0.5rem; color: red"
                     ></i>
                     {{ slotProps.data.date }}
                   </template>
@@ -131,10 +130,9 @@
                     <Column sortable field="order.display_id" :header="$t('id')">
                       <template #body="slotProps">
                         <i
-                          class="pi pi-exclamation-circle"
+                          class="pi pi-exclamation-circle mr-2 text-red-500"
                           v-tooltip.top="$t('has_refunds')"
                           v-if="orders_refunds[slotProps.data.id]?.refunds.length > 0"
-                          style="margin-right: 0.5rem; color: red"
                         ></i>
                         {{ slotProps.data.order.display_id }}
                       </template>

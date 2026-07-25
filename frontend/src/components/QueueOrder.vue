@@ -16,7 +16,7 @@
           "
           >{{ props.order.display_id }}</span
         >
-        <h2 style="color: tomato; font-weight: 800">{{ $t('cancelled') }}</h2>
+        <h2 class="text-red-500 font-extrabold">{{ $t('cancelled') }}</h2>
       </div>
     </div>
     <Card
@@ -79,8 +79,7 @@
             <Divider v-if="index > 0" />
             <div class="w-full flex">
               <div
-                :style="`width:.2rem;background-color:${item.comment != '' ? 'orange' : 'silver'}`"
-                class="mr-2"
+                :class="`w-[.2rem] mr-2 ${item.comment != '' ? 'bg-orange-500' : 'bg-gray-300'}`"
               ></div>
               <div class="flex flex-column w-full justify-content-center my-2">
                 <div class="flex justify-content-between align-items-center">
