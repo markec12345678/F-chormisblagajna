@@ -86,7 +86,7 @@
       strokeWidth="6"
       fill="transparent"
       animationDuration=".5s"
-      aria-label="$t('loading')"
+      :aria-label="$t('loading')"
     />
   </div>
   <Dialog v-model:visible="version_dialog_visible" header="Nutrix" :style="{ width: '45rem' }">
@@ -94,7 +94,7 @@
       {{ $t('about_nutrix') }}
     </p>
     <p>
-      For more support & collaboration visit &nbsp;<a
+      {{ $t('for_more_support') }} &nbsp;<a
         style="font-size: large"
         href="https://nutrixpos.com"
         target="_blank"

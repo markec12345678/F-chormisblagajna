@@ -8,56 +8,24 @@
           class="flex flex-column justify-content-center align-items-center gap-3"
         >
           <i class="pi pi-inbox" style="font-size: 3rem; opacity: 0.3"></i>
-          <h2 style="color: cadetblue; margin: 0">{{ $t('order', 3) }}: 0</h2>
-          <p style="color: #94a3b8; margin: 0">{{ t('new_orders_appear') }}</p>
+          <h2 class="text-teal-500 m-0">{{ $t('order', 3) }}: 0</h2>
+          <p class="text-slate-400 m-0">{{ t('new_orders_appear') }}</p>
         </div>
         <div v-else class="flex flex-column mb-3 px-3">
           <div class="flex align-items-center gap-2 mb-2">
-            <h2 class="m-0" style="color: cadetblue">{{ $t('order', 3) }}: {{ orders.length }}</h2>
+            <h2 class="m-0 text-teal-500">{{ $t('order', 3) }}: {{ orders.length }}</h2>
             <div class="flex gap-1 ml-3">
               <span class="flex align-items-center gap-1 text-xs">
-                <span
-                  style="
-                    width: 8px;
-                    height: 8px;
-                    border-radius: 50%;
-                    background: #22c55e;
-                    display: inline-block;
-                  "
-                ></span>
+                <span class="w-2 h-2 rounded-full bg-green-500 inline-block"></span>
               </span>
               <span class="flex align-items-center gap-1 text-xs">
-                <span
-                  style="
-                    width: 8px;
-                    height: 8px;
-                    border-radius: 50%;
-                    background: #eab308;
-                    display: inline-block;
-                  "
-                ></span>
+                <span class="w-2 h-2 rounded-full bg-yellow-500 inline-block"></span>
               </span>
               <span class="flex align-items-center gap-1 text-xs">
-                <span
-                  style="
-                    width: 8px;
-                    height: 8px;
-                    border-radius: 50%;
-                    background: #f97316;
-                    display: inline-block;
-                  "
-                ></span>
+                <span class="w-2 h-2 rounded-full bg-orange-500 inline-block"></span>
               </span>
               <span class="flex align-items-center gap-1 text-xs">
-                <span
-                  style="
-                    width: 8px;
-                    height: 8px;
-                    border-radius: 50%;
-                    background: #ef4444;
-                    display: inline-block;
-                  "
-                ></span>
+                <span class="w-2 h-2 rounded-full bg-red-500 inline-block"></span>
               </span>
             </div>
           </div>
@@ -92,7 +60,7 @@
       strokeWidth="6"
       fill="transparent"
       animationDuration=".5s"
-      aria-label="$t('loading')"
+      :aria-label="$t('loading')"
     />
   </div>
 </template>

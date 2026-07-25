@@ -37,7 +37,7 @@
         icon="pi pi-times"
         size="small"
         style="width: 2rem; height: 2rem"
-        aria-label="$t('remove')"
+        :aria-label="$t('remove')"
         severity="secondary"
         @click="removeMaterialByIndex(index)"
       />
@@ -106,7 +106,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineModel, ref, watch, defineEmits } from 'vue'
+import { defineModel, ref, watch } from 'vue'
 import InputText from 'primevue/inputtext'
 import Button from 'primevue/button'
 import Dropdown from 'primevue/dropdown'
@@ -232,30 +232,4 @@ const getSettings = () => {
 }
 
 getSettings()
-
-// watch(model.value.materials, () => {
-//     updateEntriesCost()
-// },
-// {deep: true})
-
-// const init = () => {
-
-//     // model.value.Selections = []
-
-//     if (model.value.Selections.length == 0){
-
-//         model.value.Components.forEach((component) => {
-//             const selection = new ComponentSelection()
-//                 selection.ComponentId = component.component_id
-//                 selection.Quantity = component.defaultquantity
-//                 selection.Name = component.name
-//                 selection.Unit = component.unit
-//                 selection.Entry = component.entries[0]
-
-//                 model.value.Selections.push(selection)
-//             })
-//     }
-// }
-
-// init()
 </script>

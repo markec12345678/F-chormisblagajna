@@ -2,7 +2,7 @@
   <div v-if="!loading" class="flex flex-column m-0 p-0" style="height: 100vh">
     <Toolbar style="border-radius: 0px; flex-shrink: 0" class="py-1 lg:py-2">
       <template #start>
-        <div @click="version_dialog_visible = true" style="text-decoration: none; color: gray">
+        <div @click="version_dialog_visible = true" class="text-gray-400 no-underline">
           <img
             src="@/assets/logo.png"
             alt="logo"
@@ -63,7 +63,7 @@
           size="large"
           text
           rounded
-          aria-label="$t('current')"
+          :aria-label="$t('current')"
           @click.stop="paylater_toggle"
         >
           <span class="p-button-icon pi pi-hourglass"></span>
@@ -74,7 +74,7 @@
           class="w-8 xl:w-3"
           style="max-height: 60vh; overflow-y: auto"
         >
-          <h4 class="m-2" style="color: #c2c2c2">{{ t('current_orders') }}</h4>
+          <h4 class="m-2 text-slate-400">{{ t('current_orders') }}</h4>
           <MainSearchResultView
             class="mt-2"
             @view-order-pressed="showOrderDetails(result)"
@@ -94,7 +94,7 @@
           size="large"
           text
           rounded
-          aria-label="$t('drawer')"
+          :aria-label="$t('drawer')"
           @click="drawer_visible = true"
         />
       </template>
@@ -145,7 +145,7 @@
               class="flex flex-column justify-content-center align-items-center gap-2 py-6"
             >
               <i class="pi pi-inbox" style="font-size: 2rem; opacity: 0.3"></i>
-              <p class="m-0 text-sm" style="color: #94a3b8">{{ t('no_results') }}</p>
+              <p class="m-0 text-sm text-slate-400">{{ t('no_results') }}</p>
             </div>
           </template>
         </Card>
@@ -166,18 +166,12 @@
                   class="flex flex-column justify-content-center align-items-center h-full gap-2"
                 >
                   <i class="pi pi-shopping-cart" style="font-size: 2.5rem; opacity: 0.2"></i>
-                  <p class="m-0 text-sm" style="color: #94a3b8">{{ t('no_results') }}</p>
+                  <p class="m-0 text-sm text-slate-400">{{ t('no_results') }}</p>
                 </div>
                 <TransitionGroup v-else name="cart-item" tag="div">
                   <div v-for="(item, index) in orderItems" :key="item.product.id + '_' + index">
                     <div class="flex justify-content-between align-items-center">
-                      <div
-                        style="background-color: red; width: 0.3rem; height: 2.5rem"
-                        class="mr-2"
-                        v-if="!item.isValid"
-                      >
-                        &nbsp;
-                      </div>
+                      <div class="bg-red-500 w-[0.3rem] h-10 mr-2" v-if="!item.isValid">&nbsp;</div>
                       <p class="w-6" style="text-overflow: ellipsis">
                         <strong>{{ item.product.name }}</strong>
                       </p>
@@ -188,7 +182,7 @@
                           icon="pi pi-pencil"
                           size="small"
                           style="width: 2rem; height: 2rem"
-                          aria-label="$t('edit')"
+                          :aria-label="$t('edit')"
                           severity="secondary"
                           @click="startEditItem(index)"
                           class="mr-1"
@@ -198,7 +192,7 @@
                             icon="pi pi-minus"
                             size="small"
                             style="width: 2rem; height: 2rem"
-                            aria-label="$t('remove')"
+                            :aria-label="$t('remove')"
                             severity="secondary"
                             @click="decreaseOrderItemQty(index)"
                           />
@@ -206,7 +200,7 @@
                             icon="pi pi-plus"
                             size="small"
                             style="width: 2rem; height: 2rem"
-                            aria-label="$t('remove')"
+                            :aria-label="$t('remove')"
                             severity="secondary"
                             @click="increaseOrderItemQty(index)"
                           />
@@ -228,7 +222,7 @@
                       size="small"
                       severity="secondary"
                       v-tooltip.top="$t('draft_order_tooltip')"
-                      aria-label="$t('stash_order')"
+                      :aria-label="$t('stash_order')"
                     />
                     <Button
                       :label="$t('add_discount')"
@@ -258,7 +252,7 @@
                           placeholder="0"
                           type="number"
                           class="w-8 h-2rem"
-                          aria-label="$t('discount')"
+                          :aria-label="$t('discount')"
                         />
                         <p style="font-size: 0.8rem" class="mx-2">{{ t('egp') }}</p>
                       </div>
@@ -296,7 +290,7 @@
                       onIcon="fa fa-print"
                       offIcon="fa fa-print"
                       class="w-36"
-                      aria-label="$t('do_you_confirm')"
+                      :aria-label="$t('do_you_confirm')"
                     />
                     <ToggleButton
                       size="small"
@@ -312,9 +306,9 @@
                       onIcon="fa fa-print"
                       offIcon="fa fa-print"
                       class="w-36 mx-1"
-                      aria-label="$t('do_you_confirm')"
+                      :aria-label="$t('do_you_confirm')"
                     />
-                    <!-- <ToggleButton size="small" v-tooltip.top="'Auto start order and consume components from inventory'" v-model="is_auto_start_order" onLabel="Autostarting" offLabel="Autostart" onIcon="pi pi-check" offIcon="pi pi-play-circle" class="w-36 mx-1" aria-label="$t('do_you_confirm')" /> -->
+
                     <ToggleButton
                       v-if="store.getShopMode === 'kitchen'"
                       size="small"
@@ -325,7 +319,7 @@
                       onIcon="pi pi-check"
                       offIcon="pi pi-play-circle"
                       class="w-36 mx-1"
-                      aria-label="$t('do_you_confirm')"
+                      :aria-label="$t('do_you_confirm')"
                     />
                   </div>
                 </div>
@@ -415,7 +409,7 @@
                     :offLabel="`${$t('collect')} (${total.toFixed(2)} ${$t('egp')})`"
                     :onLabel="`${$t('collecting')} (${(total + (current_order_tip || 0)).toFixed(2)} ${$t('egp')})`"
                     class="w-15rem h-5rem lg:h-10rem sm:w-40 border-noround"
-                    aria-label="$t('confirmation')"
+                    :aria-label="$t('confirmation')"
                   />
                   <ToggleButton
                     v-model="is_pay_later"
@@ -424,7 +418,7 @@
                     :offLabel="$t('pay_later')"
                     :onLabel="$t('paying_later')"
                     class="w-15rem h-5rem lg:h-10rem sm:w-40 border-noround"
-                    aria-label="$t('confirmation')"
+                    :aria-label="$t('confirmation')"
                   />
                   <div class="flex flex-column align-items-start justify-content-start mt-4 w-full">
                     <h4 class="mt-0">{{ $t('payment_source') }}</h4>
@@ -443,7 +437,7 @@
                     <InputText
                       :placeholder="$t('tips')"
                       v-model.number="current_order_tip"
-                      aria-label="$t('tips')"
+                      :aria-label="$t('tips')"
                     />
                   </div>
                 </div>
@@ -460,7 +454,7 @@
                       :offLabel="$t('dine_in')"
                       :onLabel="$t('dine_in')"
                       class="w-15rem h-5rem lg:h-10rem sm:w-40 border-noround"
-                      aria-label="$t('confirmation')"
+                      :aria-label="$t('confirmation')"
                     />
                     <ToggleButton
                       v-model="is_take_away"
@@ -469,7 +463,7 @@
                       :offLabel="$t('takeaway')"
                       :onLabel="$t('takeaway')"
                       class="w-15rem h-5rem lg:h-10rem sm:w-40 border-noround"
-                      aria-label="$t('confirmation')"
+                      :aria-label="$t('confirmation')"
                     />
                     <ToggleButton
                       v-model="is_delivery"
@@ -478,7 +472,7 @@
                       :offLabel="$t('delivery')"
                       :onLabel="$t('delivery')"
                       class="w-15rem h-5rem lg:h-10rem sm:w-40 border-noround"
-                      aria-label="$t('confirmation')"
+                      :aria-label="$t('confirmation')"
                     />
                   </div>
                 </template>
@@ -561,17 +555,17 @@
                   <InputText
                     v-model="delivery_info.name"
                     :placeholder="$t('name')"
-                    aria-label="$t('name')"
+                    :aria-label="$t('name')"
                   />
                   <InputText
                     v-model="delivery_info.address"
                     :placeholder="$t('address')"
-                    aria-label="$t('address')"
+                    :aria-label="$t('address')"
                   />
                   <InputText
                     v-model="delivery_info.phone"
                     :placeholder="$t('phone')"
-                    aria-label="$t('phone')"
+                    :aria-label="$t('phone')"
                   />
                 </div>
                 <div class="flex pt-6 justify-content-end gap-2">
@@ -717,7 +711,7 @@
       strokeWidth="6"
       fill="transparent"
       animationDuration=".5s"
-      aria-label="$t('loading')"
+      :aria-label="$t('loading')"
     />
   </div>
   <Drawer v-model:visible="drawer_visible">
@@ -741,7 +735,7 @@
               icon="pi pi-user"
               severity="secondary"
               text
-              aria-label="$t('profile')"
+              :aria-label="$t('profile')"
               :label="$t('profile')"
               @click="$router.push('/profile')"
             />
@@ -750,7 +744,7 @@
               icon="pi pi-sign-out"
               severity="secondary"
               text
-              aria-label="$t('signout')"
+              :aria-label="$t('signout')"
               :label="t('signout')"
               @click="handleSignout()"
             />
@@ -840,7 +834,7 @@
                 class="w-3"
                 style="max-height: 60vh; overflow-y: auto"
               >
-                <h4 class="my-0 mx-2" style="color: #c2c2c2">{{ t('notifications') }}</h4>
+                <h4 class="my-0 mx-2 text-slate-400">{{ t('notifications') }}</h4>
                 <Button
                   text
                   :label="t('clear_all')"
@@ -937,13 +931,13 @@
                 class="w-5 lg:w-3"
                 style="max-height: 60vh; overflow-y: auto"
               >
-                <h4 class="m-2" style="color: #c2c2c2">{{ t('stashed_orders') }}</h4>
+                <h4 class="m-2 text-slate-400">{{ t('stashed_orders') }}</h4>
                 <div
                   v-if="stashedOrders.length === 0"
                   class="flex flex-column align-items-center gap-2 py-3"
                 >
                   <i class="pi pi-clock" style="font-size: 1.5rem; opacity: 0.3"></i>
-                  <p class="m-0 text-sm" style="color: #94a3b8">{{ t('no_results') }}</p>
+                  <p class="m-0 text-sm text-slate-400">{{ t('no_results') }}</p>
                 </div>
                 <StashedOrder
                   v-else
@@ -951,6 +945,7 @@
                   v-for="(order, index) in stashedOrders"
                   :key="index"
                   @back_to_checkout="BackStashedOrderToCheckout(index)"
+                  @delete="DeleteStashedOrder"
                 />
               </OverlayPanel>
             </li>
@@ -1202,14 +1197,14 @@ watch(is_delivery, (new_val) => {
     is_serve_inside.value = false
     is_take_away.value = false
     order_details_steps.value = [
-      { number: 1, label: 'Main details' },
-      { number: 2, label: 'Delivery' },
-      { number: 3, label: 'Confirmation' },
+      { number: 1, label: t('main_details') },
+      { number: 2, label: t('delivery') },
+      { number: 3, label: t('confirmation') },
     ]
   } else {
     order_details_steps.value = [
-      { number: 1, label: 'Main details' },
-      { number: 3, label: 'Confirmation' },
+      { number: 1, label: t('main_details') },
+      { number: 3, label: t('confirmation') },
     ]
   }
 })
@@ -1396,6 +1391,35 @@ const BackStashedOrderToCheckout = async (stashed_order_index: number) => {
     .then(() => {
       stashedOrders.value.splice(stashed_order_index, 1)
 
+      stashed_orders_op.value.toggle()
+    })
+    .catch(() => {
+      toast.add({
+        severity: 'error',
+        summary: t('failed_remove_stashed_order'),
+        detail: '',
+        life: 3000,
+        group: 'br',
+      })
+      stashed_orders_op.value.toggle()
+    })
+}
+
+const DeleteStashedOrder = (order: Order) => {
+  const index = stashedOrders.value.findIndex((o) => o.id === order.id)
+  if (index === -1) return
+
+  axios
+    .delete(
+      `http://${import.meta.env.VITE_APP_BACKEND_HOST}${import.meta.env.VITE_APP_MODULE_CORE_API_PREFIX}/api/orders/${order.id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${auth.accessToken.value}`,
+        },
+      },
+    )
+    .then(() => {
+      stashedOrders.value.splice(index, 1)
       stashed_orders_op.value.toggle()
     })
     .catch(() => {
@@ -1683,8 +1707,6 @@ const init = async () => {
 }
 
 init()
-
-// const notifications_severity_counter = ref<number[]>([])
 
 const notifications_severity_counter = computed(() => {
   const counter = [0, 0, 0, 0]

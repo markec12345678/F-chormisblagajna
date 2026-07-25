@@ -215,7 +215,7 @@
               "
               severity="secondary"
               size="small"
-              aria-label="$t('cancel_order')"
+              :aria-label="$t('cancel_order')"
               @click.stop="confirmCancelOrder($event)"
             >
               {{ $t('cancel') }} {{ $t('order') }}

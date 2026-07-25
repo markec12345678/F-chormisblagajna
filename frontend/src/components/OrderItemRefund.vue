@@ -133,7 +133,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, ref, defineEmits } from 'vue'
+import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
 import { OrderItem, Product } from '@/classes/OrderItem'

@@ -52,14 +52,14 @@
                       v-if="isSuperuser && !slotProps.data.roles.includes('superuser')"
                       icon="pi pi-pencil"
                       severity="secondary"
-                      aria-label="$t('edit_password')"
+                      :aria-label="$t('edit_password')"
                       @click="openPasswordEditDialog(slotProps.data)"
                     />
                     <Button
                       v-if="!slotProps.data.roles.includes('superuser')"
                       icon="pi pi-trash"
                       severity="danger"
-                      aria-label="$t('remove')"
+                      :aria-label="$t('remove')"
                       @click="confirmDeleteUser($event, slotProps.data.id)"
                     />
                   </ButtonGroup>
@@ -118,7 +118,7 @@
                   <Button
                     :label="$t('cancel')"
                     severity="secondary"
-                    aria-label="$t('cancel')"
+                    :aria-label="$t('cancel')"
                     @click="userAddDialog = false"
                   />
                   <Button
@@ -126,7 +126,7 @@
                     severity="primary"
                     @click="submitUser"
                     :label="$t('save')"
-                    aria-label="$t('save')"
+                    :aria-label="$t('save')"
                     :loading="isSubmitting"
                     :disabled="isSubmitting"
                   />
@@ -152,7 +152,7 @@
                   <Button
                     :label="$t('cancel')"
                     severity="secondary"
-                    aria-label="$t('cancel')"
+                    :aria-label="$t('cancel')"
                     @click="passwordEditDialog = false"
                   />
                   <Button
@@ -160,7 +160,7 @@
                     severity="primary"
                     @click="submitPasswordChange"
                     :label="$t('save')"
-                    aria-label="$t('save')"
+                    :aria-label="$t('save')"
                     :loading="isSubmitting"
                     :disabled="isSubmitting"
                   />

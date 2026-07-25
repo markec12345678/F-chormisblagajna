@@ -9,20 +9,20 @@
       <InputText id="unit" v-model="edited_material.unit" aria-describedby="unit" />
     </div>
     <div class="col-12 flex">
-      <Button :label="$t('cancel')" severity="secondary" aria-label="$t('cancel')" />
+      <Button :label="$t('cancel')" severity="secondary" :aria-label="$t('cancel')" />
       <Button
         class="ml-2"
         severity="primary"
         @click="returnMaterial"
         :label="$t('done')"
-        aria-label="$t('done')"
+        :aria-label="$t('done')"
       />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { defineProps, ref, defineEmits } from 'vue'
+import { ref } from 'vue'
 import { Material } from '@/classes/OrderItem'
 import Button from 'primevue/button'
 import InputText from 'primevue/inputtext'

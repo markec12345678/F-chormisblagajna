@@ -20,13 +20,13 @@
     </div>
     <template #footer>
       <ButtonGroup>
-        <Button :label="$t('cancel')" severity="secondary" aria-label="$t('cancel')" />
+        <Button :label="$t('cancel')" severity="secondary" :aria-label="$t('cancel')" />
         <Button
           class="ml-2"
           severity="primary"
           @click="submitCustomer"
           :label="$t('save')"
-          aria-label="$t('save')"
+          :aria-label="$t('save')"
         />
       </ButtonGroup>
     </template>
@@ -34,7 +34,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, getCurrentInstance, defineEmits, defineProps, watch } from 'vue'
+import { ref, getCurrentInstance, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
 import { useToast } from 'primevue/usetoast'

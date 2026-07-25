@@ -53,13 +53,13 @@
                     <Button
                       icon="pi pi-pencil"
                       severity="secondary"
-                      aria-label="$t('edit')"
+                      :aria-label="$t('edit')"
                       @click="prepareProductToEdit(slotProps.data)"
                     />
                     <Button
                       icon="pi pi-trash"
                       severity="danger"
-                      aria-label="$t('remove')"
+                      :aria-label="$t('remove')"
                       @click="confirmDeleteProduct($event, slotProps.data.id)"
                     />
                   </ButtonGroup>
@@ -148,7 +148,7 @@
                           <Button
                             icon="pi pi-times"
                             severity="secondary"
-                            aria-label="$t('remove')"
+                            :aria-label="$t('remove')"
                             @click="removeMaterial(slotProps.data.index)"
                           />
                         </ButtonGroup>
@@ -188,7 +188,7 @@
                           <Button
                             icon="pi pi-times"
                             severity="secondary"
-                            aria-label="$t('remove')"
+                            :aria-label="$t('remove')"
                             @click="sub_products.splice(slotProps.data.index, 1)"
                           />
                         </ButtonGroup>
@@ -234,13 +234,13 @@
 
               <template #footer>
                 <ButtonGroup>
-                  <Button :label="$t('cancel')" severity="secondary" aria-label="$t('cancel')" />
+                  <Button :label="$t('cancel')" severity="secondary" :aria-label="$t('cancel')" />
                   <Button
                     class="ml-2"
                     severity="primary"
                     @click="submitProduct"
                     :label="$t('save')"
-                    aria-label="$t('save')"
+                    :aria-label="$t('save')"
                     :loading="isSubmitting"
                     :disabled="isSubmitting"
                   />
@@ -323,7 +323,7 @@
                         <Button
                           icon="pi pi-times"
                           severity="secondary"
-                          aria-label="$t('remove')"
+                          :aria-label="$t('remove')"
                           @click="removeEditMaterial(slotProps.data.index)"
                         />
                       </ButtonGroup>
@@ -363,7 +363,7 @@
                         <Button
                           icon="pi pi-times"
                           severity="secondary"
-                          aria-label="$t('remove')"
+                          :aria-label="$t('remove')"
                           @click="productToEdit.sub_products.splice(slotProps.data.index, 1)"
                         />
                       </ButtonGroup>
@@ -404,13 +404,13 @@
               </div>
               <template #footer>
                 <ButtonGroup>
-                  <Button :label="$t('cancel')" severity="secondary" aria-label="$t('cancel')" />
+                  <Button :label="$t('cancel')" severity="secondary" :aria-label="$t('cancel')" />
                   <Button
                     class="ml-2"
                     severity="primary"
                     @click="updateProduct"
                     :label="$t('save')"
-                    aria-label="$t('save')"
+                    :aria-label="$t('save')"
                     :loading="isSubmitting"
                     :disabled="isSubmitting"
                   />
@@ -458,7 +458,6 @@ import { useConfirm } from 'primevue/useconfirm'
 import { Image, Message, ToggleSwitch } from 'primevue'
 import type { FileUploadBeforeSendEvent } from 'primevue/fileupload'
 import { Form } from '@primevue/forms'
-// import { Material } from '@/classes/OrderItem';
 import { globalStore } from '@/stores'
 import type {
   ProductItem,
@@ -517,8 +516,6 @@ const add_product_resolver = ({ values }) => {
 const isSubmitting = ref(false)
 const new_product_id = ref('')
 const add_subproduct_dialog = ref(false)
-// const new_product_materials = ref<Material[]>([])
-// const new_product_subproducts = ref([])
 const materials = ref<ProductItemMaterial[]>([])
 const sub_products = ref<ProductItemSubProduct[]>([])
 
@@ -557,17 +554,6 @@ const backend_host = computed(() => {
 const backendUrl = computed(() => {
   return `http://${import.meta.env.VITE_APP_BACKEND_HOST}${import.meta.env.VITE_APP_MODULE_CORE_API_PREFIX}`
 })
-
-// const onFileSelect = (event:any) => {
-//     const file = event.files[0];
-//     const reader = new FileReader();
-
-//     reader.onload = async (e) => {
-//         src.value = e.target?.result;
-//     };
-
-//     reader.readAsDataURL(file);
-// }
 
 const deleteProduct = (product_id: string) => {
   axios

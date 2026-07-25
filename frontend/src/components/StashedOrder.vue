@@ -19,7 +19,13 @@
               size="small"
               @click="emit('back_to_checkout')"
             />
-            <Button icon="pi pi-times" severity="secondary" class="ml-2" size="small" />
+            <Button
+              icon="pi pi-times"
+              severity="secondary"
+              class="ml-2"
+              size="small"
+              @click="emit('delete', props.order)"
+            />
           </div>
         </div>
       </template>
@@ -28,7 +34,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, defineProps, defineEmits } from 'vue'
+import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
 import Message from 'primevue/message'
@@ -37,7 +43,7 @@ import Tag from 'primevue/tag'
 
 import Order from '@/classes/Order'
 
-const emit = defineEmits(['back_to_checkout'])
+const emit = defineEmits(['back_to_checkout', 'delete'])
 
 const props = defineProps({
   order: {

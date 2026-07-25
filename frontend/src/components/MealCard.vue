@@ -16,7 +16,7 @@
           icon="pi pi-ellipsis-h"
           @click.stop="toggle"
           severity="secondary"
-          aria-label="$t('save')"
+          :aria-label="$t('save')"
           style="width: 2rem; height: 2rem; position: absolute; top: 0; right: 0"
           size="small"
           class="m-1"
@@ -70,7 +70,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineProps, computed } from 'vue'
+import { ref, computed } from 'vue'
 
 import Button from 'primevue/button'
 import OverlayPanel from 'primevue/overlaypanel'

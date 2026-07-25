@@ -304,6 +304,8 @@ const i18n = createI18n({
       average_cost_tooltip:
         'Average cost of materials available in the inventory will be used for each product during order creation, material/s with earliest expiration will be consumed first',
       for_more_support: 'For more support & collaboration visit',
+      instock: 'IN STOCK',
+      lowstock: 'LOW STOCK',
     },
   },
 })

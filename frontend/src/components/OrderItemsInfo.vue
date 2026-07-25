@@ -33,7 +33,7 @@
               icon="pi pi-undo"
               :label="$t('return')"
               severity="warn"
-              aria-label="$t('refund')"
+              :aria-label="$t('refund')"
               @click="startRefund(slotProps.data)"
               v-if="order_items_status[slotProps.data.id].title != t('refunded')"
             >
@@ -68,7 +68,7 @@
 import Dialog from 'primevue/dialog'
 import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
-import { ref, defineProps, computed, defineEmits } from 'vue'
+import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
 import { OrderItem } from '@/classes/OrderItem'

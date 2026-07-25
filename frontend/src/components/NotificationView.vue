@@ -11,7 +11,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, defineEmits, ref } from 'vue'
+import { ref } from 'vue'
 import Message from 'primevue/message'
 import { formatDistanceToNow } from 'date-fns'
 import { Notification } from '@/classes/Notification'

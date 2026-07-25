@@ -12,7 +12,7 @@
           <Button
             icon="pi pi-book"
             severity="secondary"
-            aria-label="$t('info')"
+            :aria-label="$t('info')"
             @click="emit('view-order-pressed')"
           />
         </div>
@@ -22,7 +22,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, computed, defineEmits } from 'vue'
+import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
 import Message from 'primevue/message'

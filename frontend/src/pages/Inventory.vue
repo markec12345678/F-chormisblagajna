@@ -39,8 +39,8 @@
                   <Tag
                     :value="
                       slotProps.data.totalAmount > slotProps.data.settings.stock_alert_treshold
-                        ? 'INSTOCK'
-                        : 'LOWSTOCK'
+                        ? $t('instock')
+                        : $t('lowstock')
                     "
                     :severity="
                       slotProps.data.totalAmount > slotProps.data.settings.stock_alert_treshold
@@ -50,7 +50,7 @@
                   />
                 </template>
               </Column>
-              <Column :header="$t('actions')" style="width: 30rem">
+              <Column :header="$t('actions')" style="width: auto">
                 <template #body="slotProps">
                   <ButtonGroup>
                     <Button
@@ -58,30 +58,30 @@
                       :label="$t('history')"
                       @click="loadComponentLogs(slotProps.data.id)"
                       severity="secondary"
-                      aria-label="$t('save')"
+                      :aria-label="$t('save')"
                     />
                     <Button
                       icon="fa fa-dolly-flatbed"
                       severity="secondary"
-                      aria-label="$t('show_entries')"
+                      :aria-label="$t('show_entries')"
                       @click="showEntriesDialog(slotProps.data)"
                     />
                     <Button
                       icon="pi pi-pencil"
                       severity="secondary"
                       @click="openEditMaterialDialog(slotProps.data)"
-                      aria-label="$t('edit')"
+                      :aria-label="$t('edit')"
                     />
                     <Button
                       icon="pi pi-cog"
                       severity="secondary"
-                      aria-label="$t('settings')"
+                      :aria-label="$t('settings')"
                       @click="openMaterialSettingsDialog(slotProps.data)"
                     />
                     <Button
                       icon="pi pi-times"
                       severity="danger"
-                      aria-label="$t('delete')"
+                      :aria-label="$t('delete')"
                       @click="confirmDeleteMaterial(slotProps.data.id)"
                     />
                   </ButtonGroup>
@@ -127,13 +127,13 @@
               :label="$t('cancel')"
               @click="material_settings_dialog = false"
               severity="secondary"
-              aria-label="$t('save')"
+              :aria-label="$t('save')"
             />
             <Button
               class="ml-2"
               severity="primary"
               :label="$t('save')"
-              aria-label="$t('save')"
+              :aria-label="$t('save')"
               @click="saveMaterialSettings"
             />
           </ButtonGroup>
@@ -188,14 +188,14 @@
             <Column field="company" :header="$t('company')"></Column>
             <Column field="quantity" :header="$t('quantity')" sortable></Column>
             <Column field="expiration_date" :header="$t('expiration_date')" sortable></Column>
-            <Column :header="$t('actions')" style="width: 30rem">
+            <Column :header="$t('actions')" style="width: auto">
               <template #body="slotProps">
                 <ButtonGroup>
                   <Button
                     icon="pi pi-times"
                     :label="$t('delete')"
                     severity="secondary"
-                    aria-label="$t('delete')"
+                    :aria-label="$t('delete')"
                     @click="(e: Event) => deleteEntryFromEntriesDialog(e, slotProps.data)"
                   />
                 </ButtonGroup>
@@ -272,13 +272,13 @@
               </template>
             </Column>
             <Column field="purchase_price" :header="$t('total_price')"></Column>
-            <Column :header="$t('actions')" style="width: 30rem">
+            <Column :header="$t('actions')" style="width: auto">
               <template #body="slotProps">
                 <ButtonGroup>
                   <Button
                     icon="pi pi-times"
                     severity="secondary"
-                    aria-label="$t('delete')"
+                    :aria-label="$t('delete')"
                     @click="removeNewComponentEntry(slotProps.data)"
                   />
                 </ButtonGroup>

@@ -48,13 +48,13 @@
                     <Button
                       icon="pi pi-pencil"
                       severity="secondary"
-                      aria-label="$t('edit')"
+                      :aria-label="$t('edit')"
                       @click="prepareCustomerToEdit(slotProps.data)"
                     />
                     <Button
                       icon="pi pi-trash"
                       severity="danger"
-                      aria-label="$t('remove')"
+                      :aria-label="$t('remove')"
                       @click="confirmDeleteCustomer($event, slotProps.data.id)"
                     />
                   </ButtonGroup>
@@ -88,13 +88,13 @@
               </div>
               <template #footer>
                 <ButtonGroup>
-                  <Button :label="$t('cancel')" severity="secondary" aria-label="$t('cancel')" />
+                  <Button :label="$t('cancel')" severity="secondary" :aria-label="$t('cancel')" />
                   <Button
                     class="ml-2"
                     severity="primary"
                     @click="submitCustomer"
                     :label="$t('save')"
-                    aria-label="$t('save')"
+                    :aria-label="$t('save')"
                     :loading="isSubmitting"
                     :disabled="isSubmitting"
                   />
@@ -132,13 +132,13 @@
               </div>
               <template #footer>
                 <ButtonGroup>
-                  <Button :label="$t('cancel')" severity="secondary" aria-label="$t('cancel')" />
+                  <Button :label="$t('cancel')" severity="secondary" :aria-label="$t('cancel')" />
                   <Button
                     class="ml-2"
                     severity="primary"
                     @click="updateCustomer"
                     :label="$t('save')"
-                    aria-label="$t('save')"
+                    :aria-label="$t('save')"
                     :loading="isSubmitting"
                     :disabled="isSubmitting"
                   />
@@ -165,7 +165,6 @@ import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useToast } from 'primevue/usetoast'
 import { useConfirm } from 'primevue/useconfirm'
-// import { Material } from '@/classes/OrderItem';
 import { globalStore } from '../stores'
 import auth from '../services/auth'
 import type { Customer, DataTablePageEvent } from '@/types'

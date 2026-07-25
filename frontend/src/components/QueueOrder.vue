@@ -23,10 +23,7 @@
       :style="`width: 20rem; overflow: hidden; border-left: 4px solid ${urgencyColor};${state == 'cancelled' ? 'filter:grayscale(1) blur(0.2rem);' : ''}`"
     >
       <template #header>
-        <!-- <h1 class="m-2">#{{props.number}}</h1> -->
-        <!-- 2024-06-20T14:31:39.946Z -->
         <div class="grid mt-1 p-2">
-          <!-- <div class="flex gap-3 mt-1 p-2 justify-content-center align-items-center"> -->
           <h3 class="col-12 m-0 p-0 px-2">
             {{ props.order.display_id }}
           </h3>
@@ -59,14 +56,14 @@
                 icon="pi pi-trash"
                 class="w-3"
                 severity="secondary"
-                aria-label="$t('remove')"
+                :aria-label="$t('remove')"
                 @click="confirmCancel($event)"
               />
               <ConfirmPopup></ConfirmPopup>
               <Button
                 icon="pi pi-check"
                 class="w-9"
-                aria-label="$t('finish')"
+                :aria-label="$t('finish')"
                 :label="$t('finish')"
                 @click="confirmFinish($event)"
                 severity="success"
@@ -94,7 +91,7 @@
                     @click="showProductDetails(item.product)"
                     text
                     rounded
-                    aria-label="$t('star')"
+                    :aria-label="$t('star')"
                   />
                 </div>
                 <!-- <h1 class="m-0" style="color:blue">x{{item.quantity}}</h1> -->
@@ -181,7 +178,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineProps, watch, defineEmits, computed } from 'vue'
+import { ref, watch, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
 
@@ -221,8 +218,6 @@ const product_for_details = ref<Product>()
 const started_at = ref('')
 
 const state = ref('pending')
-
-// const orderItemSelectedOptions = ref({})
 
 const visible = ref(false)
 const props = defineProps(['order', 'number'])
