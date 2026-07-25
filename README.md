@@ -113,7 +113,7 @@ cd frontend && npm run build
 # Backend (9 paketov, 85 testov)
 go test -race ./...
 
-# Frontend (31 testnih datotek, 184 testov)
+# Frontend (35 testnih datotek, 202 testov)
 cd frontend && npx vitest run
 ```
 
