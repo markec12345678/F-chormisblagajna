@@ -7,7 +7,7 @@
       :globalFilterFields="['name']"
       :value="products"
       stripedRows
-      tableStyle="min-width: 50rem"
+      tableStyle="min-width: 100%"
       class="w-full pr-5"
     >
       <template #header>

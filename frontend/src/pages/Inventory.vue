@@ -11,7 +11,7 @@
               :loading="isInventoryLoading"
               :value="inventory_components"
               stripedRows
-              tableStyle="min-width: 50rem"
+              tableStyle="min-width: 100%"
               class="w-full"
             >
               <template #header>

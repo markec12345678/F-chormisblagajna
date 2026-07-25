@@ -8,47 +8,59 @@
           </div>
           <div class="col-12">
             <div class="col-12 lg:col-4 flex flex-column gap-2">
-              <label for="binary" class="font-bold">{{ $t('enabled') }}</label>
+              <label for="enabled" class="font-bold">{{ $t('enabled') }}</label>
               <ToggleSwitch v-model="hubSync.settings.enabled" class="mb-2" />
             </div>
             <div class="col-12 lg:col-4 flex flex-column gap-2">
-              <label for="binary" class="font-bold">{{ $t('server_host') }}</label>
-              <InputText v-model="hubSync.settings.server_host" type="text" class="w-full mb-2" />
-            </div>
-            <div class="col-12 lg:col-4 flex flex-column gap-2">
-              <label for="binary" class="font-bold">{{ $t('token') }}</label>
-              <InputText v-model="hubSync.settings.token" type="text" class="w-full mb-2" />
-            </div>
-            <div class="col-12 lg:col-4 flex flex-column gap-2">
-              <label for="binary" class="font-bold">{{ $t('sync_interval') }}</label>
+              <label for="server_host" class="font-bold">{{ $t('server_host') }}</label>
               <InputText
+                id="server_host"
+                v-model="hubSync.settings.server_host"
+                type="text"
+                class="w-full mb-2"
+              />
+            </div>
+            <div class="col-12 lg:col-4 flex flex-column gap-2">
+              <label for="token" class="font-bold">{{ $t('token') }}</label>
+              <InputText
+                id="token"
+                v-model="hubSync.settings.token"
+                type="text"
+                class="w-full mb-2"
+              />
+            </div>
+            <div class="col-12 lg:col-4 flex flex-column gap-2">
+              <label for="sync_interval" class="font-bold">{{ $t('sync_interval') }}</label>
+              <InputText
+                id="sync_interval"
                 v-model.number="hubSync.settings.sync_interval"
                 type="text"
                 class="w-full mb-2"
               />
             </div>
             <div class="col-12 lg:col-4 flex flex-column gap-2">
-              <label for="binary" class="font-bold">{{ $t('buffer_size') }}</label>
+              <label for="buffer_size" class="font-bold">{{ $t('buffer_size') }}</label>
               <InputNumber
+                id="buffer_size"
                 v-model.number="hubSync.settings.buffer_size"
                 mode="decimal"
                 class="w-full mb-2"
               />
             </div>
             <div class="col-12 lg:col-4 flex flex-column gap-2">
-              <label for="binary" class="font-bold">{{ $t('last_synced') }}</label>
+              <label for="last_synced" class="font-bold">{{ $t('last_synced') }}</label>
               <span>{{ hubSync.last_synced || '-' }}</span>
             </div>
             <div class="col-12 lg:col-4 flex flex-column gap-2">
-              <label for="binary" class="font-bold">{{ $t('sync_progress') }}</label>
+              <label for="sync_progress" class="font-bold">{{ $t('sync_progress') }}</label>
               <span>{{ hubSync.sync_progress || '-' }}</span>
             </div>
             <div class="col-12 lg:col-4 flex flex-column gap-2">
-              <label for="binary" class="font-bold">{{ $t('sync_sales') }}</label>
+              <label for="sync_sales" class="font-bold">{{ $t('sync_sales') }}</label>
               <ToggleSwitch v-model="hubSync.settings.sync_sales" class="mb-2" />
             </div>
             <div class="col-12 lg:col-4 flex flex-column gap-2">
-              <label for="binary" class="font-bold">{{ $t('sync_inventory') }}</label>
+              <label for="sync_inventory" class="font-bold">{{ $t('sync_inventory') }}</label>
               <ToggleSwitch v-model="hubSync.settings.sync_inventory" class="mb-2" />
             </div>
 

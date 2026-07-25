@@ -82,7 +82,7 @@
                 <small class="p-error">{{ new_category_error }}</small>
               </div>
               <div class="flex flex-column gap-2 w-10 mt-3">
-                <label for="name">{{ $t('product', 3) }}</label>
+                <label for="products">{{ $t('product', 3) }}</label>
                 <DataTable :value="new_category.products" stripedRows class="w-full pr-2">
                   <Column field="name" :header="$t('name')"></Column>
                   <Column :header="$t('actions')">
@@ -143,7 +143,7 @@
                 <small class="p-error">{{ category_edit_error }}</small>
               </div>
               <div class="flex flex-column gap-2 w-10 mt-3">
-                <label for="name">{{ $t('product', 3) }}</label>
+                <label for="products">{{ $t('product', 3) }}</label>
                 <DataTable :value="categoryToEdit.products" stripedRows class="w-full pr-2">
                   <Column field="name" :header="$t('name')"></Column>
                   <Column :header="$t('actions')">

@@ -85,7 +85,7 @@
                 </div>
                 <div class="flex flex-column gap-2 w-5 mt-2">
                   <label for="price">{{ $t('price') }}</label>
-                  <InputText id="name" name="price" type="number" aria-describedby="price" />
+                  <InputText id="price" name="price" type="number" aria-describedby="price" />
                   <Message
                     v-if="$form.price?.invalid"
                     severity="error"
@@ -95,7 +95,7 @@
                   >
                 </div>
                 <div class="flex flex-column gap-2 mt-2">
-                  <label for="name">{{ $t('image') }}</label>
+                  <label for="image">{{ $t('image') }}</label>
                   <FileUpload
                     @before-send="beforeNewProductImageUpload"
                     ref="newProductImageUpload"
@@ -116,8 +116,8 @@
                   </FileUpload>
                 </div>
                 <div class="flex flex-column gap-2 w-5 mt-2">
-                  <label for="name">{{ $t('ready_to_serve') }}</label>
-                  <InputText name="ready" type="number" aria-describedby="ready" />
+                  <label for="ready">{{ $t('ready_to_serve') }}</label>
+                  <InputText id="ready" name="ready" type="number" aria-describedby="ready" />
                   <Message
                     v-if="$form.ready?.invalid"
                     severity="error"
@@ -127,7 +127,7 @@
                   >
                 </div>
                 <div class="flex flex-column gap-2 w-10 mt-3">
-                  <label for="name">{{ $t('inventory_item', 3) }}</label>
+                  <label for="materials">{{ $t('inventory_item', 3) }}</label>
                   <DataTable :value="materials" stripedRows class="w-full pr-2">
                     <Column field="name" :header="$t('name')"></Column>
                     <Column field="quantity" :header="$t('quantity')">
@@ -168,7 +168,7 @@
                   </DataTable>
                 </div>
                 <div class="flex flex-column gap-2 w-10 mt-3">
-                  <label for="name">{{ $t('subproduct', 3) }}</label>
+                  <label for="sub_products">{{ $t('subproduct', 3) }}</label>
                   <DataTable :value="sub_products" stripedRows class="w-full pr-2">
                     <Column field="name" :header="$t('name')"></Column>
                     <Column field="quantity" :header="$t('quantity')">
@@ -208,11 +208,13 @@
                   </DataTable>
                 </div>
                 <div class="flex flex-column gap-2 w-10 mt-3">
-                  <label for="name">{{ $t('enable_inventory_consumption', 1) }}</label>
+                  <label for="enable_inventory_consumption">{{
+                    $t('enable_inventory_consumption', 1)
+                  }}</label>
                   <ToggleSwitch v-model="newproduct_enable_inventory_consumption" />
                 </div>
                 <div class="flex flex-column gap-2 w-10 mt-3">
-                  <label for="name">{{ $t('enable_fixed_cost') }}</label>
+                  <label for="enable_fixed_cost">{{ $t('enable_fixed_cost') }}</label>
                   <ToggleSwitch v-model="newproduct_enable_fixed_cost" />
                 </div>
                 <div v-if="newproduct_enable_fixed_cost" class="flex flex-column gap-2 w-5 mt-2">
@@ -265,8 +267,9 @@
                 />
               </div>
               <div class="flex flex-column gap-2 w-5 mt-2">
-                <label for="name">{{ $t('ready_to_serve') }}</label>
+                <label for="ready">{{ $t('ready_to_serve') }}</label>
                 <InputText
+                  id="ready"
                   v-model.number="productToEdit.ready"
                   type="number"
                   aria-describedby="ready"
@@ -299,7 +302,7 @@
                 </FileUpload>
               </div>
               <div class="flex flex-column gap-2 w-10 mt-3">
-                <label for="name">{{ $t('inventory_item', 3) }}</label>
+                <label for="materials">{{ $t('inventory_item', 3) }}</label>
                 <DataTable :value="productToEdit.materials" stripedRows class="w-full pr-2">
                   <Column field="name" :header="$t('name')"></Column>
                   <Column field="quantity" :header="$t('quantity')">
@@ -340,7 +343,7 @@
                 </DataTable>
               </div>
               <div class="flex flex-column gap-2 w-10 mt-3">
-                <label for="name">{{ $t('subproduct', 3) }}</label>
+                <label for="sub_products">{{ $t('subproduct', 3) }}</label>
                 <DataTable :value="productToEdit.sub_products" stripedRows class="w-full pr-2">
                   <Column field="name" :header="$t('name')"></Column>
                   <Column field="quantity" :header="$t('quantity')">
@@ -380,11 +383,13 @@
                 </DataTable>
               </div>
               <div class="flex flex-column gap-2 w-10 mt-3">
-                <label for="name">{{ $t('enable_inventory_consumption', 1) }}</label>
+                <label for="enable_inventory_consumption">{{
+                  $t('enable_inventory_consumption', 1)
+                }}</label>
                 <ToggleSwitch v-model="productToEdit.enable_inventory_consumption" />
               </div>
               <div class="flex flex-column gap-2 w-10 mt-3">
-                <label for="name">{{ $t('enable_fixed_cost') }}</label>
+                <label for="enable_fixed_cost">{{ $t('enable_fixed_cost') }}</label>
                 <ToggleSwitch v-model="productToEdit.enable_fixed_cost" />
               </div>
               <div v-if="productToEdit.enable_fixed_cost" class="flex flex-column gap-2 w-5 mt-2">
