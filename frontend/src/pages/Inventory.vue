@@ -315,7 +315,7 @@
           :rowsPerPageOptions="[7, 14, 30, 90]"
           :value="component_logs"
           stripedRows
-          tableStyle="min-width: 50rem;max-height:50vh;"
+          tableStyle="width: 100%;max-height:50vh;"
           class="w-full pr-2"
         >
           <Column expander style="width: 5rem" />

@@ -37,6 +37,7 @@ const i18n = createI18n({
       items: 'items',
       checkout: 'Checkout',
       success: 'Success',
+      order_paid_success: 'Successfully paid order {id}',
       pending: 'Pending',
       in_progress: 'In Progress',
       cancelled: 'Cancelled',

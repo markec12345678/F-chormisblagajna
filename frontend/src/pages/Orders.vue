@@ -18,7 +18,7 @@
               :rowsPerPageOptions="[50, 100, 500]"
               :value="orders"
               stripedRows
-              tableStyle="min-width: 50rem;max-height:50vh;"
+              tableStyle="width: 100%;max-height:50vh;"
               class="w-full pr-2"
             >
               <template #header>

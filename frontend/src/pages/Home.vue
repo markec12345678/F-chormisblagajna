@@ -721,7 +721,7 @@
           <Avatar icon="pi pi-user" class="mr-2" size="medium" />
           <div class="flex flex-column align-items-start justify-content-start w-full">
             <div class="mx-2">
-              {{ user?.username || 'Anonymous' }}
+              {{ user?.username || $t('anonymous') }}
             </div>
             <Chip
               v-for="(role, index) in roles"

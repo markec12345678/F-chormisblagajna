@@ -18,7 +18,7 @@
               :rowsPerPageOptions="[50, 100, 500]"
               :value="products"
               stripedRows
-              tableStyle="min-width: 50rem;max-height:50vh;"
+              tableStyle="width: 100%;max-height:50vh;"
               class="w-full pr-2"
             >
               <template #header>
@@ -278,7 +278,7 @@
               <div class="flex flex-column gap-2 w-10 mt-3">
                 <Image
                   :src="backend_host + '/public/' + productToEdit.image_url"
-                  alt="Image"
+                  :alt="$t('image')"
                   width="250"
                 />
               </div>

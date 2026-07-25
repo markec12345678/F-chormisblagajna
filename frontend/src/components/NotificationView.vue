@@ -14,7 +14,10 @@
 import { ref } from 'vue'
 import Message from 'primevue/message'
 import { formatDistanceToNow } from 'date-fns'
+import { enUS } from 'date-fns/locale'
 import { Notification } from '@/classes/Notification'
+import { useI18n } from 'vue-i18n'
+const { locale } = useI18n()
 
 const timePassed = ref()
 
@@ -27,11 +30,17 @@ const props = defineProps({
   },
 })
 
+const getLocale = () => {
+  if (locale.value === 'sl') return undefined
+  if (locale.value === 'ar') return undefined
+  return enUS
+}
+
 const updateElapsedTime = () => {
   const date = new Date(props.notification.date)
-  timePassed.value = formatDistanceToNow(date, { addSuffix: true })
+  timePassed.value = formatDistanceToNow(date, { addSuffix: true, locale: getLocale() })
   setInterval(function () {
-    timePassed.value = formatDistanceToNow(date, { addSuffix: true })
+    timePassed.value = formatDistanceToNow(date, { addSuffix: true, locale: getLocale() })
   }, 10000)
 }
 
