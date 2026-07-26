@@ -16,7 +16,6 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
-	"strconv"
 	"strings"
 
 	"github.com/gorilla/mux"
@@ -285,15 +284,7 @@ func GetProducts(config config.Config, logger logger.ILogger) http.HandlerFunc {
 
 	return func(w http.ResponseWriter, r *http.Request) {
 
-		page_number, err := strconv.Atoi(r.URL.Query().Get("page[number]"))
-		if err != nil {
-			page_number = 1
-		}
-
-		page_size, err := strconv.Atoi(r.URL.Query().Get("page[size]"))
-		if err != nil {
-			page_size = 50
-		}
+		page_number, page_size := helpers.ParsePagination(r, 50)
 
 		search := r.URL.Query().Get("filter[search]")
 

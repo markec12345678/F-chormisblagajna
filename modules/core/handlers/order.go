@@ -20,6 +20,7 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/nutrixpos/pos/common/config"
+	"github.com/nutrixpos/pos/common/helpers"
 	"github.com/nutrixpos/pos/common/logger"
 	"github.com/nutrixpos/pos/modules/core/dto"
 	"github.com/nutrixpos/pos/modules/core/models"
@@ -754,19 +755,9 @@ func GetOrders(config config.Config, logger logger.ILogger) http.HandlerFunc {
 			params.IsPayLater = -1
 		}
 
-		page_number, err := strconv.Atoi(r.URL.Query().Get("page[number]"))
-		if err != nil {
-			params.PageNumber = 1
-		} else {
-			params.PageNumber = page_number
-		}
-
-		page_size, err := strconv.Atoi(r.URL.Query().Get("page[size]"))
-		if err != nil {
-			params.PageSize = 50
-		} else {
-			params.PageSize = page_size
-		}
+		page_number, page_size := helpers.ParsePagination(r, 50)
+		params.PageNumber = page_number
+		params.PageSize = page_size
 
 		orderService := services.OrderService{
 			Logger: logger,

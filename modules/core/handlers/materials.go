@@ -16,6 +16,7 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/nutrixpos/pos/common/config"
+	"github.com/nutrixpos/pos/common/helpers"
 	"github.com/nutrixpos/pos/common/logger"
 	"github.com/nutrixpos/pos/modules/core/models"
 	"github.com/nutrixpos/pos/modules/core/services"
@@ -29,15 +30,7 @@ func GetMaterialEntries(config config.Config, logger logger.ILogger) http.Handle
 		params := mux.Vars(r)
 		material_id_param := params["material_id"]
 
-		page_number, err := strconv.Atoi(r.URL.Query().Get("page[number]"))
-		if err != nil {
-			page_number = 1
-		}
-
-		page_size, err := strconv.Atoi(r.URL.Query().Get("page[size]"))
-		if err != nil {
-			page_size = 50
-		}
+		page_number, page_size := helpers.ParsePagination(r, 50)
 
 		search := r.URL.Query().Get("filter[search]")
 
@@ -177,15 +170,7 @@ func GetMaterials(config config.Config, logger logger.ILogger) http.HandlerFunc 
 
 	return func(w http.ResponseWriter, r *http.Request) {
 
-		page_number, err := strconv.Atoi(r.URL.Query().Get("page[number]"))
-		if err != nil {
-			page_number = 1
-		}
-
-		page_size, err := strconv.Atoi(r.URL.Query().Get("page[size]"))
-		if err != nil {
-			page_size = 50
-		}
+		page_number, page_size := helpers.ParsePagination(r, 50)
 
 		materialService := services.MaterialService{
 			Logger: logger,
@@ -383,15 +368,7 @@ func GetMaterialLogs(config config.Config, logger logger.ILogger) http.HandlerFu
 		params := mux.Vars(r)
 		material_id := params["id"]
 
-		page_number, err := strconv.Atoi(r.URL.Query().Get("page[number]"))
-		if err != nil {
-			page_number = 1
-		}
-
-		page_size, err := strconv.Atoi(r.URL.Query().Get("page[size]"))
-		if err != nil {
-			page_size = 50
-		}
+		page_number, page_size := helpers.ParsePagination(r, 50)
 
 		logService := services.LogService{
 			Logger: logger,

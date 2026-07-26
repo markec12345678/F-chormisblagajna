@@ -14,25 +14,17 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"strconv"
 	"time"
 
 	"github.com/nutrixpos/pos/common/config"
+	"github.com/nutrixpos/pos/common/helpers"
 	"github.com/nutrixpos/pos/common/logger"
 	"github.com/nutrixpos/pos/modules/core/services"
 )
 
 func ExportSalesCSV(config config.Config, logger logger.ILogger) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		page_number, err := strconv.Atoi(r.URL.Query().Get("page[number]"))
-		if err != nil || page_number == 0 {
-			page_number = 1
-		}
-
-		page_size, err := strconv.Atoi(r.URL.Query().Get("page[size]"))
-		if err != nil {
-			page_size = 50
-		}
+		page_number, page_size := helpers.ParsePagination(r, 50)
 
 		salesService := services.SalesService{
 			Logger: logger,
@@ -78,15 +70,7 @@ func ExportSalesCSV(config config.Config, logger logger.ILogger) http.HandlerFun
 func GetSalesPerDay(config config.Config, logger logger.ILogger) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
-		page_number, err := strconv.Atoi(r.URL.Query().Get("page[number]"))
-		if err != nil || page_number == 0 {
-			page_number = 1
-		}
-
-		page_size, err := strconv.Atoi(r.URL.Query().Get("page[size]"))
-		if err != nil {
-			page_size = 50
-		}
+		page_number, page_size := helpers.ParsePagination(r, 50)
 
 		salesService := services.SalesService{
 			Logger: logger,
