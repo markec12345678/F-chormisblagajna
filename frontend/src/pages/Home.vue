@@ -1012,6 +1012,7 @@ import { useI18n } from 'vue-i18n'
 import { ToggleButton, Drawer, Avatar, ButtonGroup, Select } from 'primevue'
 import { globalStore } from '@/stores'
 import auth from '@/services/auth'
+import { debounce } from '@/utils/debounce'
 
 interface ChatMessage {
   message: string
@@ -1298,13 +1299,13 @@ const orderToShowAmountCollected = () => {
   getCurrentOrders()
 }
 
-const mainSearchTextChanged = (event: KeyboardEvent) => {
-  if (mainSearchText.value != '') {
+const debouncedMainSearch = debounce((text: string, event: KeyboardEvent) => {
+  if (text != '') {
     mainsearch_op.value.show(event)
 
     axios
       .get(
-        `http://${import.meta.env.VITE_APP_BACKEND_HOST}${import.meta.env.VITE_APP_MODULE_CORE_API_PREFIX}/api/orders?filter[display_id]=${mainSearchText.value}`,
+        `http://${import.meta.env.VITE_APP_BACKEND_HOST}${import.meta.env.VITE_APP_MODULE_CORE_API_PREFIX}/api/orders?filter[display_id]=${text}`,
         {
           headers: {
             Authorization: `Bearer ${auth.accessToken.value}`,
@@ -1322,6 +1323,10 @@ const mainSearchTextChanged = (event: KeyboardEvent) => {
     mainSearchResult.value = []
     mainsearch_op.value.hide()
   }
+}, 300)
+
+const mainSearchTextChanged = (event: KeyboardEvent) => {
+  debouncedMainSearch(mainSearchText.value, event)
 }
 
 const getCurrentOrders = () => {
@@ -1893,7 +1898,7 @@ const submitOrder = () => {
 const isUpdatingDiscount = ref(false)
 const isUpdatingDiscountPercent = ref(false)
 
-watch(searchtext, (newSearchText) => {
+const debouncedProductSearch = debounce((newSearchText: string) => {
   isSearchingProduct.value = true
 
   axios
@@ -1911,6 +1916,10 @@ watch(searchtext, (newSearchText) => {
       refreshAvailabilities()
       isSearchingProduct.value = false
     })
+}, 300)
+
+watch(searchtext, (newSearchText) => {
+  debouncedProductSearch(newSearchText)
 })
 
 watch(subtotal, (new_subtotal) => {

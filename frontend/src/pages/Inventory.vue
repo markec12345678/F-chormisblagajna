@@ -12,6 +12,8 @@
               :value="inventory_components"
               stripedRows
               tableStyle="min-width: 100%"
+              scrollHeight="70vh"
+              :scrollable="true"
               class="w-full"
             >
               <template #header>

@@ -55,10 +55,10 @@ vi.stubGlobal(
     close = vi.fn()
     readyState = 1
     static OPEN = 1
-    onopen: ((...args: any[]) => void) | null = null
-    onmessage: ((...args: any[]) => void) | null = null
-    onerror: ((...args: any[]) => void) | null = null
-    onclose: ((...args: any[]) => void) | null = null
+    onopen: ((...args: unknown[]) => void) | null = null
+    onmessage: ((...args: unknown[]) => void) | null = null
+    onerror: ((...args: unknown[]) => void) | null = null
+    onclose: ((...args: unknown[]) => void) | null = null
     constructor() {
       setTimeout(() => this.onopen?.(), 0)
     }

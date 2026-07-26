@@ -29,7 +29,7 @@
                   <InputText
                     :placeholder="$t('search')"
                     v-model="ordersSearchText"
-                    @keyup.stop="(event) => loadOrders(0, 100)"
+                    @keyup.stop="debouncedSearchOrders"
                   />
                 </IconField>
               </template>
@@ -116,6 +116,7 @@ import OrderView from '@/components/OrderView.vue'
 import { globalStore } from '@/stores'
 import auth from '../services/auth'
 import type { OrderListItem, DataTablePageEvent } from '@/types'
+import { debounce } from '@/utils/debounce'
 
 const { t } = useI18n()
 const store = globalStore()
@@ -228,6 +229,10 @@ const confirmCancelOrder = (event, display_id, order_id) => {
     reject: () => {},
   })
 }
+
+const debouncedSearchOrders = debounce(() => {
+  loadOrders(0, 100)
+}, 300)
 
 const loadOrders = (first = 0, rows = 100) => {
   isOrdersTableLoading.value = true

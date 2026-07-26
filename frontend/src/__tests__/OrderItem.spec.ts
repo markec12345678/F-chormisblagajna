@@ -243,16 +243,22 @@ describe('OrderItem', () => {
 
   it('should invalidate item when material is invalid', () => {
     const item = new OrderItem()
-    item.materials = [{ ...new OrderItemMaterial(), isQuantityValid: false } as any]
+    const invalidMat = new OrderItemMaterial()
+    invalidMat.isQuantityValid = false
+    item.materials = [{ ...invalidMat } as unknown as OrderItemMaterial]
     item.ValidateItem()
     expect(item.isValid).toBe(false)
   })
 
   it('should remove material by index', () => {
     const item = new OrderItem()
+    const validMat1 = new OrderItemMaterial()
+    validMat1.isQuantityValid = true
+    const validMat2 = new OrderItemMaterial()
+    validMat2.isQuantityValid = true
     item.materials = [
-      { ...new OrderItemMaterial(), isQuantityValid: true } as any,
-      { ...new OrderItemMaterial(), isQuantityValid: true } as any,
+      { ...validMat1 } as unknown as OrderItemMaterial,
+      { ...validMat2 } as unknown as OrderItemMaterial,
     ]
     item.RemoveMaterialByIndex(0)
     expect(item.materials.length).toBe(1)
