@@ -94,6 +94,42 @@ func TestRateLimitMiddleware(t *testing.T) {
 	}
 }
 
+func TestRateLimitMiddleware_XForwardedFor(t *testing.T) {
+	handler := RateLimit(1, time.Minute)(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+	}))
+
+	req := httptest.NewRequest("POST", "/api/auth/login", nil)
+	req.RemoteAddr = "10.0.0.1:12345"
+	req.Header.Set("X-Forwarded-For", "203.0.113.1")
+	w := httptest.NewRecorder()
+	handler.ServeHTTP(w, req)
+
+	if w.Code != http.StatusOK {
+		t.Errorf("First request with X-Forwarded-For: status = %v, want %v", w.Code, http.StatusOK)
+	}
+
+	req2 := httptest.NewRequest("POST", "/api/auth/login", nil)
+	req2.RemoteAddr = "10.0.0.2:99999"
+	req2.Header.Set("X-Forwarded-For", "203.0.113.1")
+	w2 := httptest.NewRecorder()
+	handler.ServeHTTP(w2, req2)
+
+	if w2.Code != http.StatusTooManyRequests {
+		t.Errorf("Second request same X-Forwarded-For: status = %v, want %v", w2.Code, http.StatusTooManyRequests)
+	}
+
+	req3 := httptest.NewRequest("POST", "/api/auth/login", nil)
+	req3.RemoteAddr = "10.0.0.3:12345"
+	req3.Header.Set("X-Forwarded-For", "198.51.100.1")
+	w3 := httptest.NewRecorder()
+	handler.ServeHTTP(w3, req3)
+
+	if w3.Code != http.StatusOK {
+		t.Errorf("Different X-Forwarded-For should be allowed: status = %v, want %v", w3.Code, http.StatusOK)
+	}
+}
+
 func TestNewRateLimiter_ZeroWindow(t *testing.T) {
 	defer func() {
 		if r := recover(); r != nil {

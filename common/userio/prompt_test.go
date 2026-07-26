@@ -2,7 +2,19 @@ package userio
 
 import (
 	"testing"
+
+	"github.com/nutrixpos/pos/common/logger"
 )
+
+type nopLogger struct{}
+
+func (nopLogger) Info(string, ...interface{})  {}
+func (nopLogger) Warning(string, ...interface{}) {}
+func (nopLogger) Error(string, ...interface{})   {}
+
+func testLogger() logger.ILogger {
+	return nopLogger{}
+}
 
 func TestToggleSelectedTreeElement_Found(t *testing.T) {
 	tree := []PromptTreeElement{
@@ -120,6 +132,127 @@ func TestToggleSelectedTreeElement_NestedChildren(t *testing.T) {
 	}
 	if !result[0].SubElements[0].SubElements[0].Selected {
 		t.Error("grandchild should be selected (direct children of toggled element propagate)")
+	}
+}
+
+func TestPropagateCounterIndexToTree_Flat(t *testing.T) {
+	m := &BubbleTeaSeedablesPrompter{Logger: testLogger()}
+	tree := []PromptTreeElement{
+		{Title: "A", Selected: false},
+		{Title: "B", Selected: false},
+		{Title: "C", Selected: false},
+	}
+
+	total, result := m.PropagateCounterIndexToTree(0, tree)
+
+	if total != 3 {
+		t.Errorf("expected total=3, got %d", total)
+	}
+	for i, elem := range result {
+		if elem.CounterIndex != i {
+			t.Errorf("element %d: expected CounterIndex=%d, got %d", i, i, elem.CounterIndex)
+		}
+	}
+}
+
+func TestPropagateCounterIndexToTree_WithOffset(t *testing.T) {
+	m := &BubbleTeaSeedablesPrompter{Logger: testLogger()}
+	tree := []PromptTreeElement{
+		{Title: "X"},
+		{Title: "Y"},
+	}
+
+	total, result := m.PropagateCounterIndexToTree(5, tree)
+
+	if total != 7 {
+		t.Errorf("expected total=7, got %d", total)
+	}
+	if result[0].CounterIndex != 5 {
+		t.Errorf("first element: expected CounterIndex=5, got %d", result[0].CounterIndex)
+	}
+	if result[1].CounterIndex != 6 {
+		t.Errorf("second element: expected CounterIndex=6, got %d", result[1].CounterIndex)
+	}
+}
+
+func TestPropagateCounterIndexToTree_Nested(t *testing.T) {
+	m := &BubbleTeaSeedablesPrompter{Logger: testLogger()}
+	tree := []PromptTreeElement{
+		{
+			Title: "Parent",
+			SubElements: []PromptTreeElement{
+				{Title: "Child1"},
+				{Title: "Child2"},
+			},
+		},
+	}
+
+	total, result := m.PropagateCounterIndexToTree(0, tree)
+
+	if total != 3 {
+		t.Errorf("expected total=3, got %d", total)
+	}
+	if result[0].CounterIndex != 0 {
+		t.Errorf("parent: expected CounterIndex=0, got %d", result[0].CounterIndex)
+	}
+	if result[0].SubElements[0].CounterIndex != 1 {
+		t.Errorf("child1: expected CounterIndex=1, got %d", result[0].SubElements[0].CounterIndex)
+	}
+	if result[0].SubElements[1].CounterIndex != 2 {
+		t.Errorf("child2: expected CounterIndex=2, got %d", result[0].SubElements[1].CounterIndex)
+	}
+}
+
+func TestPropagateCounterIndexToTree_DeepNested(t *testing.T) {
+	m := &BubbleTeaSeedablesPrompter{Logger: testLogger()}
+	tree := []PromptTreeElement{
+		{
+			Title: "Root",
+			SubElements: []PromptTreeElement{
+				{
+					Title: "Branch",
+					SubElements: []PromptTreeElement{
+						{Title: "Leaf1"},
+						{Title: "Leaf2"},
+					},
+				},
+				{Title: "Leaf3"},
+			},
+		},
+	}
+
+	total, result := m.PropagateCounterIndexToTree(0, tree)
+
+	if total != 6 {
+		t.Errorf("expected total=6, got %d", total)
+	}
+	if result[0].CounterIndex != 0 {
+		t.Errorf("root: expected 0, got %d", result[0].CounterIndex)
+	}
+	if result[0].SubElements[0].CounterIndex != 1 {
+		t.Errorf("branch: expected 1, got %d", result[0].SubElements[0].CounterIndex)
+	}
+	if result[0].SubElements[0].SubElements[0].CounterIndex != 2 {
+		t.Errorf("leaf1: expected 2, got %d", result[0].SubElements[0].SubElements[0].CounterIndex)
+	}
+	if result[0].SubElements[0].SubElements[1].CounterIndex != 3 {
+		t.Errorf("leaf2: expected 3, got %d", result[0].SubElements[0].SubElements[1].CounterIndex)
+	}
+	if result[0].SubElements[1].CounterIndex != 5 {
+		t.Errorf("leaf3: expected 5, got %d", result[0].SubElements[1].CounterIndex)
+	}
+}
+
+func TestPropagateCounterIndexToTree_Empty(t *testing.T) {
+	m := &BubbleTeaSeedablesPrompter{Logger: testLogger()}
+
+	total, result := m.PropagateCounterIndexToTree(0, []PromptTreeElement{})
+
+	if total != 0 {
+		t.Errorf("expected total=0, got %d", total)
+	}
+	if len(result) != 0 {
+		t.Errorf("expected empty result, got %d elements", len(result))
 	}
 }
 
