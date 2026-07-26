@@ -22,6 +22,7 @@ import (
 	"github.com/nutrixpos/pos/modules/core/models"
 	"github.com/nutrixpos/pos/modules/core/services"
 	"github.com/nutrixpos/pos/modules/fiscal"
+	"github.com/nutrixpos/pos/modules/fiscal_hr"
 	"github.com/nutrixpos/pos/modules/hubsync"
 	"go.mongodb.org/mongo-driver/v2/bson"
 	"gopkg.in/yaml.v2"
@@ -343,6 +344,11 @@ func (root *RootProcess) Execute() error {
 			Logger: root.Logger,
 			Config: root.Config,
 		}, "fiscal").RegisterHttpHandlers(root.Router).RegisterBackgroundWorkers().Save()
+
+		appmanager.LoadModule(&fiscal_hr.FiscalModuleHR{
+			Logger: root.Logger,
+			Config: root.Config,
+		}, "fiscal_hr").RegisterHttpHandlers(root.Router).Save()
 
 			// Ignite the app manager to start all modules
 			appmanager.Run()

@@ -1,6 +1,9 @@
 package models
 
-import "github.com/nutrixpos/pos/modules/fiscal/models"
+import (
+	fiscal_models "github.com/nutrixpos/pos/modules/fiscal/models"
+	fiscal_hr_models "github.com/nutrixpos/pos/modules/fiscal_hr/models"
+)
 
 // OrderQueueSettings represents the configuration settings for an order queue
 type OrderQueueSettings struct {
@@ -40,7 +43,8 @@ type Settings struct {
 	// ShopMode determines the operational mode: "" (unset/first-run), "kitchen", or "retail"
 	ShopMode             string               `bson:"shop_mode" json:"shop_mode" mapstructure:"shop_mode"`
 	AutoOpenCashDrawer   bool                 `bson:"auto_open_cash_drawer" json:"auto_open_cash_drawer" mapstructure:"auto_open_cash_drawer"`
-	Fiscal               models.FiscalSettings `bson:"fiscal" json:"fiscal" mapstructure:"fiscal"`
+	Fiscal               fiscal_models.FiscalSettings   `bson:"fiscal" json:"fiscal" mapstructure:"fiscal"`
+	FiscalHR             fiscal_hr_models.FiscalSettingsHR `bson:"fiscal_hr" json:"fiscal_hr" mapstructure:"fiscal_hr"`
 }
 
 type PaymentSource struct {

@@ -203,6 +203,71 @@
 
             <Divider />
             <div class="flex flex-column">
+              <h4><i class="pi pi-shield"></i> {{ $t('fiscal_hr') }}</h4>
+              <p class="mt-0 mb-3 text-slate-400" style="font-size: 0.9rem">
+                {{ $t('fiscal_hr_description') }}
+              </p>
+              <div class="flex align-items-center gap-2 mb-3">
+                <ToggleSwitch v-model="fiscal_hr_enabled" />
+                <span>{{ $t('fiscal_hr_enabled') }}</span>
+              </div>
+              <template v-if="fiscal_hr_enabled">
+                <div class="flex flex-column gap-3">
+                  <div class="flex align-items-center gap-2">
+                    <label class="w-8rem">{{ $t('fiscal_hr_environment') }}</label>
+                    <Select
+                      v-model="fiscal_hr_environment"
+                      :options="[
+                        { label: 'Test', value: 'test' },
+                        { label: 'Production', value: 'production' },
+                      ]"
+                      optionLabel="label"
+                      optionValue="value"
+                      class="w-full md:w-4"
+                    />
+                  </div>
+                  <div class="flex align-items-center gap-2">
+                    <label class="w-8rem">{{ $t('fiscal_hr_oib') }}</label>
+                    <InputText v-model="fiscal_hr_oib" class="w-full md:w-4" />
+                  </div>
+                  <div class="flex align-items-center gap-2">
+                    <label class="w-8rem">{{ $t('fiscal_hr_business_premise_id') }}</label>
+                    <InputText v-model="fiscal_hr_business_premise_id" class="w-full md:w-4" />
+                  </div>
+                  <div class="flex align-items-center gap-2">
+                    <label class="w-8rem">{{ $t('fiscal_hr_electronic_device_id') }}</label>
+                    <InputText v-model="fiscal_hr_electronic_device_id" class="w-full md:w-4" />
+                  </div>
+                  <div class="flex align-items-center gap-2">
+                    <label class="w-8rem">{{ $t('fiscal_hr_operator_oib') }}</label>
+                    <InputText v-model="fiscal_hr_operator_oib" class="w-full md:w-4" />
+                  </div>
+                  <div class="flex align-items-center gap-2">
+                    <label class="w-8rem">{{ $t('fiscal_hr_certificate_path') }}</label>
+                    <InputText v-model="fiscal_hr_certificate_path" class="w-full md:w-4" />
+                  </div>
+                  <div class="flex align-items-center gap-2">
+                    <label class="w-8rem">{{ $t('fiscal_hr_certificate_password') }}</label>
+                    <InputText v-model="fiscal_hr_certificate_password" type="password" class="w-full md:w-4" />
+                  </div>
+                  <div class="flex align-items-center gap-2">
+                    <label class="w-8rem">{{ $t('fiscal_hr_invoice_number') }}</label>
+                    <InputNumber v-model="fiscal_hr_invoice_number" :min="1" class="w-full md:w-4" />
+                  </div>
+                  <Button
+                    :label="$t('fiscal_hr_test_connection')"
+                    icon="pi pi-check"
+                    severity="secondary"
+                    class="mt-2 w-full md:w-4"
+                    :loading="fiscalHrTesting"
+                    @click="testFiscalHRConnection()"
+                  />
+                </div>
+              </template>
+            </div>
+
+            <Divider />
+            <div class="flex flex-column">
               <h3><span class="pi pi-language"></span> {{ t('language', 3) }}</h3>
               <Select
                 @change="changedLanguage"
@@ -320,6 +385,17 @@ const fiscal_certificate_password = ref('')
 const fiscal_invoice_number = ref(1)
 const fiscalTesting = ref(false)
 
+const fiscal_hr_enabled = ref(false)
+const fiscal_hr_environment = ref('test')
+const fiscal_hr_oib = ref('')
+const fiscal_hr_business_premise_id = ref('')
+const fiscal_hr_electronic_device_id = ref('')
+const fiscal_hr_operator_oib = ref('')
+const fiscal_hr_certificate_path = ref('')
+const fiscal_hr_certificate_password = ref('')
+const fiscal_hr_invoice_number = ref(1)
+const fiscalHrTesting = ref(false)
+
 const addQueue = () => {
   order_queues.value.push({ prefix: new_queue_prefix.value, next: new_queue_next.value })
   new_queue_prefix.value = ''
@@ -382,6 +458,17 @@ const saveSettings = () => {
             certificate_path: fiscal_certificate_path.value,
             certificate_password: fiscal_certificate_password.value,
             invoice_number: fiscal_invoice_number.value,
+          },
+          fiscal_hr: {
+            enabled: fiscal_hr_enabled.value,
+            environment: fiscal_hr_environment.value,
+            oib: fiscal_hr_oib.value,
+            business_premise_id: fiscal_hr_business_premise_id.value,
+            electronic_device_id: fiscal_hr_electronic_device_id.value,
+            operator_oib: fiscal_hr_operator_oib.value,
+            certificate_path: fiscal_hr_certificate_path.value,
+            certificate_password: fiscal_hr_certificate_password.value,
+            invoice_number: fiscal_hr_invoice_number.value,
           },
         },
       },
@@ -448,6 +535,18 @@ const getSettings = () => {
         fiscal_certificate_password.value = f.certificate_password || ''
         fiscal_invoice_number.value = f.invoice_number || 1
       }
+      if (response.data.data.fiscal_hr) {
+        const fhr = response.data.data.fiscal_hr
+        fiscal_hr_enabled.value = fhr.enabled || false
+        fiscal_hr_environment.value = fhr.environment || 'test'
+        fiscal_hr_oib.value = fhr.oib || ''
+        fiscal_hr_business_premise_id.value = fhr.business_premise_id || ''
+        fiscal_hr_electronic_device_id.value = fhr.electronic_device_id || ''
+        fiscal_hr_operator_oib.value = fhr.operator_oib || ''
+        fiscal_hr_certificate_path.value = fhr.certificate_path || ''
+        fiscal_hr_certificate_password.value = fhr.certificate_password || ''
+        fiscal_hr_invoice_number.value = fhr.invoice_number || 1
+      }
     })
     .catch((err) => {
       if (err.response?.status === 401) {
@@ -485,6 +584,32 @@ const testFiscalConnection = async () => {
     })
   } finally {
     fiscalTesting.value = false
+  }
+}
+
+const testFiscalHRConnection = async () => {
+  fiscalHrTesting.value = true
+  try {
+    await axios.post(
+      `http://${import.meta.env.VITE_APP_BACKEND_HOST}${import.meta.env.VITE_APP_MODULE_FISCAL_API_PREFIX}/api/fiscal_hr/echo`,
+      {},
+      { headers: { Authorization: `Bearer ${auth.accessToken.value}` } },
+    )
+    toast.add({
+      severity: 'success',
+      summary: t('fiscal_hr_connection_success'),
+      life: 3000,
+      group: 'br',
+    })
+  } catch {
+    toast.add({
+      severity: 'error',
+      summary: t('fiscal_hr_connection_failed'),
+      life: 3000,
+      group: 'br',
+    })
+  } finally {
+    fiscalHrTesting.value = false
   }
 }
 
