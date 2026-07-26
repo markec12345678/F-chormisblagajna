@@ -1,6 +1,8 @@
 package fiscal_hr
 
 import (
+	"time"
+
 	"github.com/gorilla/mux"
 	"github.com/nutrixpos/pos/common/config"
 	"github.com/nutrixpos/pos/common/logger"
@@ -46,6 +48,10 @@ func (f *FiscalModuleHR) RegisterHttpHandlers(router *mux.Router, prefix string)
 		auth_svc.AllowAnyOfRoles(handlers.FiscalizeOrderHandlerHR(f.Config, f.Logger), "admin", "cashier"),
 	)).Methods("POST", "OPTIONS")
 
+	router.Handle(prefix+"/api/fiscal_hr/storno", core_middlewares.AllowCors(
+		auth_svc.AllowAnyOfRoles(handlers.StornoHandlerHR(f.Config, f.Logger), "admin"),
+	)).Methods("POST", "OPTIONS")
+
 	router.Handle(prefix+"/api/fiscal_hr/settings", core_middlewares.AllowCors(
 		auth_svc.AllowAnyOfRoles(handlers.GetFiscalSettingsHandlerHR(f.Config, f.Logger), "admin"),
 	)).Methods("GET", "OPTIONS")
@@ -56,11 +62,13 @@ func (f *FiscalModuleHR) RegisterHttpHandlers(router *mux.Router, prefix string)
 }
 
 func (f *FiscalModuleHR) RegisterBackgroundWorkers() []modules.Worker {
-	// Croatian fiscal doesn't need offline retry — simpler architecture
-	return []modules.Worker{}
-}
-
-// NewCISClientForTest creates a CISClient using NewCISClientFromKey (exported for tests).
-func NewCISClientForTest(services *services.CISClient) *services.CISClient {
-	return services
+	return []modules.Worker{
+		{
+			Interval: 5 * time.Minute,
+			Task: func() {
+				queue := services.NewOfflineFiscalQueueHR(f.Logger, f.Config)
+				queue.ProcessPending()
+			},
+		},
+	}
 }

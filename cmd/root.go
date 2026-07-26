@@ -348,7 +348,7 @@ func (root *RootProcess) Execute() error {
 		appmanager.LoadModule(&fiscal_hr.FiscalModuleHR{
 			Logger: root.Logger,
 			Config: root.Config,
-		}, "fiscal_hr").RegisterHttpHandlers(root.Router).Save()
+		}, "fiscal_hr").RegisterHttpHandlers(root.Router).RegisterBackgroundWorkers().Save()
 
 			// Ignite the app manager to start all modules
 			appmanager.Run()

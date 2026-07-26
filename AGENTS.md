@@ -129,7 +129,7 @@ http.Error(w, "failed to get data", http.StatusInternalServerError)
 - `golang.org/x/crypto/pkcs12` - PKCS#12 certificate parsing (fiscal module)
 
 ## Testing
-- Backend tests (13 packages, 183 tests): `common/config`, `common/customerrors`, `common/helpers` (+ParsePagination, ParseAcceptLanguage), `common/logger`, `common/middlewares` (ratelimit +X-Forwarded-For), `common/userio` (+PropagateCounterIndexToTree), `modules/auth`, `modules/auth/middlewares` (jwt, bcrypt, auth), `modules/auth/models`, `modules/core/middlewares` (CORS), `modules/core/models`, `modules/core/dto`, `modules/fiscal/services` (ZOI, QR, format, tax grouping, receipt), `modules/fiscal_hr/services` (ZKI, OIB, XML, SOAP, PDV grouping, receipt)
+- Backend tests (13 packages, 196 tests): `common/config`, `common/customerrors`, `common/helpers` (+ParsePagination, ParseAcceptLanguage), `common/logger`, `common/middlewares` (ratelimit +X-Forwarded-For), `common/userio` (+PropagateCounterIndexToTree), `modules/auth`, `modules/auth/middlewares` (jwt, bcrypt, auth), `modules/auth/models`, `modules/core/middlewares` (CORS), `modules/core/models`, `modules/core/dto`, `modules/fiscal/services` (ZOI, QR, format, tax grouping, receipt), `modules/fiscal_hr/services` (ZKI, OIB, XML, SOAP, XML-DSig, PDV grouping, receipt)
 - Frontend tests (38 files, 230 tests): `frontend/src/__tests__/`
   - Components: ErrorBoundary, InventoryItem, Notification, Order, OrderItem, OrderItemView, AddCustomer, MealCard, PickMaterial, OrderItemRefund
   - Complex: QueueOrder, OrderView, StashedOrder
@@ -179,8 +179,10 @@ When calling the backend api from the frontend vue app, make sure to include the
 - `modules/fiscal_hr/` — Croatian CIS fiscalization (TR-2006 XML format)
 - ZKI: RSA-SHA1 signing → MD5 hash → 32-char hex
 - XML: TR-2006 `RacunZahtjev` with PDV (VAT) grouping, SOAP 1.1 envelope
+- XML-DSig: Enveloped signature, Exclusive C14N, RSA-SHA1, SHA1 digest
 - Protocol: SOAP XML web service (NOT REST), XML-DSig with PKCS#12 certificate
 - Test env: `https://cistest.apis-it.hr:8449/FiskalizacijaServiceTest`, prod: `https://cis.porezna-uprava.hr:8449/FiskalizacijaService`
-- Endpoints: `/fiscal_hr/api/fiscal_hr/echo`, `/fiscal_hr/api/fiscal_hr/invoice`, `/fiscal_hr/api/fiscal_hr/settings`
+- Endpoints: `/fiscal_hr/api/fiscal_hr/echo`, `/fiscal_hr/api/fiscal_hr/invoice`, `/fiscal_hr/api/fiscal_hr/storno`, `/fiscal_hr/api/fiscal_hr/settings`
+- Background worker: offline retry queue (every 5 min, max 10 retries)
 - Fiscal settings stored in core Settings model (`fiscal_hr` field)
 - i18n keys: fiscal_hr, fiscal_hr_description, fiscal_hr_enabled, fiscal_hr_oib, etc.

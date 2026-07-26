@@ -134,19 +134,24 @@ func (c *CISClient) FiscalizeInvoice(ctx context.Context, req *models.InvoiceReq
 		pdvEntries, req.TotalAmount, nacinPlac, operatorOIB, zki,
 	)
 
-	// TODO: sign XML with XML-DSig (requires xml.Signature support)
-	signedXML := bodyXML
-	_ = c.privateKey
-	_ = c.cert
+	// Sign the XML body and wrap in SOAP envelope
+	signedBody, err := SignEnvelope(
+		WrapInSOAP(bodyXML),
+		c.privateKey,
+		c.cert,
+	)
+	if err != nil {
+		return nil, fmt.Errorf("sign XML: %w", err)
+	}
 
-	soapEnvelope := WrapInSOAP(signedXML)
+	soapEnvelope := signedBody
 
 	resp, err := c.postRequest(ctx, soapEnvelope)
 	if err != nil {
 		return nil, fmt.Errorf("CIS request: %w", err)
 	}
 
-	jir, err := parseRacunOdgovor(resp)
+	jir, err := ParseRacunOdgovor(resp)
 	if err != nil {
 		return nil, fmt.Errorf("parse CIS response: %w", err)
 	}
@@ -157,6 +162,17 @@ func (c *CISClient) FiscalizeInvoice(ctx context.Context, req *models.InvoiceReq
 		JIR:    jir,
 		Status: "OK",
 	}, nil
+}
+
+// PrivateKey returns the client's RSA private key for signing.
+func (c *CISClient) PrivateKey() *rsa.PrivateKey { return c.privateKey }
+
+// Certificate returns the client's X.509 certificate.
+func (c *CISClient) Certificate() *x509.Certificate { return c.cert }
+
+// SendRaw sends a pre-built SOAP envelope to CIS and returns the HTTP response.
+func (c *CISClient) SendRaw(ctx context.Context, body string) (*http.Response, error) {
+	return c.postRequest(ctx, body)
 }
 
 // Echo tests the connection to CIS.
@@ -200,7 +216,8 @@ type RacunOdgovorXML struct {
 	} `xml:"Greske"`
 }
 
-func parseRacunOdgovor(resp *http.Response) (string, error) {
+// ParseRacunOdgovor parses a CIS SOAP response and extracts the JIR.
+func ParseRacunOdgovor(resp *http.Response) (string, error) {
 	defer resp.Body.Close()
 
 	body, err := io.ReadAll(resp.Body)
