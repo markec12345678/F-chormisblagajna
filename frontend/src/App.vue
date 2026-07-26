@@ -1,7 +1,11 @@
 <template>
   <main :style="`height:100%;direction:${orientation};`">
     <ErrorBoundary>
-      <RouterView v-if="!setting_up && !show_mode_modal" />
+      <RouterView v-if="!setting_up && !show_mode_modal" v-slot="{ Component }">
+        <Transition name="page" mode="out-in">
+          <component :is="Component" />
+        </Transition>
+      </RouterView>
     </ErrorBoundary>
     <!-- First-run shop mode selection modal -->
     <div
@@ -453,5 +457,20 @@ body {
 .mode-modal-footer {
   display: flex;
   justify-content: center;
+}
+
+.page-enter-active,
+.page-leave-active {
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.page-enter-from {
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+.page-leave-to {
+  opacity: 0;
+  transform: translateY(-8px);
 }
 </style>
