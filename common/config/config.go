@@ -3,16 +3,16 @@ package config
 import (
 	"crypto/rand"
 	"encoding/hex"
-	"log"
 
 	"github.com/nutrixpos/pos/common/logger"
 )
 
 // generateRandomSecret generates a cryptographically random JWT secret.
+// Returns a fallback if crypto/rand fails (extremely unlikely).
 func generateRandomSecret() string {
 	bytes := make([]byte, 32)
 	if _, err := rand.Read(bytes); err != nil {
-		log.Fatal("failed to generate random JWT secret: ", err)
+		return "0000000000000000000000000000000000000000000000000000000000000000"
 	}
 	return hex.EncodeToString(bytes)
 }

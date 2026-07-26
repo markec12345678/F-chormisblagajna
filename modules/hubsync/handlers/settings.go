@@ -21,7 +21,7 @@ func PatchSettings(config config.Config, logger logger.ILogger) http.HandlerFunc
 
 		err := json.NewDecoder(r.Body).Decode(&data)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
+			http.Error(w, "bad request", http.StatusBadRequest)
 			return
 		}
 

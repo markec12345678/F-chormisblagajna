@@ -47,7 +47,8 @@ func GetMaterialEntries(config config.Config, logger logger.ILogger) http.Handle
 
 		entries, totalRecords, err := materialService.GetMaterialEntries(material_id_param, args)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			logger.Error(err.Error())
+			http.Error(w, "internal server error", http.StatusInternalServerError)
 			return
 		}
 
@@ -60,7 +61,8 @@ func GetMaterialEntries(config config.Config, logger logger.ILogger) http.Handle
 
 		w.Header().Set("Content-Type", "application/json")
 		if err := json.NewEncoder(w).Encode(response); err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			logger.Error(err.Error())
+			http.Error(w, "internal server error", http.StatusInternalServerError)
 			return
 		}
 	}
@@ -93,7 +95,8 @@ func CalculateMaterialAverageCost(config config.Config, logger logger.ILogger) h
 		cost, err := materialService.CalculateMaterialAverageCost(material_id_param, quantity)
 
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			logger.Error(err.Error())
+			http.Error(w, "internal server error", http.StatusInternalServerError)
 			return
 		}
 
@@ -103,7 +106,8 @@ func CalculateMaterialAverageCost(config config.Config, logger logger.ILogger) h
 
 		jsonResponse, err := json.Marshal(response)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			logger.Error(err.Error())
+			http.Error(w, "internal server error", http.StatusInternalServerError)
 			return
 		}
 
@@ -145,7 +149,8 @@ func CalculateMaterialExactCost(config config.Config, logger logger.ILogger) htt
 
 		cost, err := materialService.CalculateMaterialExactCost(entry_id_param, material_id_param, quantity)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			logger.Error(err.Error())
+			http.Error(w, "internal server error", http.StatusInternalServerError)
 			return
 		}
 
@@ -155,7 +160,8 @@ func CalculateMaterialExactCost(config config.Config, logger logger.ILogger) htt
 
 		jsonResponse, err := json.Marshal(response)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			logger.Error(err.Error())
+			http.Error(w, "internal server error", http.StatusInternalServerError)
 			return
 		}
 
@@ -179,7 +185,8 @@ func GetMaterials(config config.Config, logger logger.ILogger) http.HandlerFunc 
 
 		materials, err := materialService.GetMaterials(page_number, page_size)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			logger.Error(err.Error())
+			http.Error(w, "internal server error", http.StatusInternalServerError)
 			return
 		}
 
@@ -194,7 +201,7 @@ func GetMaterials(config config.Config, logger logger.ILogger) http.HandlerFunc 
 		jsonMaterials, err := json.Marshal(response)
 		if err != nil {
 			logger.Error(err.Error())
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			http.Error(w, "internal server error", http.StatusInternalServerError)
 			return
 		}
 
@@ -222,7 +229,7 @@ func AddMaterial(config config.Config, logger logger.ILogger) http.HandlerFunc {
 
 		err := json.NewDecoder(r.Body).Decode(&request)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
+			http.Error(w, "bad request", http.StatusBadRequest)
 			return
 		}
 
@@ -236,7 +243,8 @@ func AddMaterial(config config.Config, logger logger.ILogger) http.HandlerFunc {
 		}
 		err = materialService.AddComponent(request.Data, user_id)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			logger.Error(err.Error())
+			http.Error(w, "internal server error", http.StatusInternalServerError)
 			return
 		}
 
@@ -283,7 +291,8 @@ func DeleteMaterial(config config.Config, logger logger.ILogger) http.HandlerFun
 
 		err := materialService.DeleteMaterial(id_param)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			logger.Error(err.Error())
+			http.Error(w, "internal server error", http.StatusInternalServerError)
 			return
 		}
 
@@ -304,7 +313,7 @@ func EditMaterial(config config.Config, logger logger.ILogger) http.HandlerFunc 
 
 		err := json.NewDecoder(r.Body).Decode(&request)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
+			http.Error(w, "bad request", http.StatusBadRequest)
 			return
 		}
 
@@ -315,7 +324,7 @@ func EditMaterial(config config.Config, logger logger.ILogger) http.HandlerFunc 
 
 		err = materialService.EditMaterial(id_param, request.Data)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
+			http.Error(w, "bad request", http.StatusBadRequest)
 			return
 		}
 
@@ -342,7 +351,7 @@ func PushMaterialEntry(config config.Config, logger logger.ILogger) http.Handler
 
 		err := json.NewDecoder(r.Body).Decode(&request)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
+			http.Error(w, "bad request", http.StatusBadRequest)
 			return
 		}
 
@@ -353,7 +362,7 @@ func PushMaterialEntry(config config.Config, logger logger.ILogger) http.Handler
 
 		err = materialService.PushMaterialEntry(material_id, request.Data, user_id)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
+			http.Error(w, "bad request", http.StatusBadRequest)
 			return
 		}
 
@@ -377,7 +386,8 @@ func GetMaterialLogs(config config.Config, logger logger.ILogger) http.HandlerFu
 
 		logs, total_records, err := logService.GetMaterialLogs(material_id, page_number, page_size)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			logger.Error(err.Error())
+			http.Error(w, "internal server error", http.StatusInternalServerError)
 			return
 		}
 
@@ -390,7 +400,8 @@ func GetMaterialLogs(config config.Config, logger logger.ILogger) http.HandlerFu
 
 		jsonLogs, err := json.Marshal(response)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			logger.Error(err.Error())
+			http.Error(w, "internal server error", http.StatusInternalServerError)
 			return
 		}
 

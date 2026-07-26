@@ -33,7 +33,7 @@ func InsertCategory(config config.Config, logger logger.ILogger) http.HandlerFun
 
 		err := json.NewDecoder(r.Body).Decode(&request)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
+			http.Error(w, "bad request", http.StatusBadRequest)
 			return
 		}
 
@@ -44,7 +44,8 @@ func InsertCategory(config config.Config, logger logger.ILogger) http.HandlerFun
 
 		err = categoryService.InsertCategory(request.Data)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			logger.Error(err.Error())
+			http.Error(w, "internal server error", http.StatusInternalServerError)
 			return
 		}
 
@@ -67,7 +68,8 @@ func DeleteCategory(config config.Config, logger logger.ILogger) http.HandlerFun
 
 		err := categoryService.DeleteCategory(id_param)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			logger.Error(err.Error())
+			http.Error(w, "internal server error", http.StatusInternalServerError)
 			return
 		}
 
@@ -84,7 +86,7 @@ func UpdateCategory(config config.Config, logger logger.ILogger) http.HandlerFun
 
 		err := json.NewDecoder(r.Body).Decode(&body)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
+			http.Error(w, "bad request", http.StatusBadRequest)
 			return
 		}
 
@@ -95,7 +97,8 @@ func UpdateCategory(config config.Config, logger logger.ILogger) http.HandlerFun
 
 		category, err := categoryService.UpdateCategory(body.Data)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			logger.Error(err.Error())
+			http.Error(w, "internal server error", http.StatusInternalServerError)
 			return
 		}
 
@@ -107,7 +110,8 @@ func UpdateCategory(config config.Config, logger logger.ILogger) http.HandlerFun
 		})
 
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			logger.Error(err.Error())
+			http.Error(w, "internal server error", http.StatusInternalServerError)
 			return
 		}
 
@@ -131,7 +135,8 @@ func GetCategories(config config.Config, logger logger.ILogger) http.HandlerFunc
 
 		categories, err := categoryService.GetCategories(page_number, page_size)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			logger.Error(err.Error())
+			http.Error(w, "internal server error", http.StatusInternalServerError)
 			return
 		}
 
@@ -144,7 +149,8 @@ func GetCategories(config config.Config, logger logger.ILogger) http.HandlerFunc
 			for j, product := range category.Products {
 				product, err := product_svc.GetProduct(product.Id)
 				if err != nil {
-					http.Error(w, err.Error(), http.StatusInternalServerError)
+					logger.Error(err.Error())
+					http.Error(w, "internal server error", http.StatusInternalServerError)
 					return
 				}
 				categories[i].Products[j] = product
@@ -160,7 +166,8 @@ func GetCategories(config config.Config, logger logger.ILogger) http.HandlerFunc
 
 		w.Header().Set("Content-Type", "application/json")
 		if err := json.NewEncoder(w).Encode(response); err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			logger.Error(err.Error())
+			http.Error(w, "internal server error", http.StatusInternalServerError)
 			return
 		}
 

@@ -28,7 +28,7 @@ func GetLanguage(config config.Config, logger logger.ILogger) http.HandlerFunc {
 		lang, err := lang_svc.GetLanguage(lang_code)
 		if err != nil {
 			logger.Error(err.Error())
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			http.Error(w, "internal server error", http.StatusInternalServerError)
 			return
 		}
 
@@ -60,14 +60,14 @@ func GetAvailableLanguages(config config.Config, logger logger.ILogger) http.Han
 		pwd, err := os.Getwd()
 		if err != nil {
 			logger.Error(err.Error())
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			http.Error(w, "internal server error", http.StatusInternalServerError)
 			return
 		}
 		pwd = pwd + "/assets/core/languages"
 		files, err := os.ReadDir(pwd)
 		if err != nil {
 			logger.Error(err.Error())
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			http.Error(w, "internal server error", http.StatusInternalServerError)
 			return
 		}
 		for _, file := range files {
@@ -79,7 +79,7 @@ func GetAvailableLanguages(config config.Config, logger logger.ILogger) http.Han
 			jsonFile, err := os.Open(filePath)
 			if err != nil {
 				logger.Error(err.Error())
-				http.Error(w, err.Error(), http.StatusInternalServerError)
+				http.Error(w, "internal server error", http.StatusInternalServerError)
 				return
 			}
 
@@ -114,7 +114,7 @@ func GetAvailableLanguages(config config.Config, logger logger.ILogger) http.Han
 		jsonResponse, err := json.Marshal(response)
 		if err != nil {
 			logger.Error(err.Error())
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			http.Error(w, "internal server error", http.StatusInternalServerError)
 			return
 		}
 		w.Write(jsonResponse)

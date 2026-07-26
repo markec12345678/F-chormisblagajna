@@ -1318,7 +1318,9 @@ const debouncedMainSearch = debounce((text: string, event: KeyboardEvent) => {
           mainSearchResult.value.push(response.data.data[i])
         }
       })
-      .catch(() => {})
+      .catch(() => {
+        mainSearchResult.value = []
+      })
   } else {
     mainSearchResult.value = []
     mainsearch_op.value.hide()
@@ -1690,7 +1692,9 @@ const loadSettings = async () => {
             { number: 3, label: t('confirmation') },
           ]
         })
-        .catch(() => {})
+        .catch(() => {
+          loading.value = false
+        })
       loading.value = false
     })
     .catch((err) => {

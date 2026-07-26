@@ -26,7 +26,7 @@ func UpdateDisposal(config config.Config, logger logger.ILogger) http.HandlerFun
 
 		err := json.NewDecoder(r.Body).Decode(&request)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
+			http.Error(w, "bad request", http.StatusBadRequest)
 			return
 		}
 
@@ -37,7 +37,8 @@ func UpdateDisposal(config config.Config, logger logger.ILogger) http.HandlerFun
 
 		updated_disposal, err := disposal_svc.UpdateDisposal(id_param, request.Data)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			logger.Error(err.Error())
+			http.Error(w, "internal server error", http.StatusInternalServerError)
 			return
 		}
 
@@ -70,7 +71,8 @@ func GetDisposal(config config.Config, logger logger.ILogger) http.HandlerFunc {
 
 		disposal, err := disposalService.GetDisposal(id_param)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			logger.Error(err.Error())
+			http.Error(w, "internal server error", http.StatusInternalServerError)
 			return
 		}
 
@@ -80,7 +82,8 @@ func GetDisposal(config config.Config, logger logger.ILogger) http.HandlerFunc {
 
 		w.Header().Set("Content-Type", "application/json")
 		if err := json.NewEncoder(w).Encode(response); err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			logger.Error(err.Error())
+			http.Error(w, "internal server error", http.StatusInternalServerError)
 			return
 		}
 	}
@@ -101,7 +104,8 @@ func DeleteDisposal(config config.Config, logger logger.ILogger) http.HandlerFun
 
 		err := disposalService.DeleteDisposal(id_param)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			logger.Error(err.Error())
+			http.Error(w, "internal server error", http.StatusInternalServerError)
 			return
 		}
 
@@ -119,7 +123,7 @@ func InsertDisposal(config config.Config, logger logger.ILogger) http.HandlerFun
 
 		err := json.NewDecoder(r.Body).Decode(&request)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
+			http.Error(w, "bad request", http.StatusBadRequest)
 			return
 		}
 
@@ -136,7 +140,8 @@ func InsertDisposal(config config.Config, logger logger.ILogger) http.HandlerFun
 
 			err = recipeService.AddMaterialDisposal(material_disposal, user_id)
 			if err != nil {
-				http.Error(w, err.Error(), http.StatusInternalServerError)
+				logger.Error(err.Error())
+				http.Error(w, "internal server error", http.StatusInternalServerError)
 				return
 			}
 
@@ -157,7 +162,8 @@ func InsertDisposal(config config.Config, logger logger.ILogger) http.HandlerFun
 
 			err = recipeService.AddProductDisposal(product_disposal, user_id)
 			if err != nil {
-				http.Error(w, err.Error(), http.StatusInternalServerError)
+				logger.Error(err.Error())
+				http.Error(w, "internal server error", http.StatusInternalServerError)
 				return
 			}
 
@@ -191,7 +197,8 @@ func GetDisposals(config config.Config, logger logger.ILogger) http.HandlerFunc 
 
 		disposals, totalRecords, err := disposal_service.GetDisposals(args)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			logger.Error(err.Error())
+			http.Error(w, "internal server error", http.StatusInternalServerError)
 			return
 		}
 
@@ -204,7 +211,8 @@ func GetDisposals(config config.Config, logger logger.ILogger) http.HandlerFunc 
 
 		w.Header().Set("Content-Type", "application/json")
 		if err := json.NewEncoder(w).Encode(response); err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			logger.Error(err.Error())
+			http.Error(w, "internal server error", http.StatusInternalServerError)
 			return
 		}
 	}

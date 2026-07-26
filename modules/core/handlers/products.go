@@ -31,8 +31,8 @@ func UpdateProductImage(config config.Config, logger logger.ILogger) http.Handle
 		// Parse the multipart form data
 		err := r.ParseMultipartForm(32 << 20) // Max file size: 32MB
 		if err != nil {
-			logger.Error(fmt.Sprintf("Error parsing multipart form: %s", err.Error()))
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+		logger.Error(fmt.Sprintf("Error parsing multipart form: %s", err.Error()))
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 			return
 		}
 
@@ -46,16 +46,16 @@ func UpdateProductImage(config config.Config, logger logger.ILogger) http.Handle
 
 		product, err := product_svc.GetProduct(id_param)
 		if err != nil {
-			logger.Error(fmt.Sprintf("Error getting product: %s", err.Error()))
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+		logger.Error(fmt.Sprintf("Error getting product: %s", err.Error()))
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 			return
 		}
 
 		// Get the uploaded file
 		file, fileHeader, err := r.FormFile("image")
 		if err != nil {
-			logger.Error(fmt.Sprintf("Error uploading file: %s", err.Error()))
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+		logger.Error(fmt.Sprintf("Error uploading file: %s", err.Error()))
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 			return
 		}
 
@@ -78,8 +78,8 @@ func UpdateProductImage(config config.Config, logger logger.ILogger) http.Handle
 		// Create a new file on the server
 		dst, err := os.Create(helpers.ResolveOsEnvPath(config.UploadsPath) + "/" + random_string + file_extension)
 		if err != nil {
-			logger.Error(fmt.Sprintf("Error creating file: %s", err.Error()))
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+		logger.Error(fmt.Sprintf("Error creating file: %s", err.Error()))
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 			return
 		}
 		defer dst.Close()
@@ -87,8 +87,8 @@ func UpdateProductImage(config config.Config, logger logger.ILogger) http.Handle
 		// Copy the uploaded file to the server file
 		_, err = io.Copy(dst, file)
 		if err != nil {
-			logger.Error(fmt.Sprintf("Error saving file: %s", err.Error()))
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+		logger.Error(fmt.Sprintf("Error saving file: %s", err.Error()))
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 			return
 		}
 
@@ -130,7 +130,7 @@ func UpdateProduct(config config.Config, logger logger.ILogger) http.HandlerFunc
 
 		err := json.NewDecoder(r.Body).Decode(&request)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
+			http.Error(w, "bad request", http.StatusBadRequest)
 			return
 		}
 
@@ -141,19 +141,20 @@ func UpdateProduct(config config.Config, logger logger.ILogger) http.HandlerFunc
 
 		err = recipeService.UpdateProduct(id_param, request.Data)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			logger.Error(err.Error())
+			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 			return
 		}
 
 		updated_product, err := recipeService.GetProduct(id_param)
 		if err != nil {
-			logger.Error(err.Error())
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
+		logger.Error(err.Error())
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		return
+	}
 
-		response := JSONApiOkResponse{
-			Data: updated_product,
+	response := JSONApiOkResponse{
+		Data: updated_product,
 		}
 
 		jsonResponse, err := json.Marshal(response)
@@ -183,7 +184,8 @@ func DeleteProduct(config config.Config, logger logger.ILogger) http.HandlerFunc
 
 		product, err := recipeService.GetProduct(id_param)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			logger.Error(err.Error())
+			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 			return
 		}
 
@@ -191,14 +193,15 @@ func DeleteProduct(config config.Config, logger logger.ILogger) http.HandlerFunc
 			err = os.Remove(filepath.Join(helpers.ResolveOsEnvPath(config.UploadsPath), product.ImageURL))
 			if err != nil {
 				logger.Error(err.Error())
-				http.Error(w, err.Error(), http.StatusInternalServerError)
+				http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 				return
 			}
 		}
 
 		err = recipeService.DeleteProduct(id_param)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			logger.Error(err.Error())
+			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 			return
 		}
 
@@ -216,7 +219,7 @@ func InsertNewProduct(config config.Config, logger logger.ILogger) http.HandlerF
 
 		err := json.NewDecoder(r.Body).Decode(&request)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
+			http.Error(w, "bad request", http.StatusBadRequest)
 			return
 		}
 
@@ -227,7 +230,8 @@ func InsertNewProduct(config config.Config, logger logger.ILogger) http.HandlerF
 
 		new_product, err := recipeService.InsertNew(request.Data)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			logger.Error(err.Error())
+			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 			return
 		}
 
@@ -238,7 +242,8 @@ func InsertNewProduct(config config.Config, logger logger.ILogger) http.HandlerF
 		w.WriteHeader(http.StatusCreated)
 		w.Header().Set("Content-Type", "application/json")
 		if err := json.NewEncoder(w).Encode(response); err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			logger.Error(err.Error())
+			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 			return
 		}
 
@@ -259,7 +264,8 @@ func GetProduct(config config.Config, logger logger.ILogger) http.HandlerFunc {
 
 		product, err := recipeService.GetProduct(id_param)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			logger.Error(err.Error())
+			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 			return
 		}
 
@@ -269,7 +275,8 @@ func GetProduct(config config.Config, logger logger.ILogger) http.HandlerFunc {
 
 		w.Header().Set("Content-Type", "application/json")
 		if err := json.NewEncoder(w).Encode(response); err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			logger.Error(err.Error())
+			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 			return
 		}
 
@@ -301,7 +308,8 @@ func GetProducts(config config.Config, logger logger.ILogger) http.HandlerFunc {
 
 		products, totalRecords, err := recipeService.GetProducts(args)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			logger.Error(err.Error())
+			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 			return
 		}
 
@@ -314,7 +322,8 @@ func GetProducts(config config.Config, logger logger.ILogger) http.HandlerFunc {
 
 		w.Header().Set("Content-Type", "application/json")
 		if err := json.NewEncoder(w).Encode(response); err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			logger.Error(err.Error())
+			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 			return
 		}
 	}
@@ -336,7 +345,8 @@ func GetRecipeTree(config config.Config, logger logger.ILogger) http.HandlerFunc
 
 		tree, err := recipeService.GetRecipeTree(id_param)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			logger.Error(err.Error())
+			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 			return
 		}
 
@@ -346,7 +356,8 @@ func GetRecipeTree(config config.Config, logger logger.ILogger) http.HandlerFunc
 
 		w.Header().Set("Content-Type", "application/json")
 		if err := json.NewEncoder(w).Encode(response); err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			logger.Error(err.Error())
+			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 			return
 		}
 
@@ -374,7 +385,8 @@ func GetRecipeAvailability(config config.Config, logger logger.ILogger) http.Han
 
 		availabilities, err := recipeService.CheckRecipesAvailability(ids)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			logger.Error(err.Error())
+			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 			return
 		}
 
@@ -384,7 +396,8 @@ func GetRecipeAvailability(config config.Config, logger logger.ILogger) http.Han
 
 		jsonResponse, err := json.Marshal(response)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			logger.Error(err.Error())
+			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 			return
 		}
 

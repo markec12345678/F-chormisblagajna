@@ -118,7 +118,8 @@ func GetOrderLogs(config config.Config, logger logger.ILogger, settings models.S
 
 		w.Header().Set("Content-Type", "application/json")
 		if err := json.NewEncoder(w).Encode(response); err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			logger.Error(err.Error())
+			http.Error(w, "internal server error", http.StatusInternalServerError)
 			return
 		}
 	}
@@ -178,7 +179,7 @@ func WasteOrderItem(config config.Config, logger logger.ILogger, settings models
 		err = order_svc.WasteOrderItem(request.Data.OrderItem, order_id_param, quantity, reason, request.Data.Other, user_id)
 		if err != nil {
 			logger.Error(err.Error())
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			http.Error(w, "internal server error", http.StatusInternalServerError)
 			return
 		}
 
@@ -230,7 +231,7 @@ func RefundOrderItem(config config.Config, logger logger.ILogger, settings model
 
 		if err != nil {
 			logger.Error(err.Error())
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			http.Error(w, "internal server error", http.StatusInternalServerError)
 			return
 		}
 
@@ -253,7 +254,7 @@ func PrintKitchenReceipt(config config.Config, logger logger.ILogger, settings m
 		order, err := orderService.GetOrder(id_param)
 		if err != nil {
 			logger.Error(err.Error())
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			http.Error(w, "internal server error", http.StatusInternalServerError)
 			return
 		}
 
@@ -292,7 +293,7 @@ func PrintKitchenReceipt(config config.Config, logger logger.ILogger, settings m
 		err = orderService.PrintReceipt(order, pwd+"/assets/core/templates/kitchen_receipt_0.handlebars", lang, settings.KitchenReceiptPrinter.Host)
 		if err != nil {
 			logger.Error(err.Error())
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			http.Error(w, "internal server error", http.StatusInternalServerError)
 			return
 		}
 	}
@@ -313,7 +314,7 @@ func PrintClientReceipt(config config.Config, logger logger.ILogger, settings mo
 		order, err := orderService.GetOrder(id_param)
 		if err != nil {
 			logger.Error(err.Error())
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			http.Error(w, "internal server error", http.StatusInternalServerError)
 			return
 		}
 
@@ -352,7 +353,7 @@ func PrintClientReceipt(config config.Config, logger logger.ILogger, settings mo
 		err = orderService.PrintReceipt(order, pwd+"/assets/core/templates/order_receipt_0.handlebars", lang, settings.ClientReceiptPrinter.Host)
 		if err != nil {
 			logger.Error(err.Error())
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			http.Error(w, "internal server error", http.StatusInternalServerError)
 			return
 		}
 	}
@@ -374,7 +375,7 @@ func DeleteOrder(config config.Config, logger logger.ILogger) http.HandlerFunc {
 		err := orderService.DeleteOrder(id_param)
 		if err != nil {
 			logger.Error(err.Error())
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			http.Error(w, "internal server error", http.StatusInternalServerError)
 			return
 		}
 
@@ -400,7 +401,7 @@ func Payorder(config config.Config, logger logger.ILogger, settings models.Setti
 		err := orderService.PayUnpaidOrder(id_param)
 		if err != nil {
 			logger.Error(err.Error())
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			http.Error(w, "internal server error", http.StatusInternalServerError)
 			return
 		}
 
@@ -460,7 +461,7 @@ func CancelOrder(config config.Config, logger logger.ILogger) http.HandlerFunc {
 		err := orderService.CancelOrder(id_param)
 		if err != nil {
 			logger.Error(err.Error())
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			http.Error(w, "internal server error", http.StatusInternalServerError)
 			return
 		}
 
@@ -500,7 +501,7 @@ func FinishOrder(config config.Config, logger logger.ILogger, settings models.Se
 		err = orderService.FinishOrder(id_param, user_id)
 		if err != nil {
 			logger.Error(err.Error())
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			http.Error(w, "internal server error", http.StatusInternalServerError)
 			return
 		}
 
@@ -688,14 +689,14 @@ func SubmitOrder(config config.Config, logger logger.ILogger, settings models.Se
 		msgJson, err := json.Marshal(msg)
 		if err != nil {
 			logger.Error(err.Error())
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			http.Error(w, "internal server error", http.StatusInternalServerError)
 			return
 		}
 
 		notifications_svc, err := services.SpawnNotificationSingletonSvc("melody", logger, config)
 		if err != nil {
 			logger.Error(err.Error())
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			http.Error(w, "internal server error", http.StatusInternalServerError)
 			return
 		}
 
@@ -784,7 +785,8 @@ func GetOrders(config config.Config, logger logger.ILogger) http.HandlerFunc {
 
 		w.Header().Set("Content-Type", "application/json")
 		if err := json.NewEncoder(w).Encode(response); err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			logger.Error(err.Error())
+			http.Error(w, "internal server error", http.StatusInternalServerError)
 			return
 		}
 
@@ -873,7 +875,8 @@ func GetOrder(config config.Config, logger logger.ILogger) http.HandlerFunc {
 
 		order, err := orderService.GetOrder(id_param)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			logger.Error(err.Error())
+			http.Error(w, "internal server error", http.StatusInternalServerError)
 			return
 		}
 
@@ -883,7 +886,8 @@ func GetOrder(config config.Config, logger logger.ILogger) http.HandlerFunc {
 
 		jsonOrder, err := json.Marshal(response)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			logger.Error(err.Error())
+			http.Error(w, "internal server error", http.StatusInternalServerError)
 			return
 		}
 
@@ -920,7 +924,7 @@ func UpdateOrderCustomData(config config.Config, logger logger.ILogger) http.Han
 		err = orderService.UpdateCustomData(id_param, request.Data)
 		if err != nil {
 			logger.Error(err.Error())
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			http.Error(w, "internal server error", http.StatusInternalServerError)
 			return
 		}
 

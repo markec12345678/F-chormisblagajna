@@ -144,7 +144,9 @@ const loadLanguage = async () => {
           store.setOrientation(response2.data.data.orientation)
           loading.value = false
         })
-        .catch(() => {})
+        .catch(() => {
+          loading.value = false
+        })
       loading.value = false
     })
     .catch((err) => {

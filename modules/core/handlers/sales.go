@@ -33,7 +33,8 @@ func ExportSalesCSV(config config.Config, logger logger.ILogger) http.HandlerFun
 
 		sales, _, err := salesService.GetSalesPerday(page_number, page_size)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			logger.Error(err.Error())
+			http.Error(w, "internal server error", http.StatusInternalServerError)
 			return
 		}
 
@@ -79,7 +80,8 @@ func GetSalesPerDay(config config.Config, logger logger.ILogger) http.HandlerFun
 
 		sales, totalRecords, err := salesService.GetSalesPerday(page_number, page_size)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			logger.Error(err.Error())
+			http.Error(w, "internal server error", http.StatusInternalServerError)
 			return
 		}
 
@@ -92,7 +94,8 @@ func GetSalesPerDay(config config.Config, logger logger.ILogger) http.HandlerFun
 
 		w.Header().Set("Content-Type", "application/json")
 		if err := json.NewEncoder(w).Encode(response); err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			logger.Error(err.Error())
+			http.Error(w, "internal server error", http.StatusInternalServerError)
 			return
 		}
 	}

@@ -7,10 +7,11 @@ package services
 
 import (
 	"context"
+	"crypto/rand"
 	"encoding/json"
 	"fmt"
 	"math"
-	"math/rand"
+	"math/big"
 	"regexp"
 	"time"
 
@@ -682,7 +683,10 @@ func (os *OrderService) GetOrderDisplayId() (order_display_id string, err error)
 	random_queue_index := 0
 
 	if len(settings.Orders.Queues) > 1 {
-		random_queue_index = rand.Intn((len(settings.Orders.Queues)-1)-0) + 0
+		n, err := rand.Int(rand.Reader, big.NewInt(int64(len(settings.Orders.Queues))))
+		if err == nil {
+			random_queue_index = int(n.Int64())
+		}
 	}
 	random_queue := settings.Orders.Queues[random_queue_index]
 

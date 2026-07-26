@@ -26,7 +26,8 @@ func DeleteCustomer(config config.Config, logger logger.ILogger, settings models
 
 		err := customers_svc.DeleteCustomer(id_param)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			logger.Error(err.Error())
+			http.Error(w, "internal server error", http.StatusInternalServerError)
 			return
 		}
 
@@ -51,7 +52,8 @@ func GetCustomers(config config.Config, logger logger.ILogger, settings models.S
 
 		customers, total_records, err := customers_svc.GetCustomers(params)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			logger.Error(err.Error())
+			http.Error(w, "internal server error", http.StatusInternalServerError)
 			return
 		}
 
@@ -66,7 +68,8 @@ func GetCustomers(config config.Config, logger logger.ILogger, settings models.S
 
 		jsonResponse, err := json.Marshal(response)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			logger.Error(err.Error())
+			http.Error(w, "internal server error", http.StatusInternalServerError)
 			return
 		}
 
@@ -82,7 +85,7 @@ func AddCustomer(config config.Config, logger logger.ILogger) http.HandlerFunc {
 
 		err := json.NewDecoder(r.Body).Decode(&request)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
+			http.Error(w, "bad request", http.StatusBadRequest)
 			return
 		}
 
@@ -93,7 +96,8 @@ func AddCustomer(config config.Config, logger logger.ILogger) http.HandlerFunc {
 
 		addedCustomer, err := customers_svc.InsertNew(request.Data)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			logger.Error(err.Error())
+			http.Error(w, "internal server error", http.StatusInternalServerError)
 			return
 		}
 
@@ -105,7 +109,8 @@ func AddCustomer(config config.Config, logger logger.ILogger) http.HandlerFunc {
 		w.WriteHeader(http.StatusCreated)
 		jsonResponse, err := json.Marshal(response)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			logger.Error(err.Error())
+			http.Error(w, "internal server error", http.StatusInternalServerError)
 			return
 		}
 
@@ -125,7 +130,7 @@ func UpdateCustomer(config config.Config, logger logger.ILogger) http.HandlerFun
 
 		err := json.NewDecoder(r.Body).Decode(&request)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
+			http.Error(w, "bad request", http.StatusBadRequest)
 			return
 		}
 
@@ -136,7 +141,8 @@ func UpdateCustomer(config config.Config, logger logger.ILogger) http.HandlerFun
 
 		updatedCustomer, err := customers_svc.UpdateCustomer(request.Data, id_param)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			logger.Error(err.Error())
+			http.Error(w, "internal server error", http.StatusInternalServerError)
 			return
 		}
 
@@ -145,7 +151,8 @@ func UpdateCustomer(config config.Config, logger logger.ILogger) http.HandlerFun
 			Data: updatedCustomer,
 		})
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			logger.Error(err.Error())
+			http.Error(w, "internal server error", http.StatusInternalServerError)
 			return
 		}
 
@@ -165,7 +172,8 @@ func GetCustomer(config config.Config, logger logger.ILogger) http.HandlerFunc {
 
 		customer, err := customers_svc.GetCustomer(id_param)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			logger.Error(err.Error())
+			http.Error(w, "internal server error", http.StatusInternalServerError)
 			return
 		}
 
@@ -174,7 +182,8 @@ func GetCustomer(config config.Config, logger logger.ILogger) http.HandlerFunc {
 			Data: customer,
 		})
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			logger.Error(err.Error())
+			http.Error(w, "internal server error", http.StatusInternalServerError)
 			return
 		}
 

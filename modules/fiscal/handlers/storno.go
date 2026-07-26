@@ -81,7 +81,7 @@ func StornoHandler(cfg config.Config, log logger.ILogger) http.HandlerFunc {
 		resp, err := client.FiscalizeInvoice(ctx, req.OriginalOrderID, items, -req.Amount, time.Now())
 		if err != nil {
 			log.Error("storno fiscalization error: " + err.Error())
-			http.Error(w, "storno fiscalization failed: "+err.Error(), http.StatusInternalServerError)
+			http.Error(w, "internal server error", http.StatusInternalServerError)
 			return
 		}
 

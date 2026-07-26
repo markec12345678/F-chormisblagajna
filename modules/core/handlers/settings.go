@@ -22,7 +22,7 @@ func UpdateSettings(conf config.Config, logger logger.ILogger) http.HandlerFunc 
 
 		err := json.NewDecoder(r.Body).Decode(&request)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
+			http.Error(w, "bad request", http.StatusBadRequest)
 			return
 		}
 
@@ -33,7 +33,7 @@ func UpdateSettings(conf config.Config, logger logger.ILogger) http.HandlerFunc 
 		err = settings_svc.UpdateSettings(request.Data)
 		if err != nil {
 			logger.Error(err.Error())
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			http.Error(w, "internal server error", http.StatusInternalServerError)
 			return
 		}
 
@@ -54,7 +54,7 @@ func GetSettings(conf config.Config, logger logger.ILogger) http.HandlerFunc {
 		settings, err := settings_svc.GetSettings()
 		if err != nil {
 			logger.Error(err.Error())
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			http.Error(w, "internal server error", http.StatusInternalServerError)
 			return
 		}
 

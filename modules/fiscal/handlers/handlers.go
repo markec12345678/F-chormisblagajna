@@ -81,7 +81,7 @@ func FiscalizeOrderHandler(cfg config.Config, log logger.ILogger) http.HandlerFu
 		resp, err := client.FiscalizeInvoice(ctx, req.OrderID, items, req.TotalAmount, time.Now())
 		if err != nil {
 			log.Error("fiscalization error: " + err.Error())
-			http.Error(w, "fiscalization failed: "+err.Error(), http.StatusInternalServerError)
+			http.Error(w, "internal server error", http.StatusInternalServerError)
 			return
 		}
 
@@ -129,7 +129,7 @@ func FiscalEchoHandler(cfg config.Config, log logger.ILogger) http.HandlerFunc {
 		ctx := r.Context()
 		if err := client.Echo(ctx); err != nil {
 			log.Error("furs echo error: " + err.Error())
-			http.Error(w, "FURS echo failed: "+err.Error(), http.StatusInternalServerError)
+			http.Error(w, "internal server error", http.StatusInternalServerError)
 			return
 		}
 
