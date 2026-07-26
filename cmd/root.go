@@ -21,6 +21,7 @@ import (
 	"github.com/nutrixpos/pos/modules/core/middlewares"
 	"github.com/nutrixpos/pos/modules/core/models"
 	"github.com/nutrixpos/pos/modules/core/services"
+	"github.com/nutrixpos/pos/modules/fiscal"
 	"github.com/nutrixpos/pos/modules/hubsync"
 	"go.mongodb.org/mongo-driver/v2/bson"
 	"gopkg.in/yaml.v2"
@@ -333,10 +334,15 @@ func (root *RootProcess) Execute() error {
 				Settings: settings,
 			}, "core").RegisterHttpHandlers(root.Router).RegisterBackgroundWorkers().Save()
 
-			appmanager.LoadModule(&hubsync.HubSyncModule{
-				Logger: root.Logger,
-				Config: root.Config,
-			}, "hubsync").RegisterBackgroundWorkers().RegisterHttpHandlers(root.Router).Save()
+		appmanager.LoadModule(&hubsync.HubSyncModule{
+			Logger: root.Logger,
+			Config: root.Config,
+		}, "hubsync").RegisterBackgroundWorkers().RegisterHttpHandlers(root.Router).Save()
+
+		appmanager.LoadModule(&fiscal.FiscalModule{
+			Logger: root.Logger,
+			Config: root.Config,
+		}, "fiscal").RegisterHttpHandlers(root.Router).RegisterBackgroundWorkers().Save()
 
 			// Ignite the app manager to start all modules
 			appmanager.Run()

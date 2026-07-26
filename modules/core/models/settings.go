@@ -1,5 +1,7 @@
 package models
 
+import "github.com/nutrixpos/pos/modules/fiscal/models"
+
 // OrderQueueSettings represents the configuration settings for an order queue
 type OrderQueueSettings struct {
 	Prefix string `json:"prefix" bson:"prefix" mapstructure:"prefix"`
@@ -36,8 +38,9 @@ type Settings struct {
 	KitchenReceiptPrinter PrinterSettings  `bson:"kitchen_receipt_printer" json:"kitchen_receipt_printer" mapstructure:"kitchen_receipt_printer"`
 	PaymentSources        []PaymentSource  `bson:"payment_sources" json:"payment_sources" mapstructure:"payment_sources"`
 	// ShopMode determines the operational mode: "" (unset/first-run), "kitchen", or "retail"
-	ShopMode             string `bson:"shop_mode" json:"shop_mode" mapstructure:"shop_mode"`
-	AutoOpenCashDrawer   bool   `bson:"auto_open_cash_drawer" json:"auto_open_cash_drawer" mapstructure:"auto_open_cash_drawer"`
+	ShopMode             string               `bson:"shop_mode" json:"shop_mode" mapstructure:"shop_mode"`
+	AutoOpenCashDrawer   bool                 `bson:"auto_open_cash_drawer" json:"auto_open_cash_drawer" mapstructure:"auto_open_cash_drawer"`
+	Fiscal               models.FiscalSettings `bson:"fiscal" json:"fiscal" mapstructure:"fiscal"`
 }
 
 type PaymentSource struct {

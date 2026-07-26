@@ -27,6 +27,7 @@ Blagajniški sistem za restavracije in trgovine. Go backend (MongoDB) + Vue 3 SP
 - 👤 **Več vlog** — superuser, admin, cashier, chef
 - 🌙 **Dark mode** + **RTL** podpora
 - 🛡️ **ErrorBoundary** — graceful napaka ob crashing komponentah
+- 🧾 **FURS ZAPOS** — fiskalizacija računov (ZOI, EOR, QR, mTLS)
 
 ## Tech Stack
 

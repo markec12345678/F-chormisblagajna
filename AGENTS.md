@@ -16,7 +16,7 @@ go vet ./...          # static analysis
 
 ## Architecture
 - `/cmd/` - CLI entrypoints (Cobra CLI)
-- `/modules/` - business logic (core, hubsync, auth modules)
+- `/modules/` - business logic (core, hubsync, auth, fiscal modules)
 - `/common/` - shared utilities (database, config, logger, middlewares)
 - `/frontend/` - Vue 3 SPA (separate build with Vite)
 
@@ -128,7 +128,7 @@ http.Error(w, "failed to get data", http.StatusInternalServerError)
 - `github.com/nutrixpos/melody` - WebSocket
 
 ## Testing
-- Backend tests (11 packages, 140 tests): `common/config`, `common/customerrors`, `common/helpers` (+ParsePagination, ParseAcceptLanguage), `common/logger`, `common/middlewares` (ratelimit +X-Forwarded-For), `common/userio` (+PropagateCounterIndexToTree), `modules/auth`, `modules/auth/middlewares` (jwt, bcrypt, auth), `modules/auth/models`, `modules/core/middlewares` (CORS), `modules/core/models`, `modules/core/dto`
+- Backend tests (12 packages, 164 tests): `common/config`, `common/customerrors`, `common/helpers` (+ParsePagination, ParseAcceptLanguage), `common/logger`, `common/middlewares` (ratelimit +X-Forwarded-For), `common/userio` (+PropagateCounterIndexToTree), `modules/auth`, `modules/auth/middlewares` (jwt, bcrypt, auth), `modules/auth/models`, `modules/core/middlewares` (CORS), `modules/core/models`, `modules/core/dto`, `modules/fiscal/services` (ZOI, QR, format, tax grouping)
 - Frontend tests (38 files, 230 tests): `frontend/src/__tests__/`
   - Components: ErrorBoundary, InventoryItem, Notification, Order, OrderItem, OrderItemView, AddCustomer, MealCard, PickMaterial, OrderItemRefund
   - Complex: QueueOrder, OrderView, StashedOrder
