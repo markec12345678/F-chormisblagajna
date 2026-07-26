@@ -129,8 +129,8 @@ http.Error(w, "failed to get data", http.StatusInternalServerError)
 
 ## Testing
 - Backend tests (10 packages, 114 tests): `common/config`, `common/customerrors`, `common/helpers`, `common/middlewares` (ratelimit), `common/userio`, `modules/auth`, `modules/auth/middlewares` (jwt, bcrypt, auth), `modules/auth/models`, `modules/core/middlewares` (CORS), `modules/core/models`, `modules/core/dto`
-- Frontend tests (37 files, 222 tests): `frontend/src/__tests__/`
-  - Components: ErrorBoundary, InventoryItem, Notification, Order, OrderItem, AddCustomer, MealCard, PickMaterial, OrderItemRefund
+- Frontend tests (38 files, 230 tests): `frontend/src/__tests__/`
+  - Components: ErrorBoundary, InventoryItem, Notification, Order, OrderItem, OrderItemView, AddCustomer, MealCard, PickMaterial, OrderItemRefund
   - Complex: QueueOrder, OrderView, StashedOrder
   - Pages: Settings, Categories, Customers, Orders, Kitchen, Languages, Profile, Home, Login, Sales, Products, Inventory, NoAccessView, AdminSetup, Setup, Hubsync
   - Not testable (uses `getCurrentInstance()`/`proxy.$auth`): Admin, Users
