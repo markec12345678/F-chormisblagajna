@@ -153,8 +153,8 @@
                     <Select
                       v-model="fiscal_environment"
                       :options="[
-                        { label: 'Test', value: 'test' },
-                        { label: 'Production', value: 'production' },
+                        { label: $t('label_test'), value: 'test' },
+                        { label: $t('label_production'), value: 'production' },
                       ]"
                       optionLabel="label"
                       optionValue="value"
@@ -218,8 +218,8 @@
                     <Select
                       v-model="fiscal_hr_environment"
                       :options="[
-                        { label: 'Test', value: 'test' },
-                        { label: 'Production', value: 'production' },
+                        { label: $t('label_test'), value: 'test' },
+                        { label: $t('label_production'), value: 'production' },
                       ]"
                       optionLabel="label"
                       optionValue="value"

@@ -238,7 +238,7 @@ const menu_tree = ref([
           title: 'list',
           plural: false,
         },
-        data: 'List oders',
+        data: 'List orders',
         icon: 'pi pi-fw pi-list',
         link: '/admin/orders',
       },

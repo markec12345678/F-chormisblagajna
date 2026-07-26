@@ -343,6 +343,8 @@ const i18n = createI18n({
       fiscal_hr_connection_failed: 'CIS connection failed',
       fiscal_hr_operator_oib: 'Operator OIB',
       jir: 'JIR (Unique Receipt ID)',
+      label_test: 'Test',
+      label_production: 'Production',
     },
   },
 })
