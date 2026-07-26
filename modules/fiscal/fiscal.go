@@ -1,11 +1,14 @@
 package fiscal
 
 import (
+	"time"
+
 	"github.com/gorilla/mux"
 	"github.com/nutrixpos/pos/common/config"
 	"github.com/nutrixpos/pos/common/logger"
 	"github.com/nutrixpos/pos/modules"
 	"github.com/nutrixpos/pos/modules/fiscal/handlers"
+	"github.com/nutrixpos/pos/modules/fiscal/services"
 	auth_mw "github.com/nutrixpos/pos/modules/auth/middlewares"
 	core_middlewares "github.com/nutrixpos/pos/modules/core/middlewares"
 )
@@ -45,6 +48,10 @@ func (f *FiscalModule) RegisterHttpHandlers(router *mux.Router, prefix string) {
 		auth_svc.AllowAnyOfRoles(handlers.FiscalizeOrderHandler(f.Config, f.Logger), "admin", "cashier"),
 	)).Methods("POST", "OPTIONS")
 
+	router.Handle(prefix+"/api/fiscal/storno", core_middlewares.AllowCors(
+		auth_svc.AllowAnyOfRoles(handlers.StornoHandler(f.Config, f.Logger), "admin"),
+	)).Methods("POST", "OPTIONS")
+
 	router.Handle(prefix+"/api/fiscal/settings", core_middlewares.AllowCors(
 		auth_svc.AllowAnyOfRoles(handlers.GetFiscalSettingsHandler(f.Config, f.Logger), "admin"),
 	)).Methods("GET", "OPTIONS")
@@ -55,5 +62,13 @@ func (f *FiscalModule) RegisterHttpHandlers(router *mux.Router, prefix string) {
 }
 
 func (f *FiscalModule) RegisterBackgroundWorkers() []modules.Worker {
-	return []modules.Worker{}
+	return []modules.Worker{
+		{
+			Interval: 5 * time.Minute,
+			Task: func() {
+				queue := services.NewOfflineFiscalQueue(f.Logger, f.Config)
+				queue.ProcessPending()
+			},
+		},
+	}
 }

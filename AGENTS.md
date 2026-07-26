@@ -126,9 +126,10 @@ http.Error(w, "failed to get data", http.StatusInternalServerError)
 - `github.com/golang-jwt/jwt/v5` - JWT authentication
 - `github.com/nutrixpos/crypt` - password hashing
 - `github.com/nutrixpos/melody` - WebSocket
+- `golang.org/x/crypto/pkcs12` - PKCS#12 certificate parsing (fiscal module)
 
 ## Testing
-- Backend tests (12 packages, 164 tests): `common/config`, `common/customerrors`, `common/helpers` (+ParsePagination, ParseAcceptLanguage), `common/logger`, `common/middlewares` (ratelimit +X-Forwarded-For), `common/userio` (+PropagateCounterIndexToTree), `modules/auth`, `modules/auth/middlewares` (jwt, bcrypt, auth), `modules/auth/models`, `modules/core/middlewares` (CORS), `modules/core/models`, `modules/core/dto`, `modules/fiscal/services` (ZOI, QR, format, tax grouping)
+- Backend tests (12 packages, 170 tests): `common/config`, `common/customerrors`, `common/helpers` (+ParsePagination, ParseAcceptLanguage), `common/logger`, `common/middlewares` (ratelimit +X-Forwarded-For), `common/userio` (+PropagateCounterIndexToTree), `modules/auth`, `modules/auth/middlewares` (jwt, bcrypt, auth), `modules/auth/models`, `modules/core/middlewares` (CORS), `modules/core/models`, `modules/core/dto`, `modules/fiscal/services` (ZOI, QR, format, tax grouping, receipt)
 - Frontend tests (38 files, 230 tests): `frontend/src/__tests__/`
   - Components: ErrorBoundary, InventoryItem, Notification, Order, OrderItem, OrderItemView, AddCustomer, MealCard, PickMaterial, OrderItemRefund
   - Complex: QueueOrder, OrderView, StashedOrder
@@ -162,3 +163,14 @@ http.Error(w, "failed to get data", http.StatusInternalServerError)
 
 ## API http schema
 When calling the backend api from the frontend vue app, make sure to include the VITE_APP_BACKEND_HOST and VITE_APP_MODULE_CORE_API_PREFIX env vars in the request path
+
+## Fiscal Module (FURS ZAPOS)
+- `modules/fiscal/` — FURS ZAPOS fiscal receipt integration
+- ZOI: RSA-SHA256 PKCS#1v1.5 signing → MD5 hash → 32-char hex
+- QR data: 60 digits (ZOI decimal 39d + tax number 8d + datetime 12d + check digit 1d)
+- API: mTLS (PKCS#12 certificate) + JWS RS256 signed requests
+- Test env: `https://blagajne-test.fu.gov.si:9002`, prod: `https://blagajne.fu.gov.si:9003`
+- Endpoints: `/fiscal/api/fiscal/echo`, `/fiscal/api/fiscal/invoice`, `/fiscal/api/fiscal/storno`, `/fiscal/api/fiscal/settings`
+- Background worker: offline retry queue (every 5 min, exponential backoff up to 1 hour)
+- Fiscal settings stored in core Settings model (`fiscal` field)
+- i18n keys: fiscal, fiscal_description, fiscal_enabled, fiscal_environment, etc.
