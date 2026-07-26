@@ -30,6 +30,8 @@ export default class Order {
   customer: Customer
   delivery_info: DeliveryInfo | null
   custom_data: Record<string, string> | null
+  is_fiscalized: boolean
+  fiscal_id: string
 
   constructor() {
     this.submitted_at = new Date()
@@ -48,5 +50,7 @@ export default class Order {
     this.customer = { id: '', name: '', phone: '', address: '' }
     this.delivery_info = null
     this.custom_data = null
+    this.is_fiscalized = false
+    this.fiscal_id = ''
   }
 }

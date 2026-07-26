@@ -36,6 +36,8 @@ export interface OrderListItem {
   tips: number
   customer: Customer
   discount: number
+  is_fiscalized: boolean
+  fiscal_id: string
 }
 
 export interface OrderQueue {

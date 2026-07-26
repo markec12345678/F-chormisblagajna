@@ -104,6 +104,11 @@
         </ButtonGroup>
       </div>
 
+      <div class="col-6" v-if="props.order.is_fiscalized">{{ $t('fiscal_receipt') }}</div>
+      <div v-if="props.order.is_fiscalized" class="col-6 flex align-items-center gap-2">
+        <Tag :value="props.order.fiscal_id" severity="success" />
+      </div>
+
       <div class="col-12" v-if="props.order.delivery_info != null">
         <h4>{{ $t('delivery_info') }}</h4>
         <div class="flex items-center gap-2 flex-column">
@@ -209,6 +214,21 @@
               @click="finishOrder()"
             />
             <Button
+              v-if="props.order.is_paid && !props.order.is_fiscalized"
+              icon="fa fa-file-invoice"
+              severity="success"
+              :label="$t('fiscalize')"
+              :loading="fiscalizing"
+              @click="fiscalizeOrder()"
+            />
+            <Button
+              v-if="props.order.is_fiscalized"
+              icon="fa fa-file-invoice"
+              severity="info"
+              :label="$t('fiscalized')"
+              disabled
+            />
+            <Button
               v-if="
                 props.order.state.toUpperCase() != 'CANCELLED' &&
                 props.order.state.toUpperCase() != 'FINISHED'
@@ -263,11 +283,13 @@ import {
   DataTable,
   Column,
   Dialog,
+  Tag,
 } from 'primevue'
 import axios from 'axios'
 import { useToast } from 'primevue/usetoast'
 import OrderItemsInfo from './OrderItemsInfo.vue'
 import Order from '@/classes/Order'
+import { OrderItem } from '@/classes/OrderItem'
 import { globalStore } from '@/stores'
 import auth from '../services/auth'
 
@@ -277,6 +299,7 @@ const toast = useToast()
 
 const order_logs = ref([])
 const order_logs_dialog = ref(false)
+const fiscalizing = ref(false)
 
 const custom_data_dialog = ref(false)
 const cd_key = ref('')
@@ -525,6 +548,66 @@ const collectedMoney = () => {
         detail: t('request_failed'),
         group: 'br',
       })
+    })
+}
+
+const fiscalizeOrder = () => {
+  fiscalizing.value = true
+
+  const items = props.order.items.map((item: OrderItem) => ({
+    name: item.product?.name || '',
+    quantity: item.quantity || 1,
+    unit_price: item.product?.price || 0,
+    tax_rate: 25,
+    taxable_amount: (item.product?.price || 0) * (item.quantity || 1),
+    tax_amount: ((item.product?.price || 0) * (item.quantity || 1) * 25) / 100,
+  }))
+
+  const totalAmount = items.reduce(
+    (sum: number, item: { taxable_amount: number; tax_amount: number }) =>
+      sum + item.taxable_amount + item.tax_amount,
+    0,
+  )
+
+  const fiscalPrefix = import.meta.env.VITE_APP_MODULE_FISCAL_API_PREFIX || ''
+
+  axios
+    .post(
+      `http://${import.meta.env.VITE_APP_BACKEND_HOST}${fiscalPrefix}/api/fiscal/invoice`,
+      {
+        order_id: props.order.id,
+        items,
+        total_amount: totalAmount,
+        tax_number: 0,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${auth.accessToken.value}`,
+        },
+      },
+    )
+    .then((response) => {
+      const eor = response.data.eor || response.data.jir || ''
+      Object.assign(props.order, { is_fiscalized: true, fiscal_id: eor })
+      toast.add({
+        severity: 'success',
+        summary: t('fiscalized'),
+        detail: `${t('eor')}: ${eor}`,
+        life: 8000,
+        group: 'br',
+      })
+      emit('updated')
+    })
+    .catch(() => {
+      toast.add({
+        severity: 'error',
+        summary: t('fiscalization_failed'),
+        detail: t('request_failed'),
+        group: 'br',
+      })
+    })
+    .finally(() => {
+      fiscalizing.value = false
     })
 }
 

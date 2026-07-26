@@ -146,6 +146,9 @@ type Order struct {
 	IsDineIn     bool               `json:"is_dine_in" bson:"is_dine_in" mapstructure:"is_dine_in"`
 	CustomData   map[string]string  `json:"custom_data" bson:"custom_data" mapstructure:"custom_data"`
 	Tips         float64            `json:"tips" bson:"tips" mapstructure:"tips"`
+	// IsFiscalized indicates whether the order has been fiscalized
+	IsFiscalized bool   `json:"is_fiscalized" bson:"is_fiscalized" mapstructure:"is_fiscalized"`
+	FiscalID     string `json:"fiscal_id" bson:"fiscal_id" mapstructure:"fiscal_id"` // EOR (Slovenia) or JIR (Croatia)
 }
 
 // MaterialEntry represents an entry of material, detailing purchase and quantity information.
