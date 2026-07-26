@@ -161,4 +161,116 @@ describe('Kitchen', () => {
       expect(auth.signOut).toHaveBeenCalled()
     })
   })
+
+  it('shows empty state icon when no orders', async () => {
+    mockSettingsAndLanguage()
+
+    const wrapper = mount(Kitchen, {
+      global: { plugins: [i18n, ToastService], stubs },
+    })
+
+    await vi.waitFor(() => {
+      expect(wrapper.find('.spinner-stub').exists()).toBe(false)
+      expect(wrapper.find('h2').exists()).toBe(true)
+      expect(wrapper.find('i.pi-inbox').exists()).toBe(true)
+    })
+  })
+
+  it('shows order count in header when orders exist', async () => {
+    mockGet.mockImplementation((url: string) => {
+      if (url.includes('/settings')) {
+        return Promise.resolve({ data: { data: { language: { code: 'en' } } } })
+      }
+      if (url.includes('/languages/')) {
+        return Promise.resolve({ data: { data: { code: 'en', pack: {}, orientation: 'ltr' } } })
+      }
+      if (url.includes('/orders')) {
+        return Promise.resolve({
+          data: {
+            data: [
+              { id: 'o1', display_id: 'D-1', state: 'pending', items: [], is_paid: false },
+              { id: 'o2', display_id: 'D-2', state: 'pending', items: [], is_paid: false },
+              { id: 'o3', display_id: 'D-3', state: 'in_progress', items: [], is_paid: false },
+            ],
+          },
+        })
+      }
+      return Promise.resolve({ data: { data: null } })
+    })
+
+    const wrapper = mount(Kitchen, {
+      global: { plugins: [i18n, ToastService], stubs },
+    })
+
+    await vi.waitFor(() => {
+      expect(wrapper.find('.spinner-stub').exists()).toBe(false)
+      expect(wrapper.findAll('.queue-order-stub').length).toBe(3)
+    })
+  })
+
+  it('renders three orders with different states', async () => {
+    mockGet.mockImplementation((url: string) => {
+      if (url.includes('/settings')) {
+        return Promise.resolve({ data: { data: { language: { code: 'en' } } } })
+      }
+      if (url.includes('/languages/')) {
+        return Promise.resolve({ data: { data: { code: 'en', pack: {}, orientation: 'ltr' } } })
+      }
+      if (url.includes('/orders')) {
+        return Promise.resolve({
+          data: {
+            data: [
+              { id: 'o1', display_id: 'D-1', state: 'pending', items: [], is_paid: false },
+              { id: 'o2', display_id: 'D-2', state: 'in_progress', items: [], is_paid: false },
+              { id: 'o3', display_id: 'D-3', state: 'pending', items: [], is_paid: false },
+            ],
+          },
+        })
+      }
+      return Promise.resolve({ data: { data: null } })
+    })
+
+    const wrapper = mount(Kitchen, {
+      global: { plugins: [i18n, ToastService], stubs },
+    })
+
+    await vi.waitFor(() => {
+      expect(wrapper.findAll('.queue-order-stub').length).toBe(3)
+    })
+  })
+
+  it('handles null orders response gracefully', async () => {
+    mockGet.mockImplementation((url: string) => {
+      if (url.includes('/settings')) {
+        return Promise.resolve({ data: { data: { language: { code: 'en' } } } })
+      }
+      if (url.includes('/languages/')) {
+        return Promise.resolve({ data: { data: { code: 'en', pack: {}, orientation: 'ltr' } } })
+      }
+      if (url.includes('/orders')) {
+        return Promise.resolve({ data: { data: null } })
+      }
+      return Promise.resolve({ data: { data: null } })
+    })
+
+    const wrapper = mount(Kitchen, {
+      global: { plugins: [i18n, ToastService], stubs },
+    })
+
+    await vi.waitFor(() => {
+      expect(wrapper.find('.spinner-stub').exists()).toBe(false)
+      expect(wrapper.findAll('.queue-order-stub').length).toBe(0)
+    })
+  })
+
+  it('does not show queue orders while loading', () => {
+    mockGet.mockReturnValue(new Promise(() => {}))
+
+    const wrapper = mount(Kitchen, {
+      global: { plugins: [i18n, ToastService], stubs },
+    })
+
+    expect(wrapper.find('.spinner-stub').exists()).toBe(true)
+    expect(wrapper.findAll('.queue-order-stub').length).toBe(0)
+  })
 })
