@@ -110,7 +110,7 @@ cd frontend && npm run build
 ### Testi
 
 ```bash
-# Backend (10 paketov, 114 testov)
+# Backend (11 paketov, 140 testov)
 go test -race ./...
 
 # Frontend (38 testnih datotek, 230 testov)
