@@ -306,6 +306,26 @@ const menu_tree = ref([
     icon: 'pi pi-sync',
     link: '/admin/hubsync',
   },
+  {
+    key: '9',
+    label: {
+      title: 'tables',
+      plural: true,
+    },
+    data: 'Tables',
+    icon: 'pi pi-table',
+    link: '/admin/tables',
+  },
+  {
+    key: '10',
+    label: {
+      title: 'ai_search',
+      plural: false,
+    },
+    data: 'AI',
+    icon: 'pi pi-sparkles',
+    link: '/admin/ai',
+  },
 ])
 
 const items = ref([

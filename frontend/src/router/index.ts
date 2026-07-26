@@ -91,6 +91,8 @@ const router = createRouter({
             return import('@/pages/NoAccessView.vue')
           },
         },
+        { path: 'tables', component: () => import('@/pages/Tables.vue') },
+        { path: 'ai', component: () => import('@/pages/AI.vue') },
       ],
     },
     {

@@ -88,3 +88,30 @@ export interface ProductItemSubProduct {
   quantity: number
   index?: number
 }
+
+export interface TableItem {
+  id: string
+  number: number
+  name: string
+  capacity: number
+  zone: string
+  status: string
+  qr_code: string
+  order_id: string
+}
+
+export interface AISearchResult {
+  product_id: string
+  name: string
+  description: string
+  price: number
+  score: number
+  category: string
+}
+
+export interface SmartSuggestion {
+  product_id: string
+  product_name: string
+  reason: string
+  score: number
+}
