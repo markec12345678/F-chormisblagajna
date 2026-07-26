@@ -279,6 +279,118 @@ func TestNewNoAuth(t *testing.T) {
 	}
 }
 
+func TestNewZitadelAuth_Disabled(t *testing.T) {
+	conf := config.Config{Zitadel: config.ZitadelConfig{Enabled: false}}
+	za, err := NewZitadelAuth(conf)
+	if err != nil {
+		t.Fatalf("NewZitadelAuth with disabled should not error, got: %v", err)
+	}
+	if za != nil {
+		t.Error("NewZitadelAuth with disabled should return nil")
+	}
+}
+
+func TestZitadelAuth_AllowAuthenticated_Disabled(t *testing.T) {
+	conf := config.Config{Zitadel: config.ZitadelConfig{Enabled: false}}
+	za := &ZitadelAuth{Config: conf}
+	rr := httptest.NewRecorder()
+	req := httptest.NewRequest(http.MethodGet, "/", nil)
+
+	za.AllowAuthenticated(okHandler()).ServeHTTP(rr, req)
+
+	if rr.Code != http.StatusOK {
+		t.Errorf("ZitadelAuth disabled should pass through, got %d", rr.Code)
+	}
+}
+
+func TestZitadelAuth_AllowAnyOfRoles_Disabled(t *testing.T) {
+	conf := config.Config{Zitadel: config.ZitadelConfig{Enabled: false}}
+	za := &ZitadelAuth{Config: conf}
+	rr := httptest.NewRecorder()
+	req := httptest.NewRequest(http.MethodGet, "/", nil)
+
+	za.AllowAnyOfRoles(okHandler(), "admin").ServeHTTP(rr, req)
+
+	if rr.Code != http.StatusOK {
+		t.Errorf("ZitadelAuth disabled AllowAnyOfRoles should pass through, got %d", rr.Code)
+	}
+}
+
+func TestInternalAuth_AllowAuthenticated_ContextPropagation(t *testing.T) {
+	jwtUtil := NewJWTUtil("secret", 24)
+	conf := config.Config{Auth: config.AuthConfig{Enabled: true}}
+	ia := NewInternalAuth(conf, jwtUtil)
+
+	user := testUserWithRoles([]string{"admin"})
+	token, err := jwtUtil.GenerateToken(user)
+	if err != nil {
+		t.Fatalf("GenerateToken failed: %v", err)
+	}
+
+	var capturedClaims *Claims
+	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if val := r.Context().Value(AuthCtxKey); val != nil {
+			capturedClaims = val.(*Claims)
+		}
+		w.WriteHeader(http.StatusOK)
+	})
+
+	rr := httptest.NewRecorder()
+	req := httptest.NewRequest(http.MethodGet, "/", nil)
+	req.Header.Set("Authorization", "Bearer "+token)
+
+	ia.AllowAuthenticated(handler).ServeHTTP(rr, req)
+
+	if rr.Code != http.StatusOK {
+		t.Fatalf("expected 200, got %d", rr.Code)
+	}
+	if capturedClaims == nil {
+		t.Fatal("claims should be set in context")
+	}
+	if capturedClaims.Username != user.Username {
+		t.Errorf("context Username = %v, want %v", capturedClaims.Username, user.Username)
+	}
+	if capturedClaims.UserID != user.ID.Hex() {
+		t.Errorf("context UserID = %v, want %v", capturedClaims.UserID, user.ID.Hex())
+	}
+}
+
+func TestInternalAuth_AllowAnyOfRoles_ContextPropagation(t *testing.T) {
+	jwtUtil := NewJWTUtil("secret", 24)
+	conf := config.Config{Auth: config.AuthConfig{Enabled: true}}
+	ia := NewInternalAuth(conf, jwtUtil)
+
+	user := testUserWithRoles([]string{"chef"})
+	token, err := jwtUtil.GenerateToken(user)
+	if err != nil {
+		t.Fatalf("GenerateToken failed: %v", err)
+	}
+
+	var capturedClaims *Claims
+	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if val := r.Context().Value(AuthCtxKey); val != nil {
+			capturedClaims = val.(*Claims)
+		}
+		w.WriteHeader(http.StatusOK)
+	})
+
+	rr := httptest.NewRecorder()
+	req := httptest.NewRequest(http.MethodGet, "/", nil)
+	req.Header.Set("Authorization", "Bearer "+token)
+
+	ia.AllowAnyOfRoles(handler, "chef").ServeHTTP(rr, req)
+
+	if rr.Code != http.StatusOK {
+		t.Fatalf("expected 200, got %d", rr.Code)
+	}
+	if capturedClaims == nil {
+		t.Fatal("claims should be set in context for matching role")
+	}
+	if capturedClaims.UserID != user.ID.Hex() {
+		t.Errorf("context UserID = %v, want %v", capturedClaims.UserID, user.ID.Hex())
+	}
+}
+
 func testUser() models.User {
 	return models.User{
 		ID:       bson.NewObjectID(),

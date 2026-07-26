@@ -110,14 +110,14 @@ cd frontend && npm run build
 ### Testi
 
 ```bash
-# Backend (9 paketov, 85 testov)
+# Backend (10 paketov, 114 testov)
 go test -race ./...
 
 # Frontend (35 testnih datotek, 202 testov)
 cd frontend && npx vitest run
 ```
 
-**Backend testi:** config, helpers, middlewares (ratelimit), userio, auth/middlewares, auth/models, core/middlewares (CORS), core/models, core/dto
+**Backend testi:** config, customerrors, helpers, middlewares (ratelimit), userio, auth, auth/middlewares (jwt, bcrypt, auth), auth/models, core/middlewares (CORS), core/models, core/dto
 **Frontend testi:** ErrorBoundary, InventoryItem, Notification, Order, OrderItem, AddCustomer, MealCard, QueueOrder, OrderView, StashedOrder, Settings, Categories, Customers, Orders, Kitchen, Languages, Profile, Home, Login, Sales, Products, Inventory, NoAccessView, AdminSetup, Setup, Hubsync
 
 ### CI/CD

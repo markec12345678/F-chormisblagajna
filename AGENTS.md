@@ -128,7 +128,7 @@ http.Error(w, "failed to get data", http.StatusInternalServerError)
 - `github.com/nutrixpos/melody` - WebSocket
 
 ## Testing
-- Backend tests (9 packages, 85 tests): `common/config`, `common/helpers`, `common/middlewares` (ratelimit), `common/userio`, `modules/auth/middlewares` (jwt, bcrypt), `modules/auth/models`, `modules/core/middlewares` (CORS), `modules/core/models`, `modules/core/dto`
+- Backend tests (10 packages, 114 tests): `common/config`, `common/customerrors`, `common/helpers`, `common/middlewares` (ratelimit), `common/userio`, `modules/auth`, `modules/auth/middlewares` (jwt, bcrypt, auth), `modules/auth/models`, `modules/core/middlewares` (CORS), `modules/core/models`, `modules/core/dto`
 - Frontend tests (35 files, 202 tests): `frontend/src/__tests__/`
   - Components: ErrorBoundary, InventoryItem, Notification, Order, OrderItem, AddCustomer, MealCard
   - Complex: QueueOrder, OrderView, StashedOrder
