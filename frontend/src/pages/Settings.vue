@@ -591,7 +591,7 @@ const testFiscalHRConnection = async () => {
   fiscalHrTesting.value = true
   try {
     await axios.post(
-      `http://${import.meta.env.VITE_APP_BACKEND_HOST}${import.meta.env.VITE_APP_MODULE_FISCAL_API_PREFIX}/api/fiscal_hr/echo`,
+      `http://${import.meta.env.VITE_APP_BACKEND_HOST}${import.meta.env.VITE_APP_MODULE_FISCAL_HR_API_PREFIX}/api/fiscal_hr/echo`,
       {},
       { headers: { Authorization: `Bearer ${auth.accessToken.value}` } },
     )

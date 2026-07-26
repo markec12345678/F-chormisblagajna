@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/nutrixpos/pos/common/config"
+	"github.com/nutrixpos/pos/common/helpers"
 	"github.com/nutrixpos/pos/common/logger"
 	"github.com/nutrixpos/pos/modules/fiscal/models"
 	"github.com/nutrixpos/pos/modules/fiscal/services"
@@ -91,6 +92,10 @@ func FiscalizeOrderHandler(cfg config.Config, log logger.ILogger) http.HandlerFu
 			EOR:           resp.UniqueInvoiceID,
 			InvoiceAmount: req.TotalAmount,
 			IssuedAt:      time.Now(),
+		}
+
+		if err := helpers.MarkOrderFiscalized(cfg, log, req.OrderID, resp.UniqueInvoiceID); err != nil {
+			log.Error("update order fiscal status: " + err.Error())
 		}
 
 		w.Header().Set("Content-Type", "application/json")

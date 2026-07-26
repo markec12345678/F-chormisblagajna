@@ -164,6 +164,17 @@ http.Error(w, "failed to get data", http.StatusInternalServerError)
 ## API http schema
 When calling the backend api from the frontend vue app, make sure to include the VITE_APP_BACKEND_HOST and VITE_APP_MODULE_CORE_API_PREFIX env vars in the request path
 
+## Environment Variables
+- `VITE_APP_MODULE_FISCAL_API_PREFIX` — prefix for FURS fiscal routes (default: `/fiscal`)
+- `VITE_APP_MODULE_FISCAL_HR_API_PREFIX` — prefix for Croatian fiscal routes (default: `/fiscal_hr`)
+- `VITE_APP_MODULE_CORE_API_PREFIX` — prefix for core module routes (default: `/core`)
+
+## Order Fiscal Status
+- Backend Order model (`core/models/models.go`) has `IsFiscalized bool` + `FiscalID string`
+- `helpers.MarkOrderFiscalized(cfg, log, orderID, fiscalID)` — called by both FURS and HR handlers after successful fiscalization
+- Frontend `OrderView.vue` — smart fiscalize button: queries `/api/settings` to detect which fiscal module is enabled, calls the correct endpoint
+- Frontend `OrderListItem` type has `is_fiscalized` + `fiscal_id` fields
+
 ## Fiscal Module (FURS ZAPOS)
 - `modules/fiscal/` — FURS ZAPOS fiscal receipt integration
 - ZOI: RSA-SHA256 PKCS#1v1.5 signing → MD5 hash → 32-char hex

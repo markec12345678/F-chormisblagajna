@@ -324,6 +324,7 @@ const i18n = createI18n({
       fiscalize: 'Fiscalize',
       fiscalized: 'Fiscalized',
       fiscalization_failed: 'Fiscalization failed',
+      fiscalization_not_configured: 'No fiscal module enabled. Configure FURS or Croatian fiscalization in Settings.',
       fiscal_receipt: 'Fiscal receipt',
       eor: 'EOR (Unique Invoice ID)',
       offline_pending: 'Pending fiscalization (offline)',

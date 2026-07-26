@@ -551,64 +551,92 @@ const collectedMoney = () => {
     })
 }
 
-const fiscalizeOrder = () => {
+const fiscalizeOrder = async () => {
   fiscalizing.value = true
 
-  const items = props.order.items.map((item: OrderItem) => ({
-    name: item.product?.name || '',
-    quantity: item.quantity || 1,
-    unit_price: item.product?.price || 0,
-    tax_rate: 25,
-    taxable_amount: (item.product?.price || 0) * (item.quantity || 1),
-    tax_amount: ((item.product?.price || 0) * (item.quantity || 1) * 25) / 100,
-  }))
+  try {
+    const settingsResp = await axios.get(
+      `http://${import.meta.env.VITE_APP_BACKEND_HOST}${import.meta.env.VITE_APP_MODULE_CORE_API_PREFIX}/api/settings`,
+      { headers: { Authorization: `Bearer ${auth.accessToken.value}` } },
+    )
 
-  const totalAmount = items.reduce(
-    (sum: number, item: { taxable_amount: number; tax_amount: number }) =>
-      sum + item.taxable_amount + item.tax_amount,
-    0,
-  )
+    const settings = settingsResp.data.data
+    const fiscalEnabled = settings.fiscal?.enabled || false
+    const fiscalHrEnabled = settings.fiscal_hr?.enabled || false
 
-  const fiscalPrefix = import.meta.env.VITE_APP_MODULE_FISCAL_API_PREFIX || ''
+    if (!fiscalEnabled && !fiscalHrEnabled) {
+      toast.add({
+        severity: 'warn',
+        summary: t('failed'),
+        detail: t('fiscalization_not_configured'),
+        group: 'br',
+      })
+      return
+    }
 
-  axios
-    .post(
-      `http://${import.meta.env.VITE_APP_BACKEND_HOST}${fiscalPrefix}/api/fiscal/invoice`,
-      {
+    const items = props.order.items.map((item: OrderItem) => ({
+      name: item.product?.name || '',
+      quantity: item.quantity || 1,
+      unit_price: item.product?.price || 0,
+      tax_rate: 25,
+      taxable_amount: (item.product?.price || 0) * (item.quantity || 1),
+      tax_amount: ((item.product?.price || 0) * (item.quantity || 1) * 25) / 100,
+    }))
+
+    const totalAmount = items.reduce(
+      (sum: number, item: { taxable_amount: number; tax_amount: number }) =>
+        sum + item.taxable_amount + item.tax_amount,
+      0,
+    )
+
+    const fiscalPrefix = import.meta.env.VITE_APP_MODULE_FISCAL_API_PREFIX || ''
+    const fiscalHrPrefix = import.meta.env.VITE_APP_MODULE_FISCAL_HR_API_PREFIX || ''
+
+    let endpoint = ''
+    let payload: Record<string, unknown> = {}
+
+    if (fiscalEnabled) {
+      endpoint = `http://${import.meta.env.VITE_APP_BACKEND_HOST}${fiscalPrefix}/api/fiscal/invoice`
+      payload = {
         order_id: props.order.id,
         items,
         total_amount: totalAmount,
         tax_number: 0,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${auth.accessToken.value}`,
-        },
-      },
-    )
-    .then((response) => {
-      const eor = response.data.eor || response.data.jir || ''
-      Object.assign(props.order, { is_fiscalized: true, fiscal_id: eor })
-      toast.add({
-        severity: 'success',
-        summary: t('fiscalized'),
-        detail: `${t('eor')}: ${eor}`,
-        life: 8000,
-        group: 'br',
-      })
-      emit('updated')
+      }
+    } else if (fiscalHrEnabled) {
+      endpoint = `http://${import.meta.env.VITE_APP_BACKEND_HOST}${fiscalHrPrefix}/api/fiscal_hr/invoice`
+      payload = {
+        order_id: props.order.id,
+        items,
+        total_amount: totalAmount,
+        payment_method: props.order.payment_source || 'cash',
+      }
+    }
+
+    const response = await axios.post(endpoint, payload, {
+      headers: { Authorization: `Bearer ${auth.accessToken.value}` },
     })
-    .catch(() => {
-      toast.add({
-        severity: 'error',
-        summary: t('fiscalization_failed'),
-        detail: t('request_failed'),
-        group: 'br',
-      })
+
+    const fiscalId = response.data.eor || response.data.jir || ''
+    Object.assign(props.order, { is_fiscalized: true, fiscal_id: fiscalId })
+    toast.add({
+      severity: 'success',
+      summary: t('fiscalized'),
+      detail: `${t('eor')}: ${fiscalId}`,
+      life: 8000,
+      group: 'br',
     })
-    .finally(() => {
-      fiscalizing.value = false
+    emit('updated')
+  } catch {
+    toast.add({
+      severity: 'error',
+      summary: t('fiscalization_failed'),
+      detail: t('request_failed'),
+      group: 'br',
     })
+  } finally {
+    fiscalizing.value = false
+  }
 }
 
 const PrintKitchenReceipt = () => {
