@@ -92,6 +92,8 @@ const router = createRouter({
           },
         },
         { path: 'tables', component: () => import('@/pages/Tables.vue') },
+        { path: 'branches', component: () => import('@/pages/Branches.vue') },
+        { path: 'split-bills', component: () => import('@/pages/SplitBill.vue') },
         { path: 'ai', component: () => import('@/pages/AI.vue') },
       ],
     },

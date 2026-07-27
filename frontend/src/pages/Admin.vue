@@ -319,6 +319,26 @@ const menu_tree = ref([
   {
     key: '10',
     label: {
+      title: 'branches',
+      plural: true,
+    },
+    data: 'Branches',
+    icon: 'pi pi-building',
+    link: '/admin/branches',
+  },
+  {
+    key: '11',
+    label: {
+      title: 'split_bill',
+      plural: false,
+    },
+    data: 'Split Bill',
+    icon: 'pi pi-wallet',
+    link: '/admin/split-bills',
+  },
+  {
+    key: '12',
+    label: {
       title: 'ai_search',
       plural: false,
     },

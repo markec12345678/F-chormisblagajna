@@ -3,7 +3,7 @@ node_modules
 /dist
 zitadel-key.json
 .42c
-public
+/public
 .devcontainer/data
 .devcontainer/.env
 mnt
