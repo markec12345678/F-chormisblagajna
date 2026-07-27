@@ -393,6 +393,11 @@ const i18n = createI18n({
       voice_recognition_failed: 'Voice recognition failed',
       voice_search_failed: 'Voice search failed',
       microphone_access_denied: 'Microphone access denied',
+      install_app: 'Install Nutrix POS',
+      install_description: 'Add to your home screen for quick access',
+      install: 'Install',
+      dismiss: 'Dismiss',
+      offline_mode: 'Offline mode',
     },
   },
 })

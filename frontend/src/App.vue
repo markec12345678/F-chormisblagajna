@@ -1,5 +1,6 @@
 <template>
   <main :style="`height:100%;direction:${orientation};`">
+    <OfflineIndicator />
     <ErrorBoundary>
       <RouterView v-if="!setting_up && !show_mode_modal" v-slot="{ Component }">
         <Transition name="page" mode="out-in">
@@ -7,6 +8,7 @@
         </Transition>
       </RouterView>
     </ErrorBoundary>
+    <InstallPrompt />
     <!-- First-run shop mode selection modal -->
     <div
       v-if="show_mode_modal"
@@ -141,6 +143,8 @@ import Toast from 'primevue/toast'
 import Dialog from 'primevue/dialog'
 import Button from 'primevue/button'
 import ErrorBoundary from '@/components/ErrorBoundary.vue'
+import InstallPrompt from '@/components/InstallPrompt.vue'
+import OfflineIndicator from '@/components/OfflineIndicator.vue'
 import { globalStore } from '@/stores'
 import axios from 'axios'
 import { useRouter } from 'vue-router'
