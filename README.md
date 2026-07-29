@@ -11,23 +11,22 @@
 
 # NutrixPOS
 
-Blagajniški sistem za restavracije in trgovine. Go backend (MongoDB) + Vue 3 SPA frontend.
+Celovit blagajniški sistem za restavracije in trgovine. **Go backend (MongoDB) + Vue 3 SPA frontend** z modularno arhitekturo — 48 modulov, ki jih poljubno vklapljaš.
 
-## Funkcionalnosti
+## Pregled modulov
 
-- 🍳 **Kuhinjski zaslon** — real-time naročila z WebSocket
-- 📦 **Inventar** — materiali, zaloge, dnevnik porabe
-- 📋 **Recepture** — produkti z materiali, pod-recepture
-- 🛒 **Naročila** — submit, start, finish, pay, cancel, refund, tips
-- 👥 **Stranke** — CRUD zgodovina naročil
-- 🔄 **HubSync** — sinhronizacija z oddaljenim strežnikom
-- 🌍 **Več jezikov** — dinamični paketi (SLO, EN, AR) + 130+ i18n ključev
-- 🖨️ **Thermal printer** — Handlebars template za ESC/POS
-- 🔐 **Auth** — JWT / Zitadel OIDC / NoAuth
-- 👤 **Več vlog** — superuser, admin, cashier, chef
-- 🌙 **Dark mode** + **RTL** podpora
-- 🛡️ **ErrorBoundary** — graceful napaka ob crashing komponentah
-- 🧾 **FURS ZAPOS** — fiskalizacija računov (ZOI, EOR, QR, mTLS)
+| Kategorija | Moduli |
+|------------|--------|
+| **POS & Naročila** | Core Orders, Multi-Payment, Split Payment, Online Orders, Delivery Management, Tableside Ordering, Self-Service Kiosk |
+| **Kuhinja** | Kitchen Display (WebSocket), Menu Engineering, Receipt Customization |
+| **Stranke** | Customer CRUD, Customer Feedback, Loyalty, Gift Cards |
+| **Inventar & Nabava** | Inventory (materials), Inventory Alerts, Inventory Transfers, Purchase Orders, Suppliers, Waste Tracking |
+| **Finance** | Accounting, Expenses, Employee Tips, FURS ZAPOS (SI fiscal), CIS (HR fiscal) |
+| **Osebje** | Auth & Roles (JWT/OIDC/NoAuth), Employee Performance, Scheduling, Time Clock, Staff Chat, Staff Training |
+| **Prostor** | Floor Plan (visual table editor), Reservations, Queue/Waitlist |
+| **Marketing** | Marketing Campaigns, Promotions (auto-discount rules) |
+| **Operativno** | Multi-Location Dashboard, Audit Log, Reports (CSV export), Notifications, HubSync (remote sync), Languages (i18n) |
+| **Nastavitve** | App Settings, Admin Setup Wizard |
 
 ## Tech Stack
 
@@ -38,8 +37,8 @@ Blagajniški sistem za restavracije in trgovine. Go backend (MongoDB) + Vue 3 SP
 | Frontend | Vue 3 + TypeScript + PrimeVue 4 |
 | Build | Vite 6 + viteSingleFile |
 | State | Pinia |
-| Auth | JWT (HS256) / Zitadel OIDC |
-| i18n | vue-i18n (130+ ključev, SLO/EN/AR) |
+| Auth | JWT (HS256) / Zitadel OIDC / NoAuth |
+| i18n | vue-i18n (460+ ključev, SLO/EN) |
 | CI/CD | GitHub Actions (golangci-lint) |
 | Container | Docker (multi-stage, non-root) |
 | Linting | ESLint + Prettier + oxlint |
@@ -53,7 +52,7 @@ Blagajniški sistem za restavracije in trgovine. Go backend (MongoDB) + Vue 3 SP
 docker compose up
 ```
 
-Ob prvič bo Setup Wizard zagnas na `http://localhost:8000` za nastavitev MongoDB povezave.
+Ob prvem zagonu bo Setup Wizard na `http://localhost:8000` za nastavitev MongoDB povezave.
 
 ### Ročno
 
@@ -111,22 +110,19 @@ cd frontend && npm run build
 ### Testi
 
 ```bash
-# Backend (11 paketov, 140 testov)
+# Backend (13+ paketov, 196+ testov)
 go test -race ./...
 
-# Frontend (38 testnih datotek, 230 testov)
+# Frontend (38 testnih datotek, 230+ testov)
 cd frontend && npx vitest run
 ```
 
-**Backend testi:** config, customerrors, helpers, middlewares (ratelimit), userio, auth, auth/middlewares (jwt, bcrypt, auth), auth/models, core/middlewares (CORS), core/models, core/dto
-**Frontend testi:** ErrorBoundary, InventoryItem, Notification, Order, OrderItem, OrderItemView, AddCustomer, MealCard, PickMaterial, OrderItemRefund, QueueOrder, OrderView, StashedOrder, Settings, Categories, Customers, Orders, Kitchen, Languages, Profile, Home, Login, Sales, Products, Inventory, NoAccessView, AdminSetup, Setup, Hubsync
-
 ### CI/CD
 
-GitHub Actions pipeline (.github/workflows/ci.yml):
+GitHub Actions pipeline (`.github/workflows/ci.yml`):
 - **Backend**: vet, golangci-lint, test (race + coverage), build, govulncheck
 - **Frontend**: type-check, lint (ESLint + oxlint), test (vitest), build
-- **Docker**: multi-stage build + cache (depends on backend + frontend)
+- **Docker**: multi-stage build + cache (odvisen od backend + frontend)
 
 ## Arhitektura
 
@@ -137,27 +133,44 @@ main.go
        │    ├── Auth (JWT/Zitadel/NoAuth)
        │    ├── Products/Recipes CRUD
        │    ├── Materials/Inventory CRUD
-       │    ├── Orders (submit→start→finish→pay)
-       │    ├── Customers CRUD
+       │    ├── Orders (submit→start→finish→pay/cancel/refund)
+       │    ├── Customers CRUD + stats
        │    ├── Categories CRUD
        │    ├── Sales reports + CSV export
-       │    ├── Disposals
+       │    ├── Disposals + Waste
        │    ├── Settings
        │    ├── Languages (i18n)
-       │    ├── WebSocket (real-time)
-       │    └── Background workers
-       └── HubSync modul
-            └── Sinhronizacija z hub strežnikom
+       │    ├── WebSocket (real-time kitchen display)
+       │    └── Background workers (fiscal retry)
+       ├── HubSync modul
+       │    └── Sinhronizacija z hub strežnikom
+       ├── Fiscal modul (FURS ZAPOS)
+       │    ├── ZOI, EOR, QR generation
+       │    ├── mTLS + JWS RS256
+       │    └── Offline retry worker
+       ├── Fiscal HR modul (CIS eRačun)
+       │    ├── ZKI, XML-DSig, SOAP
+       │    └── Offline retry worker
+       └── 44 dodatnih modulov (vsak sledi IBaseModule)
+            ├── handlers/ → API endpoints
+            ├── services/ → business logic
+            └── models/   → data structures
 ```
+
+Vsak modul implementira `IBaseModule` vmesnik (`OnStart`/`OnEnd`), se registrira v `cmd/root.go` prek `LoadModule()` in samodejno dobi:
+- JWT avtentikacijo (ali NoAuth za javne endpoint-e)
+- MongoDB dostop prek `common.GetDatabaseClient()`
+- Cobra CLI ukaz
 
 ## Varnost
 
-- **JWT secret** — samodejna generacija naključnega ključa ob zagonu
+- **JWT secret** — samodejna generacija naključnega ključa ob zagonu (`crypto/rand`)
 - **Rate limiting** — drseno okno na auth endpointih (10 prijav/min, 5 registracij/min)
 - **NoSQL injection** — uporabniški vnos ekraniran z `regexp.QuoteMeta`
 - **Error handling** — notranje napake niso izpostavljene strankam
 - **Docker** — non-root uporabnik, healthcheck, strip binary
 - **Kriptografija** — `crypto/rand` za varne tokene, bcrypt za gesla
+- **PIN kode** — SHA-256 salted hash
 
 ## Dostopne vloge
 
@@ -174,20 +187,16 @@ main.go
 |----------|-------|
 | `README.md` | Ta datoteka |
 | `LICENSE` | GNU GPL v2 |
-| `CONTRIBUTING.md` | Navodila za prispevke |
-| `SECURITY.md` | Politika varnosti |
-| `CODEOWNERS` | Lastnik repozitorija |
 | `AGENTS.md` | Navodila za AI agente |
 | `.golangci.yml` | Konfiguracija lintinga |
 | `.github/workflows/ci.yml` | CI/CD pipeline |
 | `Dockerfile` | Multi-stage build |
-| `docker-compose.yaml` | Pos + frontend + MongoDB |
+| `docker-compose.yaml` | POS + frontend + MongoDB |
 | `frontend/eslint.config.ts` | ESLint + Prettier + oxlint |
-| `frontend/.prettierrc.json` | Prettier konfiguracija |
 | `frontend/vitest.config.ts` | Vitest konfiguracija |
 
 ## Licenca
 
-GNU General Public License v2 - glej [LICENSE](LICENSE)
+GNU General Public License v2 — glej [LICENSE](LICENSE)
 
 > **Opozorilo:** NutrixPOS je v aktivnem razvoju. Nazaj-kompatibilnost ni zagotovljena do stabilne izdaje.
