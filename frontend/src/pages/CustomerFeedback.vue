@@ -9,34 +9,42 @@
         <div class="grid">
           <div class="col-12 md:col-3">
             <Card>
-              <template #content class="text-center">
-                <div class="text-4xl font-bold text-primary">{{ summary.average_rating?.toFixed(1) }}</div>
-                <div class="text-500">{{ $t('avg_rating') }}</div>
-                <div class="mt-1">{{ renderStars(summary.average_rating) }}</div>
+              <template #content>
+                <div class="text-center">
+                  <div class="text-4xl font-bold text-primary">{{ summary.average_rating?.toFixed(1) }}</div>
+                  <div class="text-500">{{ $t('avg_rating') }}</div>
+                  <div class="mt-1">{{ renderStars(summary.average_rating) }}</div>
+                </div>
               </template>
             </Card>
           </div>
           <div class="col-12 md:col-3">
             <Card>
-              <template #content class="text-center">
-                <div class="text-4xl font-bold">{{ summary.total_feedbacks }}</div>
-                <div class="text-500">{{ $t('total_reviews') }}</div>
+              <template #content>
+                <div class="text-center">
+                  <div class="text-4xl font-bold">{{ summary.total_feedbacks }}</div>
+                  <div class="text-500">{{ $t('total_reviews') }}</div>
+                </div>
               </template>
             </Card>
           </div>
           <div class="col-12 md:col-3">
             <Card>
-              <template #content class="text-center">
-                <div class="text-2xl font-bold text-green-500">{{ getCategoryAvg('food') }}</div>
-                <div class="text-500">{{ $t('food_rating') }}</div>
+              <template #content>
+                <div class="text-center">
+                  <div class="text-2xl font-bold text-green-500">{{ getCategoryAvg('food') }}</div>
+                  <div class="text-500">{{ $t('food_rating') }}</div>
+                </div>
               </template>
             </Card>
           </div>
           <div class="col-12 md:col-3">
             <Card>
-              <template #content class="text-center">
-                <div class="text-2xl font-bold text-orange-500">{{ getCategoryAvg('service') }}</div>
-                <div class="text-500">{{ $t('service_rating') }}</div>
+              <template #content>
+                <div class="text-center">
+                  <div class="text-2xl font-bold text-orange-500">{{ getCategoryAvg('service') }}</div>
+                  <div class="text-500">{{ $t('service_rating') }}</div>
+                </div>
               </template>
             </Card>
           </div>

@@ -55,7 +55,6 @@ import Calendar from 'primevue/calendar'
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useToast } from 'primevue/usetoast'
-import auth from '../services/auth'
 
 const { t } = useI18n()
 const toast = useToast()

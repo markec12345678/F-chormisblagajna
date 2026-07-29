@@ -123,7 +123,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useToast } from 'primevue/usetoast'
 import axios from 'axios'
@@ -190,7 +190,7 @@ async function loadAll() {
       avgFeedback.value = summary?.average_rating || 0
       recentFeedback.value = summary?.recent_feedbacks || []
     }
-  } catch (e) {
+  } catch {
     toast.add({ severity: 'error', summary: 'Error', detail: 'Failed to load dashboard data', life: 3000 })
   } finally {
     loading.value = false

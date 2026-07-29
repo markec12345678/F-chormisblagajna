@@ -112,7 +112,7 @@ const loadSession = async () => {
   loading.value = true
   try {
     const token = route.params.token as string
-    const menuResponse = await axios.get(
+    await axios.get(
       `http://${import.meta.env.VITE_APP_BACKEND_HOST}/tableside/api/menu/${token}/orders`
     )
   } catch {

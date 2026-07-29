@@ -27,7 +27,9 @@
 import { ref, reactive } from 'vue'; import axios from 'axios'; import { useI18n } from 'vue-i18n'; import { useToast } from 'primevue/usetoast'; import auth from '../services/auth'
 import Button from 'primevue/button'; import DataTable from 'primevue/datatable'; import Column from 'primevue/column'; import InputText from 'primevue/inputtext'; import InputNumber from 'primevue/inputnumber'; import TabView from 'primevue/tabview'; import TabPanel from 'primevue/tabpanel'; import Tag from 'primevue/tag'
 const { t } = useI18n(); const toast = useToast()
-const zones = ref<any[]>([]); const delOrders = ref<any[]>([]); const loading = ref(false); const zoneForm = reactive({ name: '', fee: 0, min_order: 0 })
+interface Zone { id: string; name: string; fee: number; min_order: number; active: boolean }
+interface DelOrder { id: string; customer_name: string; address: string; delivery_fee: number; status: string }
+const zones = ref<Zone[]>([]); const delOrders = ref<DelOrder[]>([]); const loading = ref(false); const zoneForm = reactive({ name: '', fee: 0, min_order: 0 })
 const formatCurrency = (n: number) => new Intl.NumberFormat('sl-SI',{style:'currency',currency:'EUR'}).format(n||0)
 const addZone = async () => { try { await axios.post(`http://${import.meta.env.VITE_APP_BACKEND_HOST}/delivery/api/zones`,{...zoneForm,active:true},{headers:{Authorization:`Bearer ${auth.accessToken.value}`}}); zoneForm.name='';zoneForm.fee=0;zoneForm.min_order=0; await load() } catch { toast.add({severity:'error',summary:t('failed'),group:'br',life:3000}) } }
 const deleteZone = async (id:string) => { try { await axios.delete(`http://${import.meta.env.VITE_APP_BACKEND_HOST}/delivery/api/zones/${id}`,{headers:{Authorization:`Bearer ${auth.accessToken.value}`}}); await load() } catch { toast.add({severity:'error',summary:t('failed'),group:'br',life:3000}) } }

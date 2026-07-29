@@ -26,7 +26,8 @@
 import { ref, reactive } from 'vue'; import axios from 'axios'; import { useI18n } from 'vue-i18n'; import { useToast } from 'primevue/usetoast'; import auth from '../services/auth'
 import Button from 'primevue/button'; import DataTable from 'primevue/datatable'; import Column from 'primevue/column'; import Card from 'primevue/card'; import InputText from 'primevue/inputtext'; import InputNumber from 'primevue/inputnumber'; import Dropdown from 'primevue/dropdown'; import Calendar from 'primevue/calendar'; import Textarea from 'primevue/textarea'
 const { t } = useI18n(); const toast = useToast()
-const campaigns = ref<any[]>([]); const loading = ref(false); const creating = ref(false); const formStart = ref<Date|null>(null); const formEnd = ref<Date|null>(null)
+interface Campaign { id: string; name: string; type: string; discount_pct: number; start_date: string; end_date: string; active: boolean }
+const campaigns = ref<Campaign[]>([]); const loading = ref(false); const creating = ref(false); const formStart = ref<Date|null>(null); const formEnd = ref<Date|null>(null)
 const form = reactive({ name:'', type:'discount', description:'', discount_pct:10 })
 const toggle = async (id:string) => { try { await axios.post(`http://${import.meta.env.VITE_APP_BACKEND_HOST}/marketing/api/campaigns/${id}/toggle`,{},{headers:{Authorization:`Bearer ${auth.accessToken.value}`}}); await load() } catch { toast.add({severity:'error',summary:t('failed'),group:'br',life:3000}) } }
 const doDelete = async (id:string) => { try { await axios.delete(`http://${import.meta.env.VITE_APP_BACKEND_HOST}/marketing/api/campaigns/${id}`,{headers:{Authorization:`Bearer ${auth.accessToken.value}`}}); await load() } catch { toast.add({severity:'error',summary:t('failed'),group:'br',life:3000}) } }

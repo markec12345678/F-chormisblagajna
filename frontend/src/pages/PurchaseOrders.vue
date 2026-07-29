@@ -31,8 +31,10 @@
 import { ref, reactive } from 'vue'; import axios from 'axios'; import { useI18n } from 'vue-i18n'; import { useToast } from 'primevue/usetoast'; import auth from '../services/auth'
 import Button from 'primevue/button'; import DataTable from 'primevue/datatable'; import Column from 'primevue/column'; import Card from 'primevue/card'; import InputText from 'primevue/inputtext'; import InputNumber from 'primevue/inputnumber'; import Calendar from 'primevue/calendar'; import Tag from 'primevue/tag'
 const { t } = useI18n(); const toast = useToast()
-const list = ref<any[]>([]); const loading = ref(false); const saving = ref(false); const formDate = ref<Date|null>(null)
-const form = reactive({ supplier_name:'', notes:'', items:[] as any[] })
+interface POItem { material_name: string; quantity: number; unit_price: number; total_price: number }
+interface PurchaseOrder { id: string; supplier_name: string; items: POItem[]; total_cost: number; status: string; ordered_at: string }
+const list = ref<PurchaseOrder[]>([]); const loading = ref(false); const saving = ref(false); const formDate = ref<Date|null>(null)
+const form = reactive({ supplier_name:'', notes:'', items: [] as POItem[] })
 const formatCurrency = (n:number) => new Intl.NumberFormat('sl-SI',{style:'currency',currency:'EUR'}).format(n||0)
 const createPO = async () => {
   saving.value=true; try {

@@ -107,7 +107,6 @@ interface TrainingProgress {
 }
 
 const modules = ref<TrainingModule[]>([])
-const sessions = ref<TrainingSession[]>([])
 const progressList = ref<TrainingProgress[]>([])
 const activeSession = ref<TrainingSession | null>(null)
 const currentSteps = ref<TrainingStep[]>([])
