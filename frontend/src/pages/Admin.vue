@@ -636,6 +636,66 @@ const menu_tree = ref([
     icon: 'pi pi-comment',
     link: '/admin/customer-feedback',
   },
+  {
+    key: '41',
+    label: {
+      title: 'delivery_management',
+      plural: false,
+    },
+    data: 'Delivery',
+    icon: 'pi pi-truck',
+    link: '/admin/delivery',
+  },
+  {
+    key: '42',
+    label: {
+      title: 'self_service_kiosk',
+      plural: false,
+    },
+    data: 'Kiosk',
+    icon: 'pi pi-desktop',
+    link: '/admin/kiosk',
+  },
+  {
+    key: '43',
+    label: {
+      title: 'language',
+      plural: true,
+    },
+    data: 'Languages',
+    icon: 'pi pi-language',
+    link: '/admin/languages',
+  },
+  {
+    key: '44',
+    label: {
+      title: 'marketing_campaigns',
+      plural: false,
+    },
+    data: 'Marketing',
+    icon: 'pi pi-megaphone',
+    link: '/admin/marketing',
+  },
+  {
+    key: '45',
+    label: {
+      title: 'purchase_orders',
+      plural: true,
+    },
+    data: 'Purchase Orders',
+    icon: 'pi pi-shopping-bag',
+    link: '/admin/purchase-orders',
+  },
+  {
+    key: '46',
+    label: {
+      title: 'queue_waitlist',
+      plural: false,
+    },
+    data: 'Queue',
+    icon: 'pi pi-users',
+    link: '/admin/queue',
+  },
 ])
 
 const items = ref([

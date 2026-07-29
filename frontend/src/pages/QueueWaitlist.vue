@@ -2,7 +2,7 @@
   <div class="w-full"><div class="grid mx-2"><div class="col-12"><h3>{{ $t('queue_waitlist') }}</h3></div>
     <div class="col-12 md:col-6"><DataTable :value="queue" stripedRows :loading="loading">
       <template #empty>{{ $t('queue_empty') }}</template>
-      <Column field="position" :header="#">
+      <Column field="position" header="#">
         <template #body="s"><Tag :value="s.data.position" /></template>
       </Column>
       <Column field="customer_name" :header="$t('customer')"></Column><Column field="party_size" :header="$t('guests')"></Column>
