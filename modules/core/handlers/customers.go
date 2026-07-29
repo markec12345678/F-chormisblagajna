@@ -190,3 +190,56 @@ func GetCustomer(config config.Config, logger logger.ILogger) http.HandlerFunc {
 		w.Write(jsonResponse)
 	}
 }
+
+func GetCustomerOrders(config config.Config, logger logger.ILogger) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		params := mux.Vars(r)
+		id_param := params["id"]
+
+		customers_svc := services.CustomersService{
+			Logger: logger,
+			Config: config,
+		}
+
+		orders, err := customers_svc.GetCustomerOrders(id_param, 100)
+		if err != nil {
+			logger.Error(err.Error())
+			http.Error(w, "internal server error", http.StatusInternalServerError)
+			return
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		jsonResponse, err := json.Marshal(JSONApiOkResponse{
+			Data: orders,
+		})
+		if err != nil {
+			logger.Error(err.Error())
+			http.Error(w, "internal server error", http.StatusInternalServerError)
+			return
+		}
+
+		w.Write(jsonResponse)
+	}
+}
+
+func UpdateCustomerStats(config config.Config, logger logger.ILogger) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		params := mux.Vars(r)
+		id_param := params["id"]
+
+		customers_svc := services.CustomersService{
+			Logger: logger,
+			Config: config,
+		}
+
+		err := customers_svc.UpdateCustomerStats(id_param)
+		if err != nil {
+			logger.Error(err.Error())
+			http.Error(w, "internal server error", http.StatusInternalServerError)
+			return
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusNoContent)
+	}
+}

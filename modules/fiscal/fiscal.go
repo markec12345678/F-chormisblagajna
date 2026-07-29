@@ -59,6 +59,18 @@ func (f *FiscalModule) RegisterHttpHandlers(router *mux.Router, prefix string) {
 	router.Handle(prefix+"/api/fiscal/settings", core_middlewares.AllowCors(
 		auth_svc.AllowAnyOfRoles(handlers.UpdateFiscalSettingsHandler(f.Config, f.Logger), "admin"),
 	)).Methods("PATCH", "OPTIONS")
+
+	router.Handle(prefix+"/api/fiscal/receipts", core_middlewares.AllowCors(
+		auth_svc.AllowAnyOfRoles(handlers.GetFiscalReceipts(f.Config, f.Logger), "admin"),
+	)).Methods("GET", "OPTIONS")
+
+	router.Handle(prefix+"/api/fiscal/daily-summary", core_middlewares.AllowCors(
+		auth_svc.AllowAnyOfRoles(handlers.GetFiscalDailySummary(f.Config, f.Logger), "admin"),
+	)).Methods("GET", "OPTIONS")
+
+	router.Handle(prefix+"/api/fiscal/receipts/export", core_middlewares.AllowCors(
+		auth_svc.AllowAnyOfRoles(handlers.ExportFiscalReceiptsCSV(f.Config, f.Logger), "admin"),
+	)).Methods("GET", "OPTIONS")
 }
 
 func (f *FiscalModule) RegisterBackgroundWorkers() []modules.Worker {

@@ -165,11 +165,21 @@ func TestOrder_JSON(t *testing.T) {
 }
 
 func TestCustomer_JSON(t *testing.T) {
+	now := time.Now()
 	customer := Customer{
-		Id:      "c-1",
-		Name:    "Janez Novak",
-		Phone:   "+38640123456",
-		Address: "Glavna 1, Ljubljana",
+		Id:            "c-1",
+		Name:          "Janez Novak",
+		Phone:         "+38640123456",
+		Address:       "Glavna 1, Ljubljana",
+		Email:         "janez@example.com",
+		Notes:         "VIP customer",
+		Tags:          []string{"vip", "regular"},
+		LoyaltyPoints: 150,
+		TotalSpent:    1234.56,
+		OrderCount:    25,
+		LastOrderDate: &now,
+		Preferences:   map[string]string{"language": "sl", "dietary": "vegetarian"},
+		CreatedAt:     now,
 	}
 
 	data, err := json.Marshal(customer)
@@ -190,6 +200,30 @@ func TestCustomer_JSON(t *testing.T) {
 	}
 	if decoded.Address != customer.Address {
 		t.Errorf("Address = %v, want %v", decoded.Address, customer.Address)
+	}
+	if decoded.Email != customer.Email {
+		t.Errorf("Email = %v, want %v", decoded.Email, customer.Email)
+	}
+	if decoded.Notes != customer.Notes {
+		t.Errorf("Notes = %v, want %v", decoded.Notes, customer.Notes)
+	}
+	if len(decoded.Tags) != 2 || decoded.Tags[0] != "vip" || decoded.Tags[1] != "regular" {
+		t.Errorf("Tags = %v, want [vip regular]", decoded.Tags)
+	}
+	if decoded.LoyaltyPoints != 150 {
+		t.Errorf("LoyaltyPoints = %v, want 150", decoded.LoyaltyPoints)
+	}
+	if decoded.TotalSpent != 1234.56 {
+		t.Errorf("TotalSpent = %v, want 1234.56", decoded.TotalSpent)
+	}
+	if decoded.OrderCount != 25 {
+		t.Errorf("OrderCount = %v, want 25", decoded.OrderCount)
+	}
+	if decoded.LastOrderDate == nil {
+		t.Error("LastOrderDate should not be nil")
+	}
+	if decoded.Preferences["language"] != "sl" {
+		t.Errorf("Preferences[language] = %v, want sl", decoded.Preferences["language"])
 	}
 }
 

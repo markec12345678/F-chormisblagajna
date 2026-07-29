@@ -43,12 +43,22 @@ const i18n = createI18n({
       name: 'Name',
       address: 'Address',
       phone: 'Phone',
+      email: 'Email',
+      notes: 'Notes',
+      tags: 'Tags',
+      loyalty_points: 'Loyalty Points',
+      total_spent: 'Total Spent',
       actions: 'Actions',
       no_results: 'No results found',
       save: 'Save',
       cancel: 'Cancel',
       edit_customer: 'Edit Customer',
       validation_required: 'This field is required',
+      filter_by_tag: 'Filter by Tag',
+      customer_details: 'Customer Details',
+      order_history: 'Order History',
+      customer_stats: 'Customer Statistics',
+      no_orders: 'No Orders Found',
     },
   },
 })
@@ -60,7 +70,7 @@ const stubs = {
     props: ['value', 'loading', 'totalRecords', 'rows', 'paginator', 'stripedRows'],
   },
   Column: {
-    template: '<div class="column-stub"><slot name="body" /></div>',
+    template: '<div class="column-stub"><slot name="body" :data="{}" /></div>',
     props: ['field', 'header', 'sortable'],
   },
   Dialog: {
@@ -72,12 +82,32 @@ const stubs = {
     template: '<input class="input-text-stub" />',
     props: ['modelValue', 'id', 'aria-describedby'],
   },
+  Textarea: {
+    template: '<textarea class="textarea-stub" />',
+    props: ['modelValue', 'id', 'rows'],
+  },
   Button: {
     template: '<button class="btn-stub" @click="$emit(\'click\')">{{ label }}</button>',
     props: ['label', 'icon', 'severity'],
   },
   ButtonGroup: { template: '<div class="btn-group-stub"><slot/></div>' },
   ConfirmPopup: { template: '<div />' },
+  Card: {
+    template: '<div class="card-stub"><slot name="title" /><slot name="content" /></div>',
+    props: ['title'],
+  },
+  Tag: {
+    template: '<span class="tag-stub">{{ value }}</span>',
+    props: ['value', 'severity'],
+  },
+  Dropdown: {
+    template: '<div class="dropdown-stub" />',
+    props: ['modelValue', 'options', 'placeholder', 'showClear'],
+  },
+  Calendar: {
+    template: '<input class="calendar-stub" />',
+    props: ['modelValue', 'placeholder', 'dateFormat'],
+  },
 }
 
 describe('Customers', () => {

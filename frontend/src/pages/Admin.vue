@@ -193,6 +193,16 @@ watch(
 
 const menu_tree = ref([
   {
+    key: '-1',
+    label: {
+      title: 'dashboard',
+      plural: false,
+    },
+    data: 'Dashboard',
+    icon: 'pi pi-fw pi-home',
+    link: '/admin/dashboard',
+  },
+  {
     key: '0',
     label: {
       title: 'inventory',
@@ -339,12 +349,292 @@ const menu_tree = ref([
   {
     key: '12',
     label: {
+      title: 'scheduling',
+      plural: false,
+    },
+    data: 'Scheduling',
+    icon: 'pi pi-calendar',
+    link: '/admin/scheduling',
+  },
+  {
+    key: '13',
+    label: {
+      title: 'reservations',
+      plural: true,
+    },
+    data: 'Reservations',
+    icon: 'pi pi-book',
+    link: '/admin/reservations',
+  },
+  {
+    key: '14',
+    label: {
+      title: 'promotions',
+      plural: true,
+    },
+    data: 'Promotions',
+    icon: 'pi pi-tags',
+    link: '/admin/promotions',
+  },
+  {
+    key: '15',
+    label: {
+      title: 'loyalty_program',
+      plural: false,
+    },
+    data: 'Loyalty',
+    icon: 'pi pi-star',
+    link: '/admin/loyalty',
+  },
+  {
+    key: '16',
+    label: {
+      title: 'reports',
+      plural: true,
+    },
+    data: 'Reports',
+    icon: 'pi pi-chart-line',
+    link: '/admin/reports',
+  },
+  {
+    key: '17',
+    label: {
+      title: 'multi_location',
+      plural: false,
+    },
+    data: 'Locations',
+    icon: 'pi pi-globe',
+    link: '/admin/locations',
+  },
+  {
+    key: '18',
+    label: {
       title: 'ai_search',
       plural: false,
     },
     data: 'AI',
     icon: 'pi pi-sparkles',
     link: '/admin/ai',
+  },
+  {
+    key: '19',
+    label: {
+      title: 'gift_cards',
+      plural: true,
+    },
+    data: 'Gift Cards',
+    icon: 'pi pi-gift',
+    link: '/admin/giftcards',
+  },
+  {
+    key: '20',
+    label: {
+      title: 'inventory_transfers',
+      plural: true,
+    },
+    data: 'Transfers',
+    icon: 'pi pi-arrow-right-arrow-left',
+    link: '/admin/transfers',
+  },
+  {
+    key: '21',
+    label: {
+      title: 'fiscal_dashboard',
+      plural: false,
+    },
+    data: 'Fiscal',
+    icon: 'pi pi-receipt',
+    link: '/admin/fiscal',
+  },
+  {
+    key: '22',
+    label: {
+      title: 'floor_plan',
+      plural: false,
+    },
+    data: 'Floor Plan',
+    icon: 'pi pi-th-large',
+    link: '/admin/floorplan',
+  },
+  {
+    key: '23',
+    label: {
+      title: 'employee_tips',
+      plural: true,
+    },
+    data: 'Tips',
+    icon: 'pi pi-dollar',
+    link: '/admin/tips',
+  },
+  {
+    key: '24',
+    label: {
+      title: 'accounting_export',
+      plural: false,
+    },
+    data: 'Accounting Export',
+    icon: 'pi pi-file-excel',
+    link: '/admin/accounting',
+  },
+  {
+    key: '25',
+    label: {
+      title: 'menu_engineering',
+      plural: false,
+    },
+    data: 'Menu Engineering',
+    icon: 'pi pi-chart-bar',
+    link: '/admin/menu-engineering',
+  },
+  {
+    key: '26',
+    label: {
+      title: 'employee_performance',
+      plural: false,
+    },
+    data: 'Employee Performance',
+    icon: 'pi pi-users',
+    link: '/admin/employee-performance',
+  },
+  {
+    key: '27',
+    label: {
+      title: 'suppliers',
+      plural: true,
+    },
+    data: 'Suppliers',
+    icon: 'pi pi-truck',
+    link: '/admin/suppliers',
+  },
+  {
+    key: '28',
+    label: {
+      title: 'expense_tracking',
+      plural: false,
+    },
+    data: 'Expenses',
+    icon: 'pi pi-wallet',
+    link: '/admin/expenses',
+  },
+  {
+    key: '29',
+    label: {
+      title: 'time_clock',
+      plural: false,
+    },
+    data: 'Time Clock',
+    icon: 'pi pi-clock',
+    link: '/admin/timeclock',
+  },
+  {
+    key: '30',
+    label: {
+      title: 'waste_tracking',
+      plural: false,
+    },
+    data: 'Waste Tracking',
+    icon: 'pi pi-trash',
+    link: '/admin/waste',
+  },
+  {
+    key: '31',
+    label: {
+      title: 'online_orders',
+      plural: false,
+    },
+    data: 'Online Orders',
+    icon: 'pi pi-shopping-cart',
+    link: '/admin/online-orders',
+  },
+  {
+    key: '32',
+    label: {
+      title: 'staff_chat',
+      plural: false,
+    },
+    data: 'Staff Chat',
+    icon: 'pi pi-comments',
+    link: '/admin/chat',
+  },
+  {
+    key: '33',
+    label: {
+      title: 'audit_log',
+      plural: false,
+    },
+    data: 'Audit Log',
+    icon: 'pi pi-history',
+    link: '/admin/audit-log',
+  },
+  {
+    key: '34',
+    label: {
+      title: 'receipt_customization',
+      plural: false,
+    },
+    data: 'Receipt',
+    icon: 'pi pi-file',
+    link: '/admin/receipt',
+  },
+  {
+    key: '35',
+    label: {
+      title: 'inventory_alerts',
+      plural: false,
+    },
+    data: 'Alerts',
+    icon: 'pi pi-bell',
+    link: '/admin/inventory-alerts',
+  },
+  {
+    key: '36',
+    label: {
+      title: 'multi_payment',
+      plural: false,
+    },
+    data: 'MultiPay',
+    icon: 'pi pi-credit-card',
+    link: '/admin/multi-payment',
+  },
+  {
+    key: '37',
+    label: {
+      title: 'customer_display',
+      plural: false,
+    },
+    data: 'Display',
+    icon: 'pi pi-desktop',
+    link: '/admin/customer-display',
+  },
+  {
+    key: '38',
+    label: {
+      title: 'tableside_ordering',
+      plural: false,
+    },
+    data: 'Tableside',
+    icon: 'pi pi-table',
+    link: '/admin/tableside',
+  },
+  {
+    key: '39',
+    label: {
+      title: 'staff_training',
+      plural: false,
+    },
+    data: 'Training',
+    icon: 'pi pi-graduation-cap',
+    link: '/admin/staff-training',
+  },
+  {
+    key: '40',
+    label: {
+      title: 'customer_feedback',
+      plural: false,
+    },
+    data: 'Feedback',
+    icon: 'pi pi-comment',
+    link: '/admin/customer-feedback',
   },
 ])
 

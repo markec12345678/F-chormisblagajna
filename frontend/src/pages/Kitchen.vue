@@ -190,6 +190,7 @@ const startWebsocket = () => {
       } else if (data.topic_name == 'order_submitted') {
         orders.value.push(data.order)
         displayOrders()
+        playBeep()
       } else {
         const notification = new Notification()
         notification.description = data.message
@@ -269,6 +270,24 @@ prepareLayout()
 loadOrders()
 loadLanguage()
 startWebsocket()
+
+const playBeep = () => {
+  try {
+    const audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)()
+    const oscillator = audioCtx.createOscillator()
+    const gainNode = audioCtx.createGain()
+    oscillator.connect(gainNode)
+    gainNode.connect(audioCtx.destination)
+    oscillator.frequency.value = 800
+    oscillator.type = 'sine'
+    gainNode.gain.value = 0.3
+    oscillator.start()
+    setTimeout(() => {
+      oscillator.stop()
+      audioCtx.close()
+    }, 200)
+  } catch {}
+}
 </script>
 
 <style>

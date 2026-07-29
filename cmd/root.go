@@ -22,11 +22,47 @@ import (
 	"github.com/nutrixpos/pos/modules/core/models"
 	"github.com/nutrixpos/pos/modules/core/services"
 	"github.com/nutrixpos/pos/modules/ai"
+	"github.com/nutrixpos/pos/modules/accounting"
 	"github.com/nutrixpos/pos/modules/branch"
 	"github.com/nutrixpos/pos/modules/fiscal"
 	"github.com/nutrixpos/pos/modules/fiscal_hr"
+	"github.com/nutrixpos/pos/modules/giftcard"
 	"github.com/nutrixpos/pos/modules/hubsync"
+	"github.com/nutrixpos/pos/modules/inventorytransfer"
+	"github.com/nutrixpos/pos/modules/kitchen"
+	"github.com/nutrixpos/pos/modules/loyalty"
+	"github.com/nutrixpos/pos/modules/promotion"
+	"github.com/nutrixpos/pos/modules/multilocation"
+	"github.com/nutrixpos/pos/modules/menuengineering"
+	"github.com/nutrixpos/pos/modules/employee"
+	"github.com/nutrixpos/pos/modules/supplier"
+	"github.com/nutrixpos/pos/modules/expense"
+	"github.com/nutrixpos/pos/modules/timeclock"
+	"github.com/nutrixpos/pos/modules/waste"
+	"github.com/nutrixpos/pos/modules/onlineorder"
+	"github.com/nutrixpos/pos/modules/chat"
+	"github.com/nutrixpos/pos/modules/auditlog"
+	"github.com/nutrixpos/pos/modules/receipt"
+	"github.com/nutrixpos/pos/modules/customerdisplay"
+	"github.com/nutrixpos/pos/modules/delivery"
+	"github.com/nutrixpos/pos/modules/feedback"
+	"github.com/nutrixpos/pos/modules/inventoryalerts"
+	"github.com/nutrixpos/pos/modules/reservations"
+	"github.com/nutrixpos/pos/modules/purchase"
+	"github.com/nutrixpos/pos/modules/kiosk"
+	"github.com/nutrixpos/pos/modules/giftcards"
+	"github.com/nutrixpos/pos/modules/queue"
+	"github.com/nutrixpos/pos/modules/floorplan"
+	"github.com/nutrixpos/pos/modules/marketing"
+	"github.com/nutrixpos/pos/modules/tableside"
+	"github.com/nutrixpos/pos/modules/training"
+	"github.com/nutrixpos/pos/modules/multipayment"
+	"github.com/nutrixpos/pos/modules/notification"
+	"github.com/nutrixpos/pos/modules/report"
+	"github.com/nutrixpos/pos/modules/reservation"
+	"github.com/nutrixpos/pos/modules/scheduling"
 	"github.com/nutrixpos/pos/modules/splitbill"
+	"github.com/nutrixpos/pos/modules/tips"
 	"github.com/nutrixpos/pos/modules/table"
 	"go.mongodb.org/mongo-driver/v2/bson"
 	"gopkg.in/yaml.v2"
@@ -373,6 +409,186 @@ func (root *RootProcess) Execute() error {
 		Logger: root.Logger,
 		Config: root.Config,
 	}, "splitbill").RegisterHttpHandlers(root.Router).Save()
+
+	appmanager.LoadModule(&scheduling.SchedulingModule{
+		Logger: root.Logger,
+		Config: root.Config,
+	}, "scheduling").RegisterHttpHandlers(root.Router).Save()
+
+	appmanager.LoadModule(&reservation.ReservationModule{
+		Logger: root.Logger,
+		Config: root.Config,
+	}, "reservation").RegisterHttpHandlers(root.Router).Save()
+
+	appmanager.LoadModule(&promotion.PromotionModule{
+		Logger: root.Logger,
+		Config: root.Config,
+	}, "promotion").RegisterHttpHandlers(root.Router).Save()
+
+	appmanager.LoadModule(&loyalty.LoyaltyModule{
+		Logger: root.Logger,
+		Config: root.Config,
+	}, "loyalty").RegisterHttpHandlers(root.Router).Save()
+
+	appmanager.LoadModule(&report.ReportModule{
+		Logger: root.Logger,
+		Config: root.Config,
+	}, "report").RegisterHttpHandlers(root.Router).Save()
+
+	appmanager.LoadModule(&multilocation.MultiLocationModule{
+		Logger: root.Logger,
+		Config: root.Config,
+	}, "multilocation").RegisterHttpHandlers(root.Router).Save()
+
+	appmanager.LoadModule(&giftcard.GiftCardModule{
+		Logger: root.Logger,
+		Config: root.Config,
+	}, "giftcard").RegisterHttpHandlers(root.Router).Save()
+
+	appmanager.LoadModule(&inventorytransfer.InventoryTransferModule{
+		Logger: root.Logger,
+		Config: root.Config,
+	}, "inventorytransfer").RegisterHttpHandlers(root.Router).Save()
+
+	appmanager.LoadModule(&tips.TipsModule{
+		Logger: root.Logger,
+		Config: root.Config,
+	}, "tips").RegisterHttpHandlers(root.Router).Save()
+
+	appmanager.LoadModule(&kitchen.KitchenModule{
+		Logger: root.Logger,
+		Config: root.Config,
+	}, "kitchen").RegisterHttpHandlers(root.Router).Save()
+
+	appmanager.LoadModule(&notification.NotificationModule{
+		Logger: root.Logger,
+		Config: root.Config,
+	}, "notification").RegisterHttpHandlers(root.Router).Save()
+
+	appmanager.LoadModule(&accounting.AccountingModule{
+		Logger: root.Logger,
+		Config: root.Config,
+	}, "accounting").RegisterHttpHandlers(root.Router).Save()
+
+	appmanager.LoadModule(&menuengineering.MenuEngineeringModule{
+		Logger: root.Logger,
+		Config: root.Config,
+	}, "menuengineering").RegisterHttpHandlers(root.Router).Save()
+
+	appmanager.LoadModule(&employee.EmployeeModule{
+		Logger: root.Logger,
+		Config: root.Config,
+	}, "employee").RegisterHttpHandlers(root.Router).Save()
+
+	appmanager.LoadModule(&supplier.SupplierModule{
+		Logger: root.Logger,
+		Config: root.Config,
+	}, "supplier").RegisterHttpHandlers(root.Router).Save()
+
+	appmanager.LoadModule(&expense.ExpenseModule{
+		Logger: root.Logger,
+		Config: root.Config,
+	}, "expense").RegisterHttpHandlers(root.Router).Save()
+
+	appmanager.LoadModule(&timeclock.TimeClockModule{
+		Logger: root.Logger,
+		Config: root.Config,
+	}, "timeclock").RegisterHttpHandlers(root.Router).Save()
+
+	appmanager.LoadModule(&waste.WasteModule{
+		Logger: root.Logger,
+		Config: root.Config,
+	}, "waste").RegisterHttpHandlers(root.Router).Save()
+
+	appmanager.LoadModule(&onlineorder.OnlineOrderModule{
+		Logger: root.Logger,
+		Config: root.Config,
+	}, "onlineorder").RegisterHttpHandlers(root.Router).Save()
+
+	appmanager.LoadModule(&chat.ChatModule{
+		Logger: root.Logger,
+		Config: root.Config,
+	}, "chat").RegisterHttpHandlers(root.Router).Save()
+
+	appmanager.LoadModule(&auditlog.AuditLogModule{
+		Logger: root.Logger,
+		Config: root.Config,
+	}, "auditlog").RegisterHttpHandlers(root.Router).Save()
+
+	appmanager.LoadModule(&receipt.ReceiptModule{
+		Logger: root.Logger,
+		Config: root.Config,
+	}, "receipt").RegisterHttpHandlers(root.Router).Save()
+
+	appmanager.LoadModule(&inventoryalerts.InventoryAlertsModule{
+		Logger: root.Logger,
+		Config: root.Config,
+	}, "inventoryalerts").RegisterHttpHandlers(root.Router).Save()
+
+	appmanager.LoadModule(&multipayment.MultiPaymentModule{
+		Logger: root.Logger,
+		Config: root.Config,
+	}, "multipayment").RegisterHttpHandlers(root.Router).Save()
+
+	appmanager.LoadModule(&customerdisplay.CustomerDisplayModule{
+		Logger: root.Logger,
+		Config: root.Config,
+	}, "customerdisplay").RegisterHttpHandlers(root.Router).Save()
+
+	appmanager.LoadModule(&tableside.TablesideModule{
+		Logger: root.Logger,
+		Config: root.Config,
+	}, "tableside").RegisterHttpHandlers(root.Router).Save()
+
+	appmanager.LoadModule(&training.TrainingModule{
+		Logger: root.Logger,
+		Config: root.Config,
+	}, "training").RegisterHttpHandlers(root.Router).Save()
+
+	appmanager.LoadModule(&feedback.FeedbackModule{
+		Logger: root.Logger,
+		Config: root.Config,
+	}, "feedback").RegisterHttpHandlers(root.Router).Save()
+
+	appmanager.LoadModule(&reservations.ReservationModule{
+		Logger: root.Logger,
+		Config: root.Config,
+	}, "reservations").RegisterHttpHandlers(root.Router).Save()
+
+	appmanager.LoadModule(&delivery.DeliveryModule{
+		Logger: root.Logger,
+		Config: root.Config,
+	}, "delivery").RegisterHttpHandlers(root.Router).Save()
+
+	appmanager.LoadModule(&purchase.PurchaseModule{
+		Logger: root.Logger,
+		Config: root.Config,
+	}, "purchase").RegisterHttpHandlers(root.Router).Save()
+
+	appmanager.LoadModule(&kiosk.KioskModule{
+		Logger: root.Logger,
+		Config: root.Config,
+	}, "kiosk").RegisterHttpHandlers(root.Router).Save()
+
+	appmanager.LoadModule(&giftcards.GiftCardModule{
+		Logger: root.Logger,
+		Config: root.Config,
+	}, "giftcards").RegisterHttpHandlers(root.Router).Save()
+
+	appmanager.LoadModule(&queue.QueueModule{
+		Logger: root.Logger,
+		Config: root.Config,
+	}, "queue").RegisterHttpHandlers(root.Router).Save()
+
+	appmanager.LoadModule(&floorplan.FloorplanModule{
+		Logger: root.Logger,
+		Config: root.Config,
+	}, "floorplan").RegisterHttpHandlers(root.Router).Save()
+
+	appmanager.LoadModule(&marketing.MarketingModule{
+		Logger: root.Logger,
+		Config: root.Config,
+	}, "marketing").RegisterHttpHandlers(root.Router).Save()
 
 		// Ignite the app manager to start all modules
 		appmanager.Run()

@@ -191,6 +191,8 @@ func (c *Core) RegisterHttpHandlers(router *mux.Router, prefix string) {
 	router.Handle(prefix+"/api/customers/{id}", core_middlewares.AllowCors(auth_svc.AllowAnyOfRoles(handlers.GetCustomer(c.Config, c.Logger), "admin"))).Methods("GET", "OPTIONS")
 	router.Handle(prefix+"/api/customers", core_middlewares.AllowCors(auth_svc.AllowAnyOfRoles(handlers.GetCustomers(c.Config, c.Logger, c.Settings), "admin", "cashier"))).Methods("GET", "OPTIONS")
 	router.Handle(prefix+"/api/customers", core_middlewares.AllowCors(auth_svc.AllowAnyOfRoles(handlers.AddCustomer(c.Config, c.Logger), "admin", "cashier"))).Methods("POST", "OPTIONS")
+	router.Handle(prefix+"/api/customers/{id}/orders", core_middlewares.AllowCors(auth_svc.AllowAnyOfRoles(handlers.GetCustomerOrders(c.Config, c.Logger), "admin", "cashier"))).Methods("GET", "OPTIONS")
+	router.Handle(prefix+"/api/customers/{id}/stats", core_middlewares.AllowCors(auth_svc.AllowAnyOfRoles(handlers.UpdateCustomerStats(c.Config, c.Logger), "admin"))).Methods("POST", "OPTIONS")
 	router.Handle(prefix+"/api/logs/salesperday", core_middlewares.AllowCors(auth_svc.AllowAnyOfRoles(handlers.GetSalesPerDay(c.Config, c.Logger), "admin"))).Methods("GET", "OPTIONS")
 	router.Handle(prefix+"/api/logs/salesperday/exportcsv", core_middlewares.AllowCors(auth_svc.AllowAnyOfRoles(handlers.ExportSalesCSV(c.Config, c.Logger), "admin"))).Methods("GET", "OPTIONS")
 	router.Handle(prefix+"/api/materials", core_middlewares.AllowCors(auth_svc.AllowAnyOfRoles(handlers.GetMaterials(c.Config, c.Logger), "admin", "cashier", "chef"))).Methods("GET", "OPTIONS")

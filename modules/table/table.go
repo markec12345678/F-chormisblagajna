@@ -63,4 +63,16 @@ func (t *TableModule) RegisterHttpHandlers(router *mux.Router, prefix string) {
 	router.Handle(prefix+"/api/tables/{id}/qr", core_middlewares.AllowCors(
 		auth_svc.AllowAnyOfRoles(handlers.GetQRCode(t.Config, t.Logger), "admin", "cashier"),
 	)).Methods("GET", "OPTIONS")
+
+	router.Handle(prefix+"/api/tables/transfer", core_middlewares.AllowCors(
+		auth_svc.AllowAnyOfRoles(handlers.TransferTable(t.Config, t.Logger), "admin", "cashier"),
+	)).Methods("POST", "OPTIONS")
+
+	router.Handle(prefix+"/api/tables/merge", core_middlewares.AllowCors(
+		auth_svc.AllowAnyOfRoles(handlers.MergeTables(t.Config, t.Logger), "admin"),
+	)).Methods("POST", "OPTIONS")
+
+	router.Handle(prefix+"/api/tables/floorplan", core_middlewares.AllowCors(
+		auth_svc.AllowAnyOfRoles(handlers.GetFloorPlan(t.Config, t.Logger), "admin", "cashier", "chef"),
+	)).Methods("GET", "OPTIONS")
 }

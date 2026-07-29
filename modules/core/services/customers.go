@@ -100,6 +100,7 @@ func (cs CustomersService) InsertNew(customer models.Customer) (afterInsert mode
 	collection := client.Database(cs.Config.Databases[0].Database).Collection("customers")
 
 	customer.Id = bson.NewObjectID().Hex()
+	customer.CreatedAt = time.Now()
 
 	result, err := collection.InsertOne(ctx, customer)
 	if err != nil {
@@ -136,8 +137,18 @@ func (cs CustomersService) UpdateCustomer(customer models.Customer, customer_id 
 	if customer.Address != "" {
 		update["address"] = customer.Address
 	}
-
-	update["id"] = customer_id
+	if customer.Email != "" {
+		update["email"] = customer.Email
+	}
+	if customer.Notes != "" {
+		update["notes"] = customer.Notes
+	}
+	if customer.Tags != nil {
+		update["tags"] = customer.Tags
+	}
+	if customer.Preferences != nil {
+		update["preferences"] = customer.Preferences
+	}
 
 	_, err = collection.UpdateOne(ctx, bson.M{"id": customer_id}, bson.M{"$set": update})
 	if err != nil {
@@ -170,4 +181,90 @@ func (cs CustomersService) DeleteCustomer(customer_id string) (err error) {
 	}
 
 	return
+}
+
+func (cs CustomersService) GetCustomerOrders(customer_id string, limit int) (orders []models.Order, err error) {
+
+	client, err := common.GetDatabaseClient(cs.Logger, &cs.Config)
+	if err != nil {
+		return orders, err
+	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	orders = make([]models.Order, 0)
+
+	collection := client.Database(cs.Config.Databases[0].Database).Collection("orders")
+
+	findOptions := options.Find()
+	findOptions.SetLimit(int64(limit))
+	findOptions.SetSort(bson.D{{Key: "submitted_at", Value: -1}})
+
+	cursor, err := collection.Find(ctx, bson.M{"customer.id": customer_id}, findOptions)
+	if err != nil {
+		return orders, err
+	}
+	defer cursor.Close(ctx)
+
+	for cursor.Next(context.Background()) {
+		var order models.Order
+		if err := cursor.Decode(&order); err != nil {
+			return orders, err
+		}
+		orders = append(orders, order)
+	}
+
+	return orders, nil
+}
+
+func (cs CustomersService) UpdateCustomerStats(customer_id string) (err error) {
+
+	client, err := common.GetDatabaseClient(cs.Logger, &cs.Config)
+	if err != nil {
+		return err
+	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	ordersCollection := client.Database(cs.Config.Databases[0].Database).Collection("orders")
+	customersCollection := client.Database(cs.Config.Databases[0].Database).Collection("customers")
+
+	var totalSpent float64
+	var orderCount int
+	var lastOrderDate *time.Time
+
+	cursor, err := ordersCollection.Find(ctx, bson.M{
+		"customer.id": customer_id,
+		"is_paid":     true,
+	})
+	if err != nil {
+		return err
+	}
+	defer cursor.Close(ctx)
+
+	for cursor.Next(context.Background()) {
+		var order models.Order
+		if err := cursor.Decode(&order); err != nil {
+			return err
+		}
+		totalSpent += order.SalePrice - order.Discount
+		orderCount++
+		if lastOrderDate == nil || order.SubmittedAt.After(*lastOrderDate) {
+			lastOrderDate = &order.SubmittedAt
+		}
+	}
+
+	update := bson.M{
+		"total_spent":     totalSpent,
+		"order_count":     orderCount,
+		"loyalty_points":  int(totalSpent / 10),
+	}
+	if lastOrderDate != nil {
+		update["last_order_date"] = lastOrderDate
+	}
+
+	_, err = customersCollection.UpdateOne(ctx, bson.M{"id": customer_id}, bson.M{"$set": update})
+	return err
 }
