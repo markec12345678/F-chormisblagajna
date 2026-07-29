@@ -18,7 +18,9 @@
             <Card>
               <template #title>{{ $t('total_expenses') }}</template>
               <template #content>
-                <div class="text-4xl font-bold text-red-500">{{ formatCurrency(summary.total_expenses) }}</div>
+                <div class="text-4xl font-bold text-red-500">
+                  {{ formatCurrency(summary.total_expenses) }}
+                </div>
               </template>
             </Card>
           </div>
@@ -26,7 +28,9 @@
             <Card>
               <template #title>{{ $t('monthly_total') }}</template>
               <template #content>
-                <div class="text-4xl font-bold text-orange-500">{{ formatCurrency(summary.monthly_total) }}</div>
+                <div class="text-4xl font-bold text-orange-500">
+                  {{ formatCurrency(summary.monthly_total) }}
+                </div>
               </template>
             </Card>
           </div>
@@ -34,7 +38,9 @@
             <Card>
               <template #title>{{ $t('categories') }}</template>
               <template #content>
-                <div class="text-4xl font-bold text-blue-500">{{ summary.by_category?.length || 0 }}</div>
+                <div class="text-4xl font-bold text-blue-500">
+                  {{ summary.by_category?.length || 0 }}
+                </div>
               </template>
             </Card>
           </div>
@@ -85,7 +91,12 @@
         </div>
       </div>
 
-      <Dialog v-model:visible="expenseDialog" modal :header="editingExpense ? $t('edit_expense') : $t('add_expense')" :style="{ width: '50rem' }">
+      <Dialog
+        v-model:visible="expenseDialog"
+        modal
+        :header="editingExpense ? $t('edit_expense') : $t('add_expense')"
+        :style="{ width: '50rem' }"
+      >
         <div class="grid">
           <div class="col-12 md:col-6">
             <div class="flex flex-column gap-2">
@@ -96,13 +107,22 @@
           <div class="col-12 md:col-6">
             <div class="flex flex-column gap-2">
               <label>{{ $t('amount') }}</label>
-              <InputNumber v-model="currentExpense.amount" mode="currency" currency="EUR" locale="sl-SI" />
+              <InputNumber
+                v-model="currentExpense.amount"
+                mode="currency"
+                currency="EUR"
+                locale="sl-SI"
+              />
             </div>
           </div>
           <div class="col-12 md:col-6">
             <div class="flex flex-column gap-2">
               <label>{{ $t('category') }}</label>
-              <Dropdown v-model="currentExpense.category" :options="categories" :placeholder="$t('select_category')" />
+              <Dropdown
+                v-model="currentExpense.category"
+                :options="categories"
+                :placeholder="$t('select_category')"
+              />
             </div>
           </div>
           <div class="col-12 md:col-6">
@@ -178,7 +198,16 @@ const expenseDialog = ref(false)
 const editingExpense = ref(false)
 const currentExpense = ref<Partial<Expense>>({})
 
-const categories = ['rent', 'utilities', 'supplies', 'marketing', 'maintenance', 'insurance', 'taxes', 'other']
+const categories = [
+  'rent',
+  'utilities',
+  'supplies',
+  'marketing',
+  'maintenance',
+  'insurance',
+  'taxes',
+  'other',
+]
 
 const formatCurrency = (amount: number) => {
   return new Intl.NumberFormat('sl-SI', { style: 'currency', currency: 'EUR' }).format(amount)
@@ -202,20 +231,32 @@ const saveExpense = async () => {
       await axios.put(
         `http://${import.meta.env.VITE_APP_BACKEND_HOST}/expense/api/expenses/${currentExpense.value.id}`,
         currentExpense.value,
-        { headers: { Authorization: `Bearer ${auth.accessToken.value}` } }
+        { headers: { Authorization: `Bearer ${auth.accessToken.value}` } },
       )
     } else {
       await axios.post(
         `http://${import.meta.env.VITE_APP_BACKEND_HOST}/expense/api/expenses`,
         currentExpense.value,
-        { headers: { Authorization: `Bearer ${auth.accessToken.value}` } }
+        { headers: { Authorization: `Bearer ${auth.accessToken.value}` } },
       )
     }
-    toast.add({ severity: 'success', summary: t('success'), detail: t('expense_saved'), group: 'br', life: 3000 })
+    toast.add({
+      severity: 'success',
+      summary: t('success'),
+      detail: t('expense_saved'),
+      group: 'br',
+      life: 3000,
+    })
     expenseDialog.value = false
     loadData()
   } catch {
-    toast.add({ severity: 'error', summary: t('failed'), detail: t('save_failed'), group: 'br', life: 3000 })
+    toast.add({
+      severity: 'error',
+      summary: t('failed'),
+      detail: t('save_failed'),
+      group: 'br',
+      life: 3000,
+    })
   } finally {
     isSaving.value = false
   }
@@ -226,16 +267,22 @@ const loadData = async () => {
   try {
     const [expensesRes, summaryRes] = await Promise.all([
       axios.get(`http://${import.meta.env.VITE_APP_BACKEND_HOST}/expense/api/expenses`, {
-        headers: { Authorization: `Bearer ${auth.accessToken.value}` }
+        headers: { Authorization: `Bearer ${auth.accessToken.value}` },
       }),
       axios.get(`http://${import.meta.env.VITE_APP_BACKEND_HOST}/expense/api/expenses/summary`, {
-        headers: { Authorization: `Bearer ${auth.accessToken.value}` }
-      })
+        headers: { Authorization: `Bearer ${auth.accessToken.value}` },
+      }),
     ])
     expenses.value = expensesRes.data.data || []
     summary.value = summaryRes.data.data
   } catch {
-    toast.add({ severity: 'error', summary: t('failed'), detail: t('load_failed'), group: 'br', life: 3000 })
+    toast.add({
+      severity: 'error',
+      summary: t('failed'),
+      detail: t('load_failed'),
+      group: 'br',
+      life: 3000,
+    })
   } finally {
     isLoading.value = false
   }

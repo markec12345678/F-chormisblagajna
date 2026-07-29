@@ -7,7 +7,12 @@
           <div class="flex gap-2">
             <Calendar v-model="startDate" :placeholder="$t('start_date')" dateFormat="yy-mm-dd" />
             <Calendar v-model="endDate" :placeholder="$t('end_date')" dateFormat="yy-mm-dd" />
-            <Button :label="$t('load')" icon="pi pi-refresh" @click="loadPerformance" :loading="isLoading" />
+            <Button
+              :label="$t('load')"
+              icon="pi pi-refresh"
+              @click="loadPerformance"
+              :loading="isLoading"
+            />
           </div>
         </div>
       </div>
@@ -26,7 +31,9 @@
             <Card>
               <template #title>{{ $t('total_revenue') }}</template>
               <template #content>
-                <div class="text-4xl font-bold text-green-500">{{ formatCurrency(summary.total_revenue) }}</div>
+                <div class="text-4xl font-bold text-green-500">
+                  {{ formatCurrency(summary.total_revenue) }}
+                </div>
               </template>
             </Card>
           </div>
@@ -34,7 +41,9 @@
             <Card>
               <template #title>{{ $t('avg_sales_per_hour') }}</template>
               <template #content>
-                <div class="text-4xl font-bold text-blue-500">{{ formatCurrency(summary.avg_sales_per_hour) }}</div>
+                <div class="text-4xl font-bold text-blue-500">
+                  {{ formatCurrency(summary.avg_sales_per_hour) }}
+                </div>
               </template>
             </Card>
           </div>
@@ -59,7 +68,10 @@
               <template #empty>{{ $t('no_data') }}</template>
               <Column field="rank" :header="$t('rank')" style="width: 80px">
                 <template #body="slotProps">
-                  <Tag :value="`#${slotProps?.data?.rank || 0}`" :severity="getRankSeverity(slotProps?.data?.rank || 0)" />
+                  <Tag
+                    :value="`#${slotProps?.data?.rank || 0}`"
+                    :severity="getRankSeverity(slotProps?.data?.rank || 0)"
+                  />
                 </template>
               </Column>
               <Column field="employee_name" :header="$t('employee')"></Column>
@@ -94,7 +106,11 @@
           <template #title>{{ $t('top_products_per_employee') }}</template>
           <template #content>
             <div class="grid">
-              <div class="col-12 md:col-6 lg:col-4" v-for="emp in summary.top_performers?.slice(0, 6)" :key="emp.employee_id">
+              <div
+                class="col-12 md:col-6 lg:col-4"
+                v-for="emp in summary.top_performers?.slice(0, 6)"
+                :key="emp.employee_id"
+              >
                 <Card>
                   <template #title>{{ emp.employee_name }}</template>
                   <template #content>
@@ -201,7 +217,7 @@ const loadPerformance = async () => {
 
     const response = await axios.get(
       `http://${import.meta.env.VITE_APP_BACKEND_HOST}/employee/api/performance?${params.toString()}`,
-      { headers: { Authorization: `Bearer ${auth.accessToken.value}` } }
+      { headers: { Authorization: `Bearer ${auth.accessToken.value}` } },
     )
     summary.value = response.data.data
   } catch {

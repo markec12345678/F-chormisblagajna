@@ -100,7 +100,8 @@ const stubs = {
   },
   Divider: { template: '<hr />' },
   InputText: {
-    template: '<input :value="modelValue" @input="$emit(\'update:modelValue\', $event.target.value)" />',
+    template:
+      '<input :value="modelValue" @input="$emit(\'update:modelValue\', $event.target.value)" />',
     props: ['modelValue', 'type', 'placeholder'],
     emits: ['update:modelValue'],
   },
@@ -110,7 +111,8 @@ const stubs = {
   },
   Dialog: { template: '<div><slot/></div>', props: ['visible'] },
   Textarea: {
-    template: '<textarea :value="modelValue" @input="$emit(\'update:modelValue\', $event.target.value)"></textarea>',
+    template:
+      '<textarea :value="modelValue" @input="$emit(\'update:modelValue\', $event.target.value)"></textarea>',
     props: ['modelValue', 'placeholder'],
     emits: ['update:modelValue'],
   },

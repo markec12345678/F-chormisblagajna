@@ -126,7 +126,9 @@ describe('PickMaterial', () => {
   })
 
   it('emits returnMaterial when add button clicked', async () => {
-    const mockPost = vi.fn().mockResolvedValue({ data: { data: [{ id: 'e1', quantity: 5, cost: 2.5 }] } })
+    const mockPost = vi
+      .fn()
+      .mockResolvedValue({ data: { data: [{ id: 'e1', quantity: 5, cost: 2.5 }] } })
     mockGet.mockResolvedValueOnce({
       data: {
         data: [

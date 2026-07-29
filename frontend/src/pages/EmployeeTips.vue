@@ -3,7 +3,12 @@
     <div class="flex justify-content-between align-items-center mb-4">
       <h2 class="m-0">{{ $t('employee_tips') }}</h2>
       <div class="flex gap-2">
-        <Button :label="$t('payout_tips')" icon="pi pi-wallet" severity="warn" @click="showPayoutDialog = true" />
+        <Button
+          :label="$t('payout_tips')"
+          icon="pi pi-wallet"
+          severity="warn"
+          @click="showPayoutDialog = true"
+        />
         <Button :label="$t('record_tip')" icon="pi pi-plus" @click="showRecordDialog = true" />
       </div>
     </div>
@@ -43,7 +48,9 @@
           <Card class="h-full">
             <template #title>{{ $t('payout_history') }}</template>
             <template #content>
-              <div class="text-3xl font-bold text-yellow-500">{{ formatCurrency(totalPaidOut) }}</div>
+              <div class="text-3xl font-bold text-yellow-500">
+                {{ formatCurrency(totalPaidOut) }}
+              </div>
             </template>
           </Card>
         </div>
@@ -77,7 +84,9 @@
             </Column>
             <Column field="payout_method" :header="$t('payout_method')" />
             <Column field="payout_date" :header="$t('date')" sortable>
-              <template #body="{ data }">{{ new Date(data.payout_date).toLocaleString() }}</template>
+              <template #body="{ data }">{{
+                new Date(data.payout_date).toLocaleString()
+              }}</template>
             </Column>
           </DataTable>
         </template>
@@ -85,7 +94,12 @@
     </div>
 
     <!-- Record Tip Dialog -->
-    <Dialog v-model:visible="showRecordDialog" :header="$t('record_tip')" :style="{ width: '450px' }" modal>
+    <Dialog
+      v-model:visible="showRecordDialog"
+      :header="$t('record_tip')"
+      :style="{ width: '450px' }"
+      modal
+    >
       <div class="flex flex-column gap-3">
         <div>
           <label class="block mb-1">{{ $t('employee') }}</label>
@@ -93,11 +107,23 @@
         </div>
         <div>
           <label class="block mb-1">{{ $t('amount') }}</label>
-          <InputNumber v-model="newTip.amount" mode="currency" currency="EUR" locale="sl-SI" class="w-full" />
+          <InputNumber
+            v-model="newTip.amount"
+            mode="currency"
+            currency="EUR"
+            locale="sl-SI"
+            class="w-full"
+          />
         </div>
         <div>
           <label class="block mb-1">{{ $t('payment_method') }}</label>
-          <Dropdown v-model="newTip.payment_method" :options="paymentMethods" optionLabel="label" optionValue="value" class="w-full" />
+          <Dropdown
+            v-model="newTip.payment_method"
+            :options="paymentMethods"
+            optionLabel="label"
+            optionValue="value"
+            class="w-full"
+          />
         </div>
       </div>
       <template #footer>
@@ -107,7 +133,12 @@
     </Dialog>
 
     <!-- Payout Dialog -->
-    <Dialog v-model:visible="showPayoutDialog" :header="$t('payout_tips')" :style="{ width: '450px' }" modal>
+    <Dialog
+      v-model:visible="showPayoutDialog"
+      :header="$t('payout_tips')"
+      :style="{ width: '450px' }"
+      modal
+    >
       <div class="flex flex-column gap-3">
         <div>
           <label class="block mb-1">{{ $t('employee') }}</label>
@@ -115,11 +146,23 @@
         </div>
         <div>
           <label class="block mb-1">{{ $t('amount') }}</label>
-          <InputNumber v-model="payoutData.amount" mode="currency" currency="EUR" locale="sl-SI" class="w-full" />
+          <InputNumber
+            v-model="payoutData.amount"
+            mode="currency"
+            currency="EUR"
+            locale="sl-SI"
+            class="w-full"
+          />
         </div>
         <div>
           <label class="block mb-1">{{ $t('payout_method') }}</label>
-          <Dropdown v-model="payoutData.payout_method" :options="paymentMethods" optionLabel="label" optionValue="value" class="w-full" />
+          <Dropdown
+            v-model="payoutData.payout_method"
+            :options="paymentMethods"
+            optionLabel="label"
+            optionValue="value"
+            class="w-full"
+          />
         </div>
       </div>
       <template #footer>
@@ -175,7 +218,7 @@ const formatCurrency = (value: number) => {
 
 const totalTips = computed(() => summaries.value.reduce((sum, s) => sum + (s.total_tips || 0), 0))
 const totalCount = computed(() => summaries.value.reduce((sum, s) => sum + (s.tip_count || 0), 0))
-const averageTip = computed(() => totalCount.value > 0 ? totalTips.value / totalCount.value : 0)
+const averageTip = computed(() => (totalCount.value > 0 ? totalTips.value / totalCount.value : 0))
 const totalPaidOut = computed(() => payouts.value.reduce((sum, p) => sum + (p.amount || 0), 0))
 
 const loadData = async () => {

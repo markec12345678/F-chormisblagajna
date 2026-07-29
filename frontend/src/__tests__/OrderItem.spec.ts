@@ -191,7 +191,14 @@ describe('OrderItemMaterial', () => {
   it('should initialize with material', () => {
     const material = new Material()
     material.entries = [
-      { ...new MaterialEntry(), id: 'e1', company: 'Acme', quantity: 50, purchase_quantity: 50, purchase_price: 10 },
+      {
+        ...new MaterialEntry(),
+        id: 'e1',
+        company: 'Acme',
+        quantity: 50,
+        purchase_quantity: 50,
+        purchase_price: 10,
+      },
     ]
     material.unit = 'kg'
     material.quantity = 5

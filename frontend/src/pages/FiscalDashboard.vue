@@ -4,7 +4,12 @@
       <h2 class="m-0">{{ $t('fiscal_dashboard') }}</h2>
       <div class="flex gap-2">
         <Button label="CSV" icon="pi pi-download" severity="success" @click="exportCSV" />
-        <Button :label="$t('refresh')" icon="pi pi-refresh" @click="loadReceipts" :loading="loading" />
+        <Button
+          :label="$t('refresh')"
+          icon="pi pi-refresh"
+          @click="loadReceipts"
+          :loading="loading"
+        />
       </div>
     </div>
 
@@ -19,7 +24,9 @@
           <Card class="h-full">
             <template #title>{{ $t('total_receipts') }}</template>
             <template #content>
-              <div class="text-4xl font-bold text-primary">{{ dailySummary?.total_count || 0 }}</div>
+              <div class="text-4xl font-bold text-primary">
+                {{ dailySummary?.total_count || 0 }}
+              </div>
             </template>
           </Card>
         </div>
@@ -66,7 +73,10 @@
             </Column>
             <Column field="pending_offline" :header="$t('status')">
               <template #body="{ data }">
-                <Tag :value="data.pending_offline ? $t('pending') : $t('fiscalized')" :severity="data.pending_offline ? 'warn' : 'success'" />
+                <Tag
+                  :value="data.pending_offline ? $t('pending') : $t('fiscalized')"
+                  :severity="data.pending_offline ? 'warn' : 'success'"
+                />
               </template>
             </Column>
           </DataTable>

@@ -6,17 +6,31 @@
           <template #title>{{ $t('channels') }}</template>
           <template #content>
             <div class="flex flex-column gap-1">
-              <Button v-for="ch in channels" :key="ch.id"
+              <Button
+                v-for="ch in channels"
+                :key="ch.id"
                 :label="ch.name"
                 :severity="selectedChannel === ch.id ? 'primary' : 'secondary'"
-                text class="w-full text-left"
-                @click="selectChannel(ch)" />
+                text
+                class="w-full text-left"
+                @click="selectChannel(ch)"
+              />
             </div>
             <Divider />
             <div class="flex flex-column gap-2">
               <label class="text-sm text-500">{{ $t('new_channel') }}</label>
-              <InputText v-model="newChannelName" :placeholder="$t('channel_name')" class="w-full" />
-              <Button :label="$t('create')" icon="pi pi-plus" size="small" @click="createChannel" :loading="isCreating" />
+              <InputText
+                v-model="newChannelName"
+                :placeholder="$t('channel_name')"
+                class="w-full"
+              />
+              <Button
+                :label="$t('create')"
+                icon="pi pi-plus"
+                size="small"
+                @click="createChannel"
+                :loading="isCreating"
+              />
             </div>
           </template>
         </Card>
@@ -27,11 +41,22 @@
           <template #title>
             <div class="flex justify-content-between align-items-center">
               <span># {{ selectedChannelName }}</span>
-              <Button icon="pi pi-refresh" severity="secondary" text rounded @click="loadMessages" :loading="isLoadingMessages" />
+              <Button
+                icon="pi pi-refresh"
+                severity="secondary"
+                text
+                rounded
+                @click="loadMessages"
+                :loading="isLoadingMessages"
+              />
             </div>
           </template>
           <template #content>
-            <div ref="messagesContainer" class="messages-container" style="height: calc(100vh - 300px); overflow-y: auto;">
+            <div
+              ref="messagesContainer"
+              class="messages-container"
+              style="height: calc(100vh - 300px); overflow-y: auto"
+            >
               <div v-if="messages.length === 0" class="text-center py-5">
                 <i class="pi pi-comments text-5xl text-400 mb-3"></i>
                 <p class="text-400">{{ $t('no_messages') }}</p>
@@ -52,10 +77,19 @@
           </template>
           <template #footer>
             <div class="flex gap-2">
-              <InputText v-model="newMessage" :placeholder="$t('type_message')" class="flex-1"
-                @keyup.enter="sendMessage" />
-              <Button icon="pi pi-send" severity="success" @click="sendMessage" :loading="isSending"
-                :disabled="!newMessage.trim()" />
+              <InputText
+                v-model="newMessage"
+                :placeholder="$t('type_message')"
+                class="flex-1"
+                @keyup.enter="sendMessage"
+              />
+              <Button
+                icon="pi pi-send"
+                severity="success"
+                @click="sendMessage"
+                :loading="isSending"
+                :disabled="!newMessage.trim()"
+              />
             </div>
           </template>
         </Card>
@@ -145,13 +179,19 @@ const loadMessages = async () => {
       `http://${import.meta.env.VITE_APP_BACKEND_HOST}/chat/api/messages`,
       {
         headers: { Authorization: `Bearer ${auth.accessToken.value}` },
-        params: { channel: selectedChannel.value }
-      }
+        params: { channel: selectedChannel.value },
+      },
     )
     messages.value = response.data.data || []
     scrollToBottom()
   } catch {
-    toast.add({ severity: 'error', summary: t('failed'), detail: t('load_failed'), group: 'br', life: 3000 })
+    toast.add({
+      severity: 'error',
+      summary: t('failed'),
+      detail: t('load_failed'),
+      group: 'br',
+      life: 3000,
+    })
   } finally {
     isLoadingMessages.value = false
   }
@@ -171,12 +211,18 @@ const sendMessage = async () => {
         sender_id: user?.id || '',
         content: newMessage.value,
       },
-      { headers: { Authorization: `Bearer ${auth.accessToken.value}` } }
+      { headers: { Authorization: `Bearer ${auth.accessToken.value}` } },
     )
     newMessage.value = ''
     loadMessages()
   } catch {
-    toast.add({ severity: 'error', summary: t('failed'), detail: t('send_failed'), group: 'br', life: 3000 })
+    toast.add({
+      severity: 'error',
+      summary: t('failed'),
+      detail: t('send_failed'),
+      group: 'br',
+      life: 3000,
+    })
   } finally {
     isSending.value = false
   }
@@ -193,13 +239,25 @@ const createChannel = async () => {
         name: newChannelName.value,
         description: newChannelName.value,
       },
-      { headers: { Authorization: `Bearer ${auth.accessToken.value}` } }
+      { headers: { Authorization: `Bearer ${auth.accessToken.value}` } },
     )
-    toast.add({ severity: 'success', summary: t('success'), detail: t('channel_created'), group: 'br', life: 3000 })
+    toast.add({
+      severity: 'success',
+      summary: t('success'),
+      detail: t('channel_created'),
+      group: 'br',
+      life: 3000,
+    })
     newChannelName.value = ''
     loadChannels()
   } catch {
-    toast.add({ severity: 'error', summary: t('failed'), detail: t('create_failed'), group: 'br', life: 3000 })
+    toast.add({
+      severity: 'error',
+      summary: t('failed'),
+      detail: t('create_failed'),
+      group: 'br',
+      life: 3000,
+    })
   } finally {
     isCreating.value = false
   }
@@ -209,11 +267,17 @@ const loadChannels = async () => {
   try {
     const response = await axios.get(
       `http://${import.meta.env.VITE_APP_BACKEND_HOST}/chat/api/channels`,
-      { headers: { Authorization: `Bearer ${auth.accessToken.value}` } }
+      { headers: { Authorization: `Bearer ${auth.accessToken.value}` } },
     )
     channels.value = response.data.data || []
   } catch {
-    toast.add({ severity: 'error', summary: t('failed'), detail: t('load_failed'), group: 'br', life: 3000 })
+    toast.add({
+      severity: 'error',
+      summary: t('failed'),
+      detail: t('load_failed'),
+      group: 'br',
+      life: 3000,
+    })
   }
 }
 

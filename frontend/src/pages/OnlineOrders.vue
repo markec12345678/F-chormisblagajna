@@ -5,9 +5,20 @@
         <div class="flex justify-content-between align-items-center">
           <h3>{{ $t('online_orders') }}</h3>
           <div class="flex gap-2">
-            <Dropdown v-model="statusFilter" :options="statusOptions" optionLabel="label" optionValue="value"
-              :placeholder="$t('all_statuses')" class="w-12rem" />
-            <Button :label="$t('refresh')" icon="pi pi-refresh" @click="loadOrders" :loading="isLoading" />
+            <Dropdown
+              v-model="statusFilter"
+              :options="statusOptions"
+              optionLabel="label"
+              optionValue="value"
+              :placeholder="$t('all_statuses')"
+              class="w-12rem"
+            />
+            <Button
+              :label="$t('refresh')"
+              icon="pi pi-refresh"
+              @click="loadOrders"
+              :loading="isLoading"
+            />
           </div>
         </div>
       </div>
@@ -50,7 +61,11 @@
                 <span class="text-right" style="max-width: 200px">{{ order.delivery_addr }}</span>
               </div>
               <Divider />
-              <div v-for="item in order.items" :key="item.product_id" class="flex justify-content-between text-sm">
+              <div
+                v-for="item in order.items"
+                :key="item.product_id"
+                class="flex justify-content-between text-sm"
+              >
                 <span>{{ item.quantity }}x {{ item.product_name }}</span>
                 <span>{{ formatCurrency(item.price * item.quantity) }}</span>
               </div>
@@ -69,16 +84,46 @@
           </template>
           <template #footer>
             <div class="flex gap-2">
-              <Button v-if="order.status === 'pending'" :label="$t('confirm')" icon="pi pi-check"
-                severity="success" size="small" @click="updateStatus(order.id, 'confirmed')" />
-              <Button v-if="order.status === 'confirmed'" :label="$t('preparing')" icon="pi pi-spin pi-spinner"
-                severity="warn" size="small" @click="updateStatus(order.id, 'preparing')" />
-              <Button v-if="order.status === 'preparing'" :label="$t('ready')" icon="pi pi-check-circle"
-                severity="info" size="small" @click="updateStatus(order.id, 'ready')" />
-              <Button v-if="order.status === 'ready'" :label="$t('delivered')" icon="pi pi-verified"
-                severity="success" size="small" @click="updateStatus(order.id, 'delivered')" />
-              <Button v-if="order.status !== 'cancelled' && order.status !== 'delivered'"
-                :label="$t('cancel')" severity="danger" size="small" text @click="updateStatus(order.id, 'cancelled')" />
+              <Button
+                v-if="order.status === 'pending'"
+                :label="$t('confirm')"
+                icon="pi pi-check"
+                severity="success"
+                size="small"
+                @click="updateStatus(order.id, 'confirmed')"
+              />
+              <Button
+                v-if="order.status === 'confirmed'"
+                :label="$t('preparing')"
+                icon="pi pi-spin pi-spinner"
+                severity="warn"
+                size="small"
+                @click="updateStatus(order.id, 'preparing')"
+              />
+              <Button
+                v-if="order.status === 'preparing'"
+                :label="$t('ready')"
+                icon="pi pi-check-circle"
+                severity="info"
+                size="small"
+                @click="updateStatus(order.id, 'ready')"
+              />
+              <Button
+                v-if="order.status === 'ready'"
+                :label="$t('delivered')"
+                icon="pi pi-verified"
+                severity="success"
+                size="small"
+                @click="updateStatus(order.id, 'delivered')"
+              />
+              <Button
+                v-if="order.status !== 'cancelled' && order.status !== 'delivered'"
+                :label="$t('cancel')"
+                severity="danger"
+                size="small"
+                text
+                @click="updateStatus(order.id, 'cancelled')"
+              />
             </div>
           </template>
         </Card>
@@ -153,13 +198,20 @@ const formatDateTime = (date: string) => {
 
 const getStatusSeverity = (status: string) => {
   switch (status) {
-    case 'pending': return 'warn'
-    case 'confirmed': return 'info'
-    case 'preparing': return 'secondary'
-    case 'ready': return 'success'
-    case 'delivered': return 'success'
-    case 'cancelled': return 'danger'
-    default: return 'secondary'
+    case 'pending':
+      return 'warn'
+    case 'confirmed':
+      return 'info'
+    case 'preparing':
+      return 'secondary'
+    case 'ready':
+      return 'success'
+    case 'delivered':
+      return 'success'
+    case 'cancelled':
+      return 'danger'
+    default:
+      return 'secondary'
   }
 }
 
@@ -174,12 +226,18 @@ const loadOrders = async () => {
       `http://${import.meta.env.VITE_APP_BACKEND_HOST}/onlineorder/api/orders`,
       {
         headers: { Authorization: `Bearer ${auth.accessToken.value}` },
-        params
-      }
+        params,
+      },
     )
     orders.value = response.data.data || []
   } catch {
-    toast.add({ severity: 'error', summary: t('failed'), detail: t('load_failed'), group: 'br', life: 3000 })
+    toast.add({
+      severity: 'error',
+      summary: t('failed'),
+      detail: t('load_failed'),
+      group: 'br',
+      life: 3000,
+    })
   } finally {
     isLoading.value = false
   }
@@ -190,12 +248,24 @@ const updateStatus = async (orderId: string, status: string) => {
     await axios.put(
       `http://${import.meta.env.VITE_APP_BACKEND_HOST}/onlineorder/api/orders/${orderId}/status`,
       { status },
-      { headers: { Authorization: `Bearer ${auth.accessToken.value}` } }
+      { headers: { Authorization: `Bearer ${auth.accessToken.value}` } },
     )
-    toast.add({ severity: 'success', summary: t('success'), detail: t('order_status_updated'), group: 'br', life: 3000 })
+    toast.add({
+      severity: 'success',
+      summary: t('success'),
+      detail: t('order_status_updated'),
+      group: 'br',
+      life: 3000,
+    })
     loadOrders()
   } catch {
-    toast.add({ severity: 'error', summary: t('failed'), detail: t('update_failed'), group: 'br', life: 3000 })
+    toast.add({
+      severity: 'error',
+      summary: t('failed'),
+      detail: t('update_failed'),
+      group: 'br',
+      life: 3000,
+    })
   }
 }
 

@@ -54,7 +54,7 @@
               <Column :header="$t('tags')">
                 <template #body="slotProps">
                   <Tag
-                    v-for="tag in (slotProps?.data?.tags || [])"
+                    v-for="tag in slotProps?.data?.tags || []"
                     :key="tag"
                     :value="tag"
                     class="mr-1"
@@ -122,7 +122,12 @@
                 <div class="col-12 md:col-6">
                   <div class="flex flex-column gap-2">
                     <label for="email">{{ $t('email') }}</label>
-                    <InputText id="email" v-model="new_customer_email" aria-describedby="email" type="email" />
+                    <InputText
+                      id="email"
+                      v-model="new_customer_email"
+                      aria-describedby="email"
+                      type="email"
+                    />
                   </div>
                 </div>
                 <div class="col-12 md:col-6">
@@ -134,7 +139,11 @@
                 <div class="col-12 md:col-6">
                   <div class="flex flex-column gap-2">
                     <label for="address">{{ $t('address') }}</label>
-                    <InputText id="address" v-model="new_customer_address" aria-describedby="address" />
+                    <InputText
+                      id="address"
+                      v-model="new_customer_address"
+                      aria-describedby="address"
+                    />
                   </div>
                 </div>
                 <div class="col-12">
@@ -183,7 +192,12 @@
                 <div class="col-12 md:col-6">
                   <div class="flex flex-column gap-2">
                     <label for="email">{{ $t('email') }}</label>
-                    <InputText id="email" v-model="customerToEdit.email" aria-describedby="email" type="email" />
+                    <InputText
+                      id="email"
+                      v-model="customerToEdit.email"
+                      aria-describedby="email"
+                      type="email"
+                    />
                   </div>
                 </div>
                 <div class="col-12 md:col-6">
@@ -240,7 +254,9 @@
                       <div class="flex flex-column gap-3">
                         <div class="flex justify-content-between">
                           <span class="text-500">{{ $t('total_spent') }}:</span>
-                          <span class="font-bold">{{ formatCurrency(selectedCustomer.total_spent || 0) }}</span>
+                          <span class="font-bold">{{
+                            formatCurrency(selectedCustomer.total_spent || 0)
+                          }}</span>
                         </div>
                         <div class="flex justify-content-between">
                           <span class="text-500">{{ $t('order_count') }}:</span>
@@ -252,7 +268,11 @@
                         </div>
                         <div class="flex justify-content-between">
                           <span class="text-500">{{ $t('last_order_date') }}:</span>
-                          <span>{{ selectedCustomer.last_order_date ? new Date(selectedCustomer.last_order_date).toLocaleDateString() : '-' }}</span>
+                          <span>{{
+                            selectedCustomer.last_order_date
+                              ? new Date(selectedCustomer.last_order_date).toLocaleDateString()
+                              : '-'
+                          }}</span>
                         </div>
                       </div>
                     </template>
@@ -265,7 +285,10 @@
                       <DataTable :value="customerOrders" stripedRows tableStyle="width: 100%">
                         <template #empty>
                           <div class="flex flex-column align-items-center gap-2 py-4">
-                            <i class="pi pi-shopping-cart" style="font-size: 2rem; opacity: 0.3"></i>
+                            <i
+                              class="pi pi-shopping-cart"
+                              style="font-size: 2rem; opacity: 0.3"
+                            ></i>
                             <p class="m-0 text-slate-400">{{ $t('no_orders') }}</p>
                           </div>
                         </template>
@@ -277,12 +300,17 @@
                         </Column>
                         <Column field="sale_price" :header="$t('total')">
                           <template #body="slotProps">
-                            {{ formatCurrency(slotProps.data.sale_price - slotProps.data.discount) }}
+                            {{
+                              formatCurrency(slotProps.data.sale_price - slotProps.data.discount)
+                            }}
                           </template>
                         </Column>
                         <Column field="state" :header="$t('status')">
                           <template #body="slotProps">
-                            <Tag :value="slotProps.data.state" :severity="getStateSeverity(slotProps.data.state)" />
+                            <Tag
+                              :value="slotProps.data.state"
+                              :severity="getStateSeverity(slotProps.data.state)"
+                            />
                           </template>
                         </Column>
                         <Column field="is_paid" :header="$t('payment')">
@@ -397,7 +425,7 @@ const showCustomerDetails = async (customer: Customer) => {
   try {
     const response = await axios.get(
       `http://${import.meta.env.VITE_APP_BACKEND_HOST}${import.meta.env.VITE_APP_MODULE_CORE_API_PREFIX}/api/customers/${customer.id}/orders`,
-      { headers: { Authorization: `Bearer ${auth.accessToken.value}` } }
+      { headers: { Authorization: `Bearer ${auth.accessToken.value}` } },
     )
     customerOrders.value = response.data.data || []
   } catch {

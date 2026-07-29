@@ -11,8 +11,16 @@
             <div class="flex flex-column gap-3">
               <p class="m-0">{{ $t('quickbooks_description') }}</p>
               <div class="flex gap-2">
-                <Calendar v-model="quickbooksStart" :placeholder="$t('start_date')" dateFormat="yy-mm-dd" />
-                <Calendar v-model="quickbooksEnd" :placeholder="$t('end_date')" dateFormat="yy-mm-dd" />
+                <Calendar
+                  v-model="quickbooksStart"
+                  :placeholder="$t('start_date')"
+                  dateFormat="yy-mm-dd"
+                />
+                <Calendar
+                  v-model="quickbooksEnd"
+                  :placeholder="$t('end_date')"
+                  dateFormat="yy-mm-dd"
+                />
               </div>
               <Button
                 :label="$t('export_quickbooks')"
@@ -31,7 +39,11 @@
             <div class="flex flex-column gap-3">
               <p class="m-0">{{ $t('xero_description') }}</p>
               <div class="flex gap-2">
-                <Calendar v-model="xeroStart" :placeholder="$t('start_date')" dateFormat="yy-mm-dd" />
+                <Calendar
+                  v-model="xeroStart"
+                  :placeholder="$t('start_date')"
+                  dateFormat="yy-mm-dd"
+                />
                 <Calendar v-model="xeroEnd" :placeholder="$t('end_date')" dateFormat="yy-mm-dd" />
               </div>
               <Button
@@ -80,7 +92,7 @@ const exportQuickBooks = () => {
 
   window.open(
     `http://${import.meta.env.VITE_APP_BACKEND_HOST}/accounting/api/export/quickbooks?${params.toString()}`,
-    '_blank'
+    '_blank',
   )
 
   toast.add({
@@ -101,7 +113,7 @@ const exportXero = () => {
 
   window.open(
     `http://${import.meta.env.VITE_APP_BACKEND_HOST}/accounting/api/export/xero?${params.toString()}`,
-    '_blank'
+    '_blank',
   )
 
   toast.add({

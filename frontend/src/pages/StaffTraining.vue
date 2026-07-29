@@ -10,7 +10,10 @@
           <template #title>
             <div class="flex justify-content-between align-items-center">
               <span>{{ $t('training_in_progress') }}</span>
-              <Tag :value="`${activeSession.steps_done}/${activeSession.total_steps}`" severity="info" />
+              <Tag
+                :value="`${activeSession.steps_done}/${activeSession.total_steps}`"
+                severity="info"
+              />
             </div>
           </template>
           <template #content>
@@ -18,8 +21,17 @@
               <h4>{{ currentStep.title }}</h4>
               <p class="text-500">{{ currentStep.description }}</p>
               <div class="flex justify-content-center gap-2 mt-3">
-                <Button :label="$t('complete_step')" @click="doCompleteStep" :loading="completing" />
-                <Button :label="$t('finish_training')" severity="secondary" @click="doCompleteSession" :loading="finishing" />
+                <Button
+                  :label="$t('complete_step')"
+                  @click="doCompleteStep"
+                  :loading="completing"
+                />
+                <Button
+                  :label="$t('finish_training')"
+                  severity="secondary"
+                  @click="doCompleteSession"
+                  :loading="finishing"
+                />
               </div>
             </div>
             <ProgressBar :value="stepProgress" class="mt-3" />
@@ -46,9 +58,12 @@
                     {{ getProgress(mod.key)?.score }}/{{ getProgress(mod.key)?.max_score }}
                   </div>
                 </div>
-                <Button :label="getProgress(mod.key)?.completed ? $t('retake') : $t('start')"
+                <Button
+                  :label="getProgress(mod.key)?.completed ? $t('retake') : $t('start')"
                   :severity="getProgress(mod.key)?.completed ? 'secondary' : 'primary'"
-                  size="small" @click="startModule(mod)" />
+                  size="small"
+                  @click="startModule(mod)"
+                />
               </div>
             </div>
           </template>
@@ -141,13 +156,13 @@ const startModule = async (mod: TrainingModule) => {
     const response = await axios.post(
       `http://${import.meta.env.VITE_APP_BACKEND_HOST}/training/api/sessions`,
       { user_id: auth.user.value?.id || '', module: mod.key },
-      { headers: { Authorization: `Bearer ${auth.accessToken.value}` } }
+      { headers: { Authorization: `Bearer ${auth.accessToken.value}` } },
     )
     activeSession.value = response.data.data
 
     const stepsResponse = await axios.get(
       `http://${import.meta.env.VITE_APP_BACKEND_HOST}/training/api/modules/${mod.key}/steps`,
-      { headers: { Authorization: `Bearer ${auth.accessToken.value}` } }
+      { headers: { Authorization: `Bearer ${auth.accessToken.value}` } },
     )
     currentSteps.value = stepsResponse.data.data || []
 
@@ -164,7 +179,7 @@ const doCompleteStep = async () => {
     await axios.post(
       `http://${import.meta.env.VITE_APP_BACKEND_HOST}/training/api/sessions/${activeSession.value.id}/step`,
       {},
-      { headers: { Authorization: `Bearer ${auth.accessToken.value}` } }
+      { headers: { Authorization: `Bearer ${auth.accessToken.value}` } },
     )
     activeSession.value.steps_done++
     await loadProgress()
@@ -182,7 +197,7 @@ const doCompleteSession = async () => {
     await axios.post(
       `http://${import.meta.env.VITE_APP_BACKEND_HOST}/training/api/sessions/${activeSession.value.id}/complete`,
       {},
-      { headers: { Authorization: `Bearer ${auth.accessToken.value}` } }
+      { headers: { Authorization: `Bearer ${auth.accessToken.value}` } },
     )
     activeSession.value.completed = true
     activeSession.value = null
@@ -201,7 +216,7 @@ const loadProgress = async () => {
     const userId = auth.user.value?.id || ''
     const response = await axios.get(
       `http://${import.meta.env.VITE_APP_BACKEND_HOST}/training/api/users/${userId}/progress`,
-      { headers: { Authorization: `Bearer ${auth.accessToken.value}` } }
+      { headers: { Authorization: `Bearer ${auth.accessToken.value}` } },
     )
     progressList.value = response.data.data || []
   } catch {
@@ -213,7 +228,7 @@ const loadModules = async () => {
   try {
     const response = await axios.get(
       `http://${import.meta.env.VITE_APP_BACKEND_HOST}/training/api/modules`,
-      { headers: { Authorization: `Bearer ${auth.accessToken.value}` } }
+      { headers: { Authorization: `Bearer ${auth.accessToken.value}` } },
     )
     modules.value = response.data.data || []
   } catch {

@@ -20,8 +20,21 @@
         >
           <template #header>
             <div class="flex justify-between align-items-center">
-              <Button icon="pi pi-plus" :label="$t('add_account')" rounded raised @click="openAdd" />
-              <Dropdown v-model="tierFilter" :options="tierOptions" optionLabel="label" optionValue="value" :placeholder="$t('all_tiers')" showClear />
+              <Button
+                icon="pi pi-plus"
+                :label="$t('add_account')"
+                rounded
+                raised
+                @click="openAdd"
+              />
+              <Dropdown
+                v-model="tierFilter"
+                :options="tierOptions"
+                optionLabel="label"
+                optionValue="value"
+                :placeholder="$t('all_tiers')"
+                showClear
+              />
             </div>
           </template>
           <template #empty>
@@ -49,9 +62,24 @@
           <Column :header="$t('actions')">
             <template #body="slotProps">
               <ButtonGroup>
-                <Button icon="pi pi-wallet" severity="success" :aria-label="$t('earn_points')" @click="openEarn(slotProps.data)" />
-                <Button icon="pi pi-minus-circle" severity="warn" :aria-label="$t('redeem_points')" @click="openRedeem(slotProps.data)" />
-                <Button icon="pi pi-history" severity="secondary" :aria-label="$t('history')" @click="viewHistory(slotProps.data)" />
+                <Button
+                  icon="pi pi-wallet"
+                  severity="success"
+                  :aria-label="$t('earn_points')"
+                  @click="openEarn(slotProps.data)"
+                />
+                <Button
+                  icon="pi pi-minus-circle"
+                  severity="warn"
+                  :aria-label="$t('redeem_points')"
+                  @click="openRedeem(slotProps.data)"
+                />
+                <Button
+                  icon="pi pi-history"
+                  severity="secondary"
+                  :aria-label="$t('history')"
+                  @click="viewHistory(slotProps.data)"
+                />
               </ButtonGroup>
             </template>
           </Column>
@@ -59,7 +87,12 @@
       </div>
     </div>
 
-    <Dialog v-model:visible="earnDialog" modal :header="$t('earn_points')" :style="{ width: '25rem' }">
+    <Dialog
+      v-model:visible="earnDialog"
+      modal
+      :header="$t('earn_points')"
+      :style="{ width: '25rem' }"
+    >
       <div class="flex flex-column gap-4">
         <div class="flex flex-column gap-2">
           <label>{{ $t('points') }}</label>
@@ -73,12 +106,23 @@
       <template #footer>
         <ButtonGroup>
           <Button :label="$t('cancel')" severity="secondary" @click="earnDialog = false" />
-          <Button class="ml-2" severity="success" @click="submitEarn" :label="$t('add_points')" :loading="submitting" />
+          <Button
+            class="ml-2"
+            severity="success"
+            @click="submitEarn"
+            :label="$t('add_points')"
+            :loading="submitting"
+          />
         </ButtonGroup>
       </template>
     </Dialog>
 
-    <Dialog v-model:visible="redeemDialog" modal :header="$t('redeem_points')" :style="{ width: '25rem' }">
+    <Dialog
+      v-model:visible="redeemDialog"
+      modal
+      :header="$t('redeem_points')"
+      :style="{ width: '25rem' }"
+    >
       <div class="flex flex-column gap-4">
         <div class="flex flex-column gap-2">
           <label>{{ $t('points') }}</label>
@@ -88,17 +132,32 @@
       <template #footer>
         <ButtonGroup>
           <Button :label="$t('cancel')" severity="secondary" @click="redeemDialog = false" />
-          <Button class="ml-2" severity="warn" @click="submitRedeem" :label="$t('redeem')" :loading="submitting" />
+          <Button
+            class="ml-2"
+            severity="warn"
+            @click="submitRedeem"
+            :label="$t('redeem')"
+            :loading="submitting"
+          />
         </ButtonGroup>
       </template>
     </Dialog>
 
-    <Dialog v-model:visible="historyDialog" modal :header="$t('transaction_history')" :style="{ width: '40rem' }" :breakpoints="{ '1199px': '90vw', '575px': '90vw' }">
+    <Dialog
+      v-model:visible="historyDialog"
+      modal
+      :header="$t('transaction_history')"
+      :style="{ width: '40rem' }"
+      :breakpoints="{ '1199px': '90vw', '575px': '90vw' }"
+    >
       <DataTable :value="transactions" stripedRows>
         <template #empty>{{ $t('no_results') }}</template>
         <Column field="type" :header="$t('type')">
           <template #body="slotProps">
-            <Tag :value="slotProps.data.type" :severity="slotProps.data.type === 'earn' ? 'success' : 'warn'" />
+            <Tag
+              :value="slotProps.data.type"
+              :severity="slotProps.data.type === 'earn' ? 'success' : 'warn'"
+            />
           </template>
         </Column>
         <Column field="points" :header="$t('points')"></Column>
@@ -151,10 +210,14 @@ const tierOptions = [
 
 const getTierSeverity = (tier: string) => {
   switch (tier) {
-    case 'platinum': return 'success'
-    case 'gold': return 'warn'
-    case 'silver': return 'info'
-    default: return 'secondary'
+    case 'platinum':
+      return 'success'
+    case 'gold':
+      return 'warn'
+    case 'silver':
+      return 'info'
+    default:
+      return 'secondary'
   }
 }
 
@@ -165,49 +228,102 @@ const getAccounts = (offset = 0, limit = 50) => {
   const pageNumber = Math.floor(offset / limit) + 1
   let url = `${apiBase}/accounts?page_number=${pageNumber}&page_size=${limit}`
   if (tierFilter.value) url += `&tier=${tierFilter.value}`
-  axios.get(url).then((res) => {
-    accounts.value = res.data.data || []
-    totalRecords.value = res.data.meta?.total_records || 0
-  }).catch((err) => {
-    toast.add({ severity: 'error', summary: t('error'), detail: err.message, life: 3000 })
-  }).finally(() => { loading.value = false })
+  axios
+    .get(url)
+    .then((res) => {
+      accounts.value = res.data.data || []
+      totalRecords.value = res.data.meta?.total_records || 0
+    })
+    .catch((err) => {
+      toast.add({ severity: 'error', summary: t('error'), detail: err.message, life: 3000 })
+    })
+    .finally(() => {
+      loading.value = false
+    })
 }
 
-const onPage = (event: { first: number; rows: number }) => { getAccounts(event.first, event.rows) }
-const openAdd = () => { /* TODO: create account dialog */ }
-const openEarn = (account: any) => { selectedAccount.value = account; earnPoints.value = 10; earnDescription.value = ''; earnDialog.value = true }
-const openRedeem = (account: any) => { selectedAccount.value = account; redeemPoints.value = 10; redeemDialog.value = true }
+const onPage = (event: { first: number; rows: number }) => {
+  getAccounts(event.first, event.rows)
+}
+const openAdd = () => {
+  /* TODO: create account dialog */
+}
+const openEarn = (account: any) => {
+  selectedAccount.value = account
+  earnPoints.value = 10
+  earnDescription.value = ''
+  earnDialog.value = true
+}
+const openRedeem = (account: any) => {
+  selectedAccount.value = account
+  redeemPoints.value = 10
+  redeemDialog.value = true
+}
 
 const submitEarn = () => {
   if (!selectedAccount.value) return
   submitting.value = true
-  axios.post(`${apiBase}/earn`, { customer_id: selectedAccount.value.customer_id, points: earnPoints.value, description: earnDescription.value }).then(() => {
-    toast.add({ severity: 'success', summary: t('success'), detail: t('points_added'), life: 3000 })
-    earnDialog.value = false; getAccounts(0, rowsPerPage.value)
-  }).catch((err) => {
-    toast.add({ severity: 'error', summary: t('error'), detail: err.message, life: 3000 })
-  }).finally(() => { submitting.value = false })
+  axios
+    .post(`${apiBase}/earn`, {
+      customer_id: selectedAccount.value.customer_id,
+      points: earnPoints.value,
+      description: earnDescription.value,
+    })
+    .then(() => {
+      toast.add({
+        severity: 'success',
+        summary: t('success'),
+        detail: t('points_added'),
+        life: 3000,
+      })
+      earnDialog.value = false
+      getAccounts(0, rowsPerPage.value)
+    })
+    .catch((err) => {
+      toast.add({ severity: 'error', summary: t('error'), detail: err.message, life: 3000 })
+    })
+    .finally(() => {
+      submitting.value = false
+    })
 }
 
 const submitRedeem = () => {
   if (!selectedAccount.value) return
   submitting.value = true
-  axios.post(`${apiBase}/redeem`, { customer_id: selectedAccount.value.customer_id, points: redeemPoints.value }).then(() => {
-    toast.add({ severity: 'success', summary: t('success'), detail: t('points_redeemed'), life: 3000 })
-    redeemDialog.value = false; getAccounts(0, rowsPerPage.value)
-  }).catch((err) => {
-    toast.add({ severity: 'error', summary: t('error'), detail: err.message, life: 3000 })
-  }).finally(() => { submitting.value = false })
+  axios
+    .post(`${apiBase}/redeem`, {
+      customer_id: selectedAccount.value.customer_id,
+      points: redeemPoints.value,
+    })
+    .then(() => {
+      toast.add({
+        severity: 'success',
+        summary: t('success'),
+        detail: t('points_redeemed'),
+        life: 3000,
+      })
+      redeemDialog.value = false
+      getAccounts(0, rowsPerPage.value)
+    })
+    .catch((err) => {
+      toast.add({ severity: 'error', summary: t('error'), detail: err.message, life: 3000 })
+    })
+    .finally(() => {
+      submitting.value = false
+    })
 }
 
 const viewHistory = (account: any) => {
   selectedAccount.value = account
-  axios.get(`${apiBase}/transactions/${account.customer_id}`).then((res) => {
-    transactions.value = res.data.data || []
-    historyDialog.value = true
-  }).catch((err) => {
-    toast.add({ severity: 'error', summary: t('error'), detail: err.message, life: 3000 })
-  })
+  axios
+    .get(`${apiBase}/transactions/${account.customer_id}`)
+    .then((res) => {
+      transactions.value = res.data.data || []
+      historyDialog.value = true
+    })
+    .catch((err) => {
+      toast.add({ severity: 'error', summary: t('error'), detail: err.message, life: 3000 })
+    })
 }
 
 getAccounts()

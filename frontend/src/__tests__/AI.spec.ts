@@ -65,12 +65,12 @@ const i18n = createI18n({
 
 const stubs = {
   Card: {
-    template:
-      '<div class="card-stub"><slot name="title" /><slot name="content" /></div>',
+    template: '<div class="card-stub"><slot name="title" /><slot name="content" /></div>',
     props: ['class'],
   },
   DataTable: {
-    template: '<div class="datatable-stub"><slot name="header" /><slot name="empty" /><slot /></div>',
+    template:
+      '<div class="datatable-stub"><slot name="header" /><slot name="empty" /><slot /></div>',
     props: ['value', 'loading', 'stripedRows', 'tableStyle'],
   },
   Column: { template: '<div class="column-stub" />', props: ['field', 'header'] },

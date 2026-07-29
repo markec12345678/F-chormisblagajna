@@ -3,24 +3,42 @@
     <Toolbar class="mb-4">
       <template #start>
         <div class="flex align-items-center gap-3">
-          <img src="@/assets/logo.png" alt="logo" style="height: 30px" v-if="store.getColorMode == 'light'" />
+          <img
+            src="@/assets/logo.png"
+            alt="logo"
+            style="height: 30px"
+            v-if="store.getColorMode == 'light'"
+          />
           <h2 class="m-0">{{ $t('order_online') }}</h2>
         </div>
       </template>
       <template #end>
-        <Button :label="`${$t('cart')} (${cartItems.length})`" icon="pi pi-shopping-cart" severity="success"
-          @click="showCart = true" :badge="cartItems.length.toString()" badgeClass="p-badge-danger" />
+        <Button
+          :label="`${$t('cart')} (${cartItems.length})`"
+          icon="pi pi-shopping-cart"
+          severity="success"
+          @click="showCart = true"
+          :badge="cartItems.length.toString()"
+          badgeClass="p-badge-danger"
+        />
       </template>
     </Toolbar>
 
     <div class="grid mx-2">
       <div class="col-12">
         <div class="flex flex-wrap gap-2 mb-4">
-          <Button :label="$t('all')" :severity="selectedCategory === '' ? 'primary' : 'secondary'"
-            @click="selectedCategory = ''" />
-          <Button v-for="cat in menuCategories" :key="cat.id" :label="cat.name"
+          <Button
+            :label="$t('all')"
+            :severity="selectedCategory === '' ? 'primary' : 'secondary'"
+            @click="selectedCategory = ''"
+          />
+          <Button
+            v-for="cat in menuCategories"
+            :key="cat.id"
+            :label="cat.name"
             :severity="selectedCategory === cat.id ? 'primary' : 'secondary'"
-            @click="selectedCategory = cat.id" />
+            @click="selectedCategory = cat.id"
+          />
         </div>
       </div>
 
@@ -45,9 +63,18 @@
         <Card class="h-full">
           <template #header>
             <div v-if="product.image_url" class="overflow-hidden">
-              <img :src="product.image_url" :alt="product.name" class="w-full" style="height: 180px; object-fit: cover" />
+              <img
+                :src="product.image_url"
+                :alt="product.name"
+                class="w-full"
+                style="height: 180px; object-fit: cover"
+              />
             </div>
-            <div v-else class="flex justify-content-center align-items-center" style="height: 180px; background: var(--surface-100)">
+            <div
+              v-else
+              class="flex justify-content-center align-items-center"
+              style="height: 180px; background: var(--surface-100)"
+            >
               <i class="pi pi-image text-4xl text-300"></i>
             </div>
           </template>
@@ -59,12 +86,28 @@
           </template>
           <template #content>
             <div class="flex justify-content-between align-items-center">
-              <span class="text-xl font-bold text-primary">{{ formatCurrency(product.price) }}</span>
+              <span class="text-xl font-bold text-primary">{{
+                formatCurrency(product.price)
+              }}</span>
               <div class="flex align-items-center gap-2">
-                <Button v-if="getCartQuantity(product.id) > 0" icon="pi pi-minus" severity="danger" text rounded
-                  @click="removeFromCart(product)" />
-                <span v-if="getCartQuantity(product.id) > 0" class="font-bold">{{ getCartQuantity(product.id) }}</span>
-                <Button icon="pi pi-plus" severity="success" text rounded @click="addToCart(product)" />
+                <Button
+                  v-if="getCartQuantity(product.id) > 0"
+                  icon="pi pi-minus"
+                  severity="danger"
+                  text
+                  rounded
+                  @click="removeFromCart(product)"
+                />
+                <span v-if="getCartQuantity(product.id) > 0" class="font-bold">{{
+                  getCartQuantity(product.id)
+                }}</span>
+                <Button
+                  icon="pi pi-plus"
+                  severity="success"
+                  text
+                  rounded
+                  @click="addToCart(product)"
+                />
               </div>
             </div>
           </template>
@@ -83,9 +126,21 @@
           <Column field="quantity" :header="$t('quantity')">
             <template #body="slotProps">
               <div class="flex align-items-center gap-2">
-                <Button icon="pi pi-minus" text rounded size="small" @click="decrementCart(slotProps?.data)" />
+                <Button
+                  icon="pi pi-minus"
+                  text
+                  rounded
+                  size="small"
+                  @click="decrementCart(slotProps?.data)"
+                />
                 <span>{{ slotProps?.data?.quantity }}</span>
-                <Button icon="pi pi-plus" text rounded size="small" @click="incrementCart(slotProps?.data)" />
+                <Button
+                  icon="pi pi-plus"
+                  text
+                  rounded
+                  size="small"
+                  @click="incrementCart(slotProps?.data)"
+                />
               </div>
             </template>
           </Column>
@@ -96,8 +151,14 @@
           </Column>
           <Column :header="$t('actions')">
             <template #body="slotProps">
-              <Button icon="pi pi-trash" severity="danger" text rounded size="small"
-                @click="removeCartItem(slotProps?.data?.product_id)" />
+              <Button
+                icon="pi pi-trash"
+                severity="danger"
+                text
+                rounded
+                size="small"
+                @click="removeCartItem(slotProps?.data?.product_id)"
+              />
             </template>
           </Column>
         </DataTable>
@@ -125,8 +186,12 @@
             <div class="flex flex-column gap-3">
               <div class="flex flex-column gap-2">
                 <label>{{ $t('order_type') }}</label>
-                <Dropdown v-model="checkoutForm.order_type" :options="orderTypes" optionLabel="label"
-                  optionValue="value" />
+                <Dropdown
+                  v-model="checkoutForm.order_type"
+                  :options="orderTypes"
+                  optionLabel="label"
+                  optionValue="value"
+                />
               </div>
               <div v-if="checkoutForm.order_type === 'delivery'" class="flex flex-column gap-2">
                 <label>{{ $t('delivery_address') }}</label>
@@ -150,8 +215,14 @@
 
       <template #footer>
         <Button :label="$t('cancel')" severity="secondary" @click="showCart = false" />
-        <Button v-if="cartItems.length > 0" :label="$t('place_order')" icon="pi pi-check" severity="success"
-          @click="placeOrder" :loading="isPlacing" />
+        <Button
+          v-if="cartItems.length > 0"
+          :label="$t('place_order')"
+          icon="pi pi-check"
+          severity="success"
+          @click="placeOrder"
+          :loading="isPlacing"
+        />
       </template>
     </Dialog>
   </div>
@@ -288,35 +359,57 @@ const removeCartItem = (productId: string) => {
 
 const placeOrder = async () => {
   if (!checkoutForm.value.customer_name || !checkoutForm.value.customer_phone) {
-    toast.add({ severity: 'warn', summary: t('warning'), detail: t('fill_required_fields'), group: 'br', life: 3000 })
+    toast.add({
+      severity: 'warn',
+      summary: t('warning'),
+      detail: t('fill_required_fields'),
+      group: 'br',
+      life: 3000,
+    })
     return
   }
 
   isPlacing.value = true
   try {
-    await axios.post(
-      `http://${import.meta.env.VITE_APP_BACKEND_HOST}/onlineorder/api/order`,
-      {
-        customer_name: checkoutForm.value.customer_name,
-        customer_phone: checkoutForm.value.customer_phone,
-        customer_email: checkoutForm.value.customer_email,
-        order_type: checkoutForm.value.order_type,
-        delivery_addr: checkoutForm.value.delivery_addr,
-        notes: checkoutForm.value.notes,
-        items: cartItems.value.map((i) => ({
-          product_id: i.product_id,
-          product_name: i.name,
-          quantity: i.quantity,
-          price: i.price,
-        })),
-      }
-    )
-    toast.add({ severity: 'success', summary: t('success'), detail: t('order_placed'), group: 'br', life: 5000 })
+    await axios.post(`http://${import.meta.env.VITE_APP_BACKEND_HOST}/onlineorder/api/order`, {
+      customer_name: checkoutForm.value.customer_name,
+      customer_phone: checkoutForm.value.customer_phone,
+      customer_email: checkoutForm.value.customer_email,
+      order_type: checkoutForm.value.order_type,
+      delivery_addr: checkoutForm.value.delivery_addr,
+      notes: checkoutForm.value.notes,
+      items: cartItems.value.map((i) => ({
+        product_id: i.product_id,
+        product_name: i.name,
+        quantity: i.quantity,
+        price: i.price,
+      })),
+    })
+    toast.add({
+      severity: 'success',
+      summary: t('success'),
+      detail: t('order_placed'),
+      group: 'br',
+      life: 5000,
+    })
     cartItems.value = []
     showCart.value = false
-    checkoutForm.value = { customer_name: '', customer_phone: '', customer_email: '', order_type: 'takeaway', delivery_addr: '', notes: '' }
+    checkoutForm.value = {
+      customer_name: '',
+      customer_phone: '',
+      customer_email: '',
+      order_type: 'takeaway',
+      delivery_addr: '',
+      notes: '',
+    }
   } catch {
-    toast.add({ severity: 'error', summary: t('failed'), detail: t('order_failed'), group: 'br', life: 3000 })
+    toast.add({
+      severity: 'error',
+      summary: t('failed'),
+      detail: t('order_failed'),
+      group: 'br',
+      life: 3000,
+    })
   } finally {
     isPlacing.value = false
   }
@@ -326,11 +419,17 @@ const loadMenu = async () => {
   isLoading.value = true
   try {
     const response = await axios.get(
-      `http://${import.meta.env.VITE_APP_BACKEND_HOST}/onlineorder/api/menu`
+      `http://${import.meta.env.VITE_APP_BACKEND_HOST}/onlineorder/api/menu`,
     )
     menuCategories.value = response.data.data || []
   } catch {
-    toast.add({ severity: 'error', summary: t('failed'), detail: t('menu_load_failed'), group: 'br', life: 3000 })
+    toast.add({
+      severity: 'error',
+      summary: t('failed'),
+      detail: t('menu_load_failed'),
+      group: 'br',
+      life: 3000,
+    })
   } finally {
     isLoading.value = false
   }

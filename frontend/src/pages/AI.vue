@@ -42,7 +42,10 @@
                 </div>
                 <div v-if="isRecording" class="mt-2">
                   <div class="flex align-items-center gap-2 text-red-500">
-                    <span class="pi pi-circle-fill text-xs" style="animation: blink 1s infinite"></span>
+                    <span
+                      class="pi pi-circle-fill text-xs"
+                      style="animation: blink 1s infinite"
+                    ></span>
                     <span class="text-sm font-medium">{{ $t('ai_voice') }}...</span>
                   </div>
                 </div>
@@ -55,25 +58,31 @@
               <template #title>
                 <div class="flex justify-between align-items-center">
                   <span>{{ $t('search_results') }}</span>
-                  <Tag v-if="searchResults.length > 0" :value="String(searchResults.length)" severity="info" />
+                  <Tag
+                    v-if="searchResults.length > 0"
+                    :value="String(searchResults.length)"
+                    severity="info"
+                  />
                 </div>
               </template>
               <template #content>
-                <ProgressSpinner v-if="isSearching" style="width: 40px; height: 40px" class="flex mx-auto" />
+                <ProgressSpinner
+                  v-if="isSearching"
+                  style="width: 40px; height: 40px"
+                  class="flex mx-auto"
+                />
                 <div v-else-if="searchResults.length === 0 && hasSearched" class="text-center py-4">
                   <i class="pi pi-search" style="font-size: 2rem; opacity: 0.3"></i>
                   <p class="mt-2 text-slate-400">{{ $t('no_results') }}</p>
                 </div>
-                <div v-else-if="searchResults.length === 0 && !hasSearched" class="text-center py-4">
+                <div
+                  v-else-if="searchResults.length === 0 && !hasSearched"
+                  class="text-center py-4"
+                >
                   <i class="pi pi-sparkles" style="font-size: 2rem; opacity: 0.3"></i>
                   <p class="mt-2 text-slate-400">{{ $t('ai_search_description') }}</p>
                 </div>
-                <DataTable
-                  v-else
-                  :value="searchResults"
-                  stripedRows
-                  tableStyle="width: 100%"
-                >
+                <DataTable v-else :value="searchResults" stripedRows tableStyle="width: 100%">
                   <Column field="name" :header="$t('name')">
                     <template #body="slotProps">
                       <div>
@@ -100,12 +109,19 @@
                           <div
                             class="h-full border-round"
                             :style="{
-                              width: (slotProps.data.score * 100) + '%',
-                              background: slotProps.data.score > 0.7 ? '#22c55e' : slotProps.data.score > 0.4 ? '#eab308' : '#ef4444',
+                              width: slotProps.data.score * 100 + '%',
+                              background:
+                                slotProps.data.score > 0.7
+                                  ? '#22c55e'
+                                  : slotProps.data.score > 0.4
+                                    ? '#eab308'
+                                    : '#ef4444',
                             }"
                           ></div>
                         </div>
-                        <span class="text-sm text-500">{{ Math.round(slotProps.data.score * 100) }}%</span>
+                        <span class="text-sm text-500"
+                          >{{ Math.round(slotProps.data.score * 100) }}%</span
+                        >
                       </div>
                     </template>
                   </Column>
@@ -132,11 +148,19 @@
               <template #title>
                 <div class="flex justify-between align-items-center">
                   <span>{{ $t('smart_suggestions') }}</span>
-                  <Tag v-if="suggestions.length > 0" :value="String(suggestions.length)" severity="warn" />
+                  <Tag
+                    v-if="suggestions.length > 0"
+                    :value="String(suggestions.length)"
+                    severity="warn"
+                  />
                 </div>
               </template>
               <template #content>
-                <ProgressSpinner v-if="isLoadingSuggestions" style="width: 40px; height: 40px" class="flex mx-auto" />
+                <ProgressSpinner
+                  v-if="isLoadingSuggestions"
+                  style="width: 40px; height: 40px"
+                  class="flex mx-auto"
+                />
                 <div v-else-if="suggestions.length === 0" class="text-center py-4">
                   <i class="pi pi-lightbulb" style="font-size: 2rem; opacity: 0.3"></i>
                   <p class="mt-2 text-slate-400">{{ $t('ai_suggestions') }}</p>
@@ -180,7 +204,11 @@
                   class="w-full"
                   raised
                 />
-                <div v-if="voiceTranscript" class="mt-3 p-3 border-round" style="background: var(--p-surface-100)">
+                <div
+                  v-if="voiceTranscript"
+                  class="mt-3 p-3 border-round"
+                  style="background: var(--p-surface-100)"
+                >
                   <p class="text-sm font-medium mb-1">{{ $t('transcription') }}:</p>
                   <p class="text-sm m-0">{{ voiceTranscript }}</p>
                 </div>
@@ -225,7 +253,16 @@ const voiceTranscript = ref('')
 let mediaRecorder: MediaRecorder | null = null
 let audioChunks: Blob[] = []
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-let speechRecognition: { start: () => void; stop: () => void; onresult: (event: any) => void; onerror: () => void; onend: () => void; continuous: boolean; interimResults: boolean; lang: string } | null = null
+let speechRecognition: {
+  start: () => void
+  stop: () => void
+  onresult: (event: any) => void
+  onerror: () => void
+  onend: () => void
+  continuous: boolean
+  interimResults: boolean
+  lang: string
+} | null = null
 
 const formatPrice = (price: number) => {
   return new Intl.NumberFormat('en-US', {
@@ -278,7 +315,8 @@ const toggleVoiceRecording = () => {
 const startRecording = () => {
   if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition
+    const SpeechRecognition =
+      (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition
     speechRecognition = new SpeechRecognition()
     speechRecognition.continuous = false
     speechRecognition.interimResults = true
@@ -316,30 +354,33 @@ const startRecording = () => {
   }
 
   if ('MediaRecorder' in window) {
-    navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
-      mediaRecorder = new MediaRecorder(stream)
-      audioChunks = []
+    navigator.mediaDevices
+      .getUserMedia({ audio: true })
+      .then((stream) => {
+        mediaRecorder = new MediaRecorder(stream)
+        audioChunks = []
 
-      mediaRecorder.ondataavailable = (event) => {
-        audioChunks.push(event.data)
-      }
+        mediaRecorder.ondataavailable = (event) => {
+          audioChunks.push(event.data)
+        }
 
-      mediaRecorder.onstop = () => {
-        const audioBlob = new Blob(audioChunks, { type: 'audio/webm' })
-        sendVoiceToServer(audioBlob)
-        stream.getTracks().forEach((track) => track.stop())
-      }
+        mediaRecorder.onstop = () => {
+          const audioBlob = new Blob(audioChunks, { type: 'audio/webm' })
+          sendVoiceToServer(audioBlob)
+          stream.getTracks().forEach((track) => track.stop())
+        }
 
-      mediaRecorder.start()
-      isRecording.value = true
-    }).catch(() => {
-      toast.add({
-        severity: 'error',
-        summary: t('failed'),
-        detail: t('microphone_access_denied'),
-        group: 'br',
+        mediaRecorder.start()
+        isRecording.value = true
       })
-    })
+      .catch(() => {
+        toast.add({
+          severity: 'error',
+          summary: t('failed'),
+          detail: t('microphone_access_denied'),
+          group: 'br',
+        })
+      })
   }
 }
 

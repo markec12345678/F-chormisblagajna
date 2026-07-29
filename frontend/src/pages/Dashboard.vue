@@ -4,7 +4,13 @@
 
     <div class="flex align-items-center justify-content-between mb-3">
       <h2 class="m-0">{{ $t('admin_dashboard') }}</h2>
-      <Button :label="$t('refresh')" icon="pi pi-refresh" severity="secondary" @click="loadAll" :loading="loading" />
+      <Button
+        :label="$t('refresh')"
+        icon="pi pi-refresh"
+        severity="secondary"
+        @click="loadAll"
+        :loading="loading"
+      />
     </div>
 
     <div v-if="loading" class="flex justify-content-center py-6">
@@ -23,8 +29,14 @@
             </template>
             <template #content>
               <div class="text-3xl font-bold">{{ formatCurrency(todaySales) }}</div>
-              <div class="flex align-items-center gap-1 mt-2" :class="salesChange >= 0 ? 'text-green-500' : 'text-red-500'">
-                <i :class="salesChange >= 0 ? 'pi pi-arrow-up' : 'pi pi-arrow-down'" style="font-size: 0.8rem" />
+              <div
+                class="flex align-items-center gap-1 mt-2"
+                :class="salesChange >= 0 ? 'text-green-500' : 'text-red-500'"
+              >
+                <i
+                  :class="salesChange >= 0 ? 'pi pi-arrow-up' : 'pi pi-arrow-down'"
+                  style="font-size: 0.8rem"
+                />
                 <span>{{ Math.abs(salesChange).toFixed(1) }}% {{ $t('yesterday') }}</span>
               </div>
             </template>
@@ -41,7 +53,9 @@
             </template>
             <template #content>
               <div class="text-3xl font-bold">{{ todayOrders }}</div>
-              <div class="text-sm text-gray-500 mt-2">{{ $t('total') }} {{ $t('sales') }}: {{ formatCurrency(todaySales) }}</div>
+              <div class="text-sm text-gray-500 mt-2">
+                {{ $t('total') }} {{ $t('sales') }}: {{ formatCurrency(todaySales) }}
+              </div>
             </template>
           </Card>
         </div>
@@ -56,7 +70,9 @@
             </template>
             <template #content>
               <div class="text-3xl font-bold">{{ activeOrders }}</div>
-              <div class="text-sm text-gray-500 mt-2">{{ $t('pending_orders') }}: {{ pendingOrders }}</div>
+              <div class="text-sm text-gray-500 mt-2">
+                {{ $t('pending_orders') }}: {{ pendingOrders }}
+              </div>
             </template>
           </Card>
         </div>
@@ -71,7 +87,9 @@
             </template>
             <template #content>
               <div class="text-3xl font-bold">{{ lowStockCount }}</div>
-              <div class="text-sm text-gray-500 mt-2">{{ $t('average_rating') }}: {{ avgFeedback.toFixed(1) }}/5</div>
+              <div class="text-sm text-gray-500 mt-2">
+                {{ $t('average_rating') }}: {{ avgFeedback.toFixed(1) }}/5
+              </div>
             </template>
           </Card>
         </div>
@@ -85,7 +103,11 @@
             </template>
             <template #content>
               <div class="grid">
-                <div v-for="action in quickActions" :key="action.key" class="col-6 md:col-4 lg:col-3">
+                <div
+                  v-for="action in quickActions"
+                  :key="action.key"
+                  class="col-6 md:col-4 lg:col-3"
+                >
                   <Button
                     :label="$t(action.label)"
                     :icon="action.icon"
@@ -102,18 +124,27 @@
 
         <div class="col-12 lg:col-4">
           <Card>
-            <template #title>
-              <i class="pi pi-star mr-2" />{{ $t('recent_feedback') }}
-            </template>
+            <template #title> <i class="pi pi-star mr-2" />{{ $t('recent_feedback') }} </template>
             <template #content>
               <div v-if="recentFeedback.length === 0" class="text-gray-400 text-center py-3">
                 {{ $t('no_feedback') }}
               </div>
-              <div v-for="fb in recentFeedback.slice(0, 5)" :key="fb.id" class="flex align-items-center gap-2 mb-2 pb-2" style="border-bottom: 1px solid var(--surface-border)">
+              <div
+                v-for="fb in recentFeedback.slice(0, 5)"
+                :key="fb.id"
+                class="flex align-items-center gap-2 mb-2 pb-2"
+                style="border-bottom: 1px solid var(--surface-border)"
+              >
                 <div class="flex-shrink-0">
                   <Rating :modelValue="fb.rating" :cancel="false" readonly />
                 </div>
-                <div class="flex-1 text-sm">{{ fb.comment ? fb.comment.substring(0, 60) + (fb.comment.length > 60 ? '...' : '') : '-' }}</div>
+                <div class="flex-1 text-sm">
+                  {{
+                    fb.comment
+                      ? fb.comment.substring(0, 60) + (fb.comment.length > 60 ? '...' : '')
+                      : '-'
+                  }}
+                </div>
               </div>
             </template>
           </Card>
@@ -149,11 +180,20 @@ const quickActions = [
   { key: 'products', label: 'product|plural', icon: 'pi pi-barcode', link: '/admin/products' },
   { key: 'customers', label: 'customer|plural', icon: 'pi pi-users', link: '/admin/customers' },
   { key: 'sales', label: 'sales', icon: 'pi pi-chart-line', link: '/admin/sales' },
-  { key: 'feedback', label: 'customer_feedback', icon: 'pi pi-comments', link: '/admin/customer-feedback' },
+  {
+    key: 'feedback',
+    label: 'customer_feedback',
+    icon: 'pi pi-comments',
+    link: '/admin/customer-feedback',
+  },
 ]
 
 function formatCurrency(v) {
-  return (v || 0).toLocaleString('sl-SI', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' ' + '\u20AC'
+  return (
+    (v || 0).toLocaleString('sl-SI', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) +
+    ' ' +
+    '\u20AC'
+  )
 }
 
 async function loadAll() {
@@ -175,8 +215,13 @@ async function loadAll() {
       const yesterdayEntry = sales.find((s) => s.date?.startsWith(yesterdayStr))
       todaySales.value = todayEntry?.total_sales || 0
       yesterdaySales.value = yesterdayEntry?.total_sales || 0
-      salesChange.value = yesterdaySales.value > 0 ? ((todaySales.value - yesterdaySales.value) / yesterdaySales.value) * 100 : 0
-      todayOrders.value = sales.filter((s) => s.date?.startsWith(todayStr)).reduce((a, b) => a + (b.orders?.length || 0), 0)
+      salesChange.value =
+        yesterdaySales.value > 0
+          ? ((todaySales.value - yesterdaySales.value) / yesterdaySales.value) * 100
+          : 0
+      todayOrders.value = sales
+        .filter((s) => s.date?.startsWith(todayStr))
+        .reduce((a, b) => a + (b.orders?.length || 0), 0)
     }
 
     if (ordersRes.status === 'fulfilled') {
@@ -191,7 +236,12 @@ async function loadAll() {
       recentFeedback.value = summary?.recent_feedbacks || []
     }
   } catch {
-    toast.add({ severity: 'error', summary: 'Error', detail: 'Failed to load dashboard data', life: 3000 })
+    toast.add({
+      severity: 'error',
+      summary: 'Error',
+      detail: 'Failed to load dashboard data',
+      life: 3000,
+    })
   } finally {
     loading.value = false
   }

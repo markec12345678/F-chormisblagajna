@@ -22,7 +22,12 @@
             <div class="flex justify-between align-items-center">
               <Button icon="pi pi-plus" :label="$t('add_shift')" rounded raised @click="openAdd" />
               <div class="flex gap-2">
-                <Calendar v-model="dateRange" selectionMode="range" :placeholder="$t('date_range')" showIcon />
+                <Calendar
+                  v-model="dateRange"
+                  selectionMode="range"
+                  :placeholder="$t('date_range')"
+                  showIcon
+                />
               </div>
             </div>
           </template>
@@ -39,14 +44,25 @@
           <Column sortable field="role" :header="$t('role')"></Column>
           <Column sortable field="status" :header="$t('status')">
             <template #body="slotProps">
-              <Tag :value="slotProps.data.status" :severity="getStatusSeverity(slotProps.data.status)" />
+              <Tag
+                :value="slotProps.data.status"
+                :severity="getStatusSeverity(slotProps.data.status)"
+              />
             </template>
           </Column>
           <Column :header="$t('actions')">
             <template #body="slotProps">
               <ButtonGroup>
-                <Button icon="pi pi-pencil" severity="secondary" @click="prepareEdit(slotProps.data)" />
-                <Button icon="pi pi-trash" severity="danger" @click="confirmDelete($event, slotProps.data.id)" />
+                <Button
+                  icon="pi pi-pencil"
+                  severity="secondary"
+                  @click="prepareEdit(slotProps.data)"
+                />
+                <Button
+                  icon="pi pi-trash"
+                  severity="danger"
+                  @click="confirmDelete($event, slotProps.data.id)"
+                />
               </ButtonGroup>
             </template>
           </Column>
@@ -54,7 +70,13 @@
       </div>
     </div>
 
-    <Dialog v-model:visible="addDialog" modal :header="$t('add_shift')" :style="{ width: '30rem' }" :breakpoints="{ '1199px': '90vw', '575px': '90vw' }">
+    <Dialog
+      v-model:visible="addDialog"
+      modal
+      :header="$t('add_shift')"
+      :style="{ width: '30rem' }"
+      :breakpoints="{ '1199px': '90vw', '575px': '90vw' }"
+    >
       <div class="flex flex-column gap-4">
         <div class="flex flex-column gap-2">
           <label>{{ $t('employee') }}</label>
@@ -80,7 +102,12 @@
         </div>
         <div class="flex flex-column gap-2">
           <label>{{ $t('role') }}</label>
-          <Dropdown v-model="form.role" :options="roleOptions" optionLabel="label" optionValue="value" />
+          <Dropdown
+            v-model="form.role"
+            :options="roleOptions"
+            optionLabel="label"
+            optionValue="value"
+          />
         </div>
         <div class="flex flex-column gap-2">
           <label>{{ $t('notes') }}</label>
@@ -90,12 +117,25 @@
       <template #footer>
         <ButtonGroup>
           <Button :label="$t('cancel')" severity="secondary" @click="addDialog = false" />
-          <Button class="ml-2" severity="primary" @click="submit" :label="$t('save')" :loading="submitting" :disabled="submitting" />
+          <Button
+            class="ml-2"
+            severity="primary"
+            @click="submit"
+            :label="$t('save')"
+            :loading="submitting"
+            :disabled="submitting"
+          />
         </ButtonGroup>
       </template>
     </Dialog>
 
-    <Dialog v-model:visible="editDialog" modal :header="$t('edit_shift')" :style="{ width: '30rem' }" :breakpoints="{ '1199px': '90vw', '575px': '90vw' }">
+    <Dialog
+      v-model:visible="editDialog"
+      modal
+      :header="$t('edit_shift')"
+      :style="{ width: '30rem' }"
+      :breakpoints="{ '1199px': '90vw', '575px': '90vw' }"
+    >
       <div class="flex flex-column gap-4">
         <div class="flex flex-column gap-2">
           <label>{{ $t('employee') }}</label>
@@ -117,13 +157,25 @@
         </div>
         <div class="flex flex-column gap-2">
           <label>{{ $t('status') }}</label>
-          <Dropdown v-model="editForm.status" :options="statusOptions" optionLabel="label" optionValue="value" />
+          <Dropdown
+            v-model="editForm.status"
+            :options="statusOptions"
+            optionLabel="label"
+            optionValue="value"
+          />
         </div>
       </div>
       <template #footer>
         <ButtonGroup>
           <Button :label="$t('cancel')" severity="secondary" @click="editDialog = false" />
-          <Button class="ml-2" severity="primary" @click="submitEdit" :label="$t('save')" :loading="submitting" :disabled="submitting" />
+          <Button
+            class="ml-2"
+            severity="primary"
+            @click="submitEdit"
+            :label="$t('save')"
+            :loading="submitting"
+            :disabled="submitting"
+          />
         </ButtonGroup>
       </template>
     </Dialog>
@@ -159,7 +211,15 @@ const addDialog = ref(false)
 const editDialog = ref(false)
 const dateRange = ref<Date[]>([])
 
-const form = ref({ employee_id: '', branch_id: '', date: '', start_time: '', end_time: '', role: 'cashier', notes: '' })
+const form = ref({
+  employee_id: '',
+  branch_id: '',
+  date: '',
+  start_time: '',
+  end_time: '',
+  role: 'cashier',
+  notes: '',
+})
 const editForm = ref<any>({})
 const editId = ref('')
 
@@ -180,10 +240,14 @@ const statusOptions = [
 
 const getStatusSeverity = (status: string) => {
   switch (status) {
-    case 'confirmed': return 'success'
-    case 'completed': return 'info'
-    case 'cancelled': return 'danger'
-    default: return 'warn'
+    case 'confirmed':
+      return 'success'
+    case 'completed':
+      return 'info'
+    case 'cancelled':
+      return 'danger'
+    default:
+      return 'warn'
   }
 }
 
@@ -206,17 +270,40 @@ const getShifts = (offset = 0, limit = 50) => {
   if (dateRange.value && dateRange.value.length === 2) {
     url += `&start_date=${formatDate(dateRange.value[0])}&end_date=${formatDate(dateRange.value[1])}`
   }
-  axios.get(url).then((res) => {
-    shifts.value = res.data.data || []
-    totalRecords.value = res.data.meta?.total_records || 0
-  }).catch((err) => {
-    toast.add({ severity: 'error', summary: t('error'), detail: err.message, life: 3000 })
-  }).finally(() => { loading.value = false })
+  axios
+    .get(url)
+    .then((res) => {
+      shifts.value = res.data.data || []
+      totalRecords.value = res.data.meta?.total_records || 0
+    })
+    .catch((err) => {
+      toast.add({ severity: 'error', summary: t('error'), detail: err.message, life: 3000 })
+    })
+    .finally(() => {
+      loading.value = false
+    })
 }
 
-const onPage = (event: { first: number; rows: number }) => { getShifts(event.first, event.rows) }
-const openAdd = () => { form.value = { employee_id: '', branch_id: '', date: '', start_time: '', end_time: '', role: 'cashier', notes: '' }; addDialog.value = true }
-const prepareEdit = (shift: any) => { editForm.value = JSON.parse(JSON.stringify(shift)); editId.value = shift.id; editDialog.value = true }
+const onPage = (event: { first: number; rows: number }) => {
+  getShifts(event.first, event.rows)
+}
+const openAdd = () => {
+  form.value = {
+    employee_id: '',
+    branch_id: '',
+    date: '',
+    start_time: '',
+    end_time: '',
+    role: 'cashier',
+    notes: '',
+  }
+  addDialog.value = true
+}
+const prepareEdit = (shift: any) => {
+  editForm.value = JSON.parse(JSON.stringify(shift))
+  editId.value = shift.id
+  editDialog.value = true
+}
 
 const submit = () => {
   submitting.value = true
@@ -226,12 +313,24 @@ const submit = () => {
     start_time: form.value.start_time ? formatTime(new Date(form.value.start_time)) : '',
     end_time: form.value.end_time ? formatTime(new Date(form.value.end_time)) : '',
   }
-  axios.post(apiBase, payload).then(() => {
-    toast.add({ severity: 'success', summary: t('success'), detail: t('shift_added'), life: 3000 })
-    addDialog.value = false; getShifts(0, rowsPerPage.value)
-  }).catch((err) => {
-    toast.add({ severity: 'error', summary: t('error'), detail: err.message, life: 3000 })
-  }).finally(() => { submitting.value = false })
+  axios
+    .post(apiBase, payload)
+    .then(() => {
+      toast.add({
+        severity: 'success',
+        summary: t('success'),
+        detail: t('shift_added'),
+        life: 3000,
+      })
+      addDialog.value = false
+      getShifts(0, rowsPerPage.value)
+    })
+    .catch((err) => {
+      toast.add({ severity: 'error', summary: t('error'), detail: err.message, life: 3000 })
+    })
+    .finally(() => {
+      submitting.value = false
+    })
 }
 
 const submitEdit = () => {
@@ -242,12 +341,24 @@ const submitEdit = () => {
     start_time: editForm.value.start_time ? formatTime(new Date(editForm.value.start_time)) : '',
     end_time: editForm.value.end_time ? formatTime(new Date(editForm.value.end_time)) : '',
   }
-  axios.patch(`${apiBase}/${editId.value}`, payload).then(() => {
-    toast.add({ severity: 'success', summary: t('success'), detail: t('shift_updated'), life: 3000 })
-    editDialog.value = false; getShifts(0, rowsPerPage.value)
-  }).catch((err) => {
-    toast.add({ severity: 'error', summary: t('error'), detail: err.message, life: 3000 })
-  }).finally(() => { submitting.value = false })
+  axios
+    .patch(`${apiBase}/${editId.value}`, payload)
+    .then(() => {
+      toast.add({
+        severity: 'success',
+        summary: t('success'),
+        detail: t('shift_updated'),
+        life: 3000,
+      })
+      editDialog.value = false
+      getShifts(0, rowsPerPage.value)
+    })
+    .catch((err) => {
+      toast.add({ severity: 'error', summary: t('error'), detail: err.message, life: 3000 })
+    })
+    .finally(() => {
+      submitting.value = false
+    })
 }
 
 const confirmDelete = (event: MouseEvent, id: string) => {
@@ -260,12 +371,20 @@ const confirmDelete = (event: MouseEvent, id: string) => {
     acceptLabel: t('delete'),
     acceptClass: 'p-button-danger',
     accept: () => {
-      axios.delete(`${apiBase}/${id}`).then(() => {
-        toast.add({ severity: 'success', summary: t('success'), detail: t('shift_deleted'), life: 3000 })
-        getShifts(0, rowsPerPage.value)
-      }).catch((err) => {
-        toast.add({ severity: 'error', summary: t('error'), detail: err.message, life: 3000 })
-      })
+      axios
+        .delete(`${apiBase}/${id}`)
+        .then(() => {
+          toast.add({
+            severity: 'success',
+            summary: t('success'),
+            detail: t('shift_deleted'),
+            life: 3000,
+          })
+          getShifts(0, rowsPerPage.value)
+        })
+        .catch((err) => {
+          toast.add({ severity: 'error', summary: t('error'), detail: err.message, life: 3000 })
+        })
     },
   })
 }

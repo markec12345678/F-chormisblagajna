@@ -64,14 +64,22 @@
               </Column>
               <Column field="is_active" :header="$t('status')">
                 <template #body="slotProps">
-                  <Tag :value="slotProps?.data?.is_active ? $t('active') : $t('inactive')"
-                    :severity="slotProps?.data?.is_active ? 'success' : 'secondary'" />
+                  <Tag
+                    :value="slotProps?.data?.is_active ? $t('active') : $t('inactive')"
+                    :severity="slotProps?.data?.is_active ? 'success' : 'secondary'"
+                  />
                 </template>
               </Column>
               <Column :header="$t('actions')">
                 <template #body="slotProps">
-                  <Button icon="pi pi-trash" severity="danger" text rounded size="small"
-                    @click="deleteRule(slotProps?.data?.id)" />
+                  <Button
+                    icon="pi pi-trash"
+                    severity="danger"
+                    text
+                    rounded
+                    size="small"
+                    @click="deleteRule(slotProps?.data?.id)"
+                  />
                 </template>
               </Column>
             </DataTable>
@@ -93,7 +101,10 @@
               <Column field="material_name" :header="$t('material')"></Column>
               <Column field="severity" :header="$t('severity')">
                 <template #body="slotProps">
-                  <Tag :value="slotProps?.data?.severity" :severity="getSeverity(slotProps?.data?.severity)" />
+                  <Tag
+                    :value="slotProps?.data?.severity"
+                    :severity="getSeverity(slotProps?.data?.severity)"
+                  />
                 </template>
               </Column>
               <Column field="current_qty" :header="$t('current')">
@@ -103,8 +114,15 @@
               </Column>
               <Column field="is_read" :header="$t('read')">
                 <template #body="slotProps">
-                  <Button v-if="!slotProps?.data?.is_read" icon="pi pi-check" text rounded size="small"
-                    severity="success" @click="markAsRead(slotProps?.data?.id)" />
+                  <Button
+                    v-if="!slotProps?.data?.is_read"
+                    icon="pi pi-check"
+                    text
+                    rounded
+                    size="small"
+                    severity="success"
+                    @click="markAsRead(slotProps?.data?.id)"
+                  />
                   <span v-else class="text-400"><i class="pi pi-check-circle"></i></span>
                 </template>
               </Column>
@@ -143,7 +161,13 @@
                 </div>
               </div>
             </div>
-            <Button :label="$t('save_rule')" icon="pi pi-save" class="mt-3" @click="saveRule" :loading="isSaving" />
+            <Button
+              :label="$t('save_rule')"
+              icon="pi pi-save"
+              class="mt-3"
+              @click="saveRule"
+              :loading="isSaving"
+            />
           </template>
         </Card>
       </div>
@@ -218,7 +242,13 @@ const getSeverity = (severity: string) => {
 }
 
 const showAddRule = () => {
-  newRule.value = { material_name: '', material_id: '', threshold_low: 10, threshold_critical: 5, is_active: true }
+  newRule.value = {
+    material_name: '',
+    material_id: '',
+    threshold_low: 10,
+    threshold_critical: 5,
+    is_active: true,
+  }
 }
 
 const saveRule = async () => {
@@ -228,13 +258,31 @@ const saveRule = async () => {
     await axios.post(
       `http://${import.meta.env.VITE_APP_BACKEND_HOST}/inventory-alerts/api/rules`,
       newRule.value,
-      { headers: { Authorization: `Bearer ${auth.accessToken.value}` } }
+      { headers: { Authorization: `Bearer ${auth.accessToken.value}` } },
     )
-    toast.add({ severity: 'success', summary: t('success'), detail: t('rule_saved'), group: 'br', life: 3000 })
-    newRule.value = { material_name: '', material_id: '', threshold_low: 10, threshold_critical: 5, is_active: true }
+    toast.add({
+      severity: 'success',
+      summary: t('success'),
+      detail: t('rule_saved'),
+      group: 'br',
+      life: 3000,
+    })
+    newRule.value = {
+      material_name: '',
+      material_id: '',
+      threshold_low: 10,
+      threshold_critical: 5,
+      is_active: true,
+    }
     loadData()
   } catch {
-    toast.add({ severity: 'error', summary: t('failed'), detail: t('save_failed'), group: 'br', life: 3000 })
+    toast.add({
+      severity: 'error',
+      summary: t('failed'),
+      detail: t('save_failed'),
+      group: 'br',
+      life: 3000,
+    })
   } finally {
     isSaving.value = false
   }
@@ -244,12 +292,24 @@ const deleteRule = async (id: string) => {
   try {
     await axios.delete(
       `http://${import.meta.env.VITE_APP_BACKEND_HOST}/inventory-alerts/api/rules/${id}`,
-      { headers: { Authorization: `Bearer ${auth.accessToken.value}` } }
+      { headers: { Authorization: `Bearer ${auth.accessToken.value}` } },
     )
-    toast.add({ severity: 'success', summary: t('success'), detail: t('rule_deleted'), group: 'br', life: 3000 })
+    toast.add({
+      severity: 'success',
+      summary: t('success'),
+      detail: t('rule_deleted'),
+      group: 'br',
+      life: 3000,
+    })
     loadData()
   } catch {
-    toast.add({ severity: 'error', summary: t('failed'), detail: t('delete_failed'), group: 'br', life: 3000 })
+    toast.add({
+      severity: 'error',
+      summary: t('failed'),
+      detail: t('delete_failed'),
+      group: 'br',
+      life: 3000,
+    })
   }
 }
 
@@ -258,7 +318,7 @@ const markAsRead = async (id: string) => {
     await axios.put(
       `http://${import.meta.env.VITE_APP_BACKEND_HOST}/inventory-alerts/api/alerts/${id}/read`,
       {},
-      { headers: { Authorization: `Bearer ${auth.accessToken.value}` } }
+      { headers: { Authorization: `Bearer ${auth.accessToken.value}` } },
     )
     loadData()
   } catch {
@@ -271,20 +331,26 @@ const loadData = async () => {
   try {
     const [rulesRes, alertsRes, summaryRes] = await Promise.all([
       axios.get(`http://${import.meta.env.VITE_APP_BACKEND_HOST}/inventory-alerts/api/rules`, {
-        headers: { Authorization: `Bearer ${auth.accessToken.value}` }
+        headers: { Authorization: `Bearer ${auth.accessToken.value}` },
       }),
       axios.get(`http://${import.meta.env.VITE_APP_BACKEND_HOST}/inventory-alerts/api/alerts`, {
-        headers: { Authorization: `Bearer ${auth.accessToken.value}` }
+        headers: { Authorization: `Bearer ${auth.accessToken.value}` },
       }),
       axios.get(`http://${import.meta.env.VITE_APP_BACKEND_HOST}/inventory-alerts/api/summary`, {
-        headers: { Authorization: `Bearer ${auth.accessToken.value}` }
-      })
+        headers: { Authorization: `Bearer ${auth.accessToken.value}` },
+      }),
     ])
     rules.value = rulesRes.data.data || []
     alerts.value = alertsRes.data.data || []
     summary.value = summaryRes.data.data
   } catch {
-    toast.add({ severity: 'error', summary: t('failed'), detail: t('load_failed'), group: 'br', life: 3000 })
+    toast.add({
+      severity: 'error',
+      summary: t('failed'),
+      detail: t('load_failed'),
+      group: 'br',
+      life: 3000,
+    })
   } finally {
     isLoading.value = false
   }

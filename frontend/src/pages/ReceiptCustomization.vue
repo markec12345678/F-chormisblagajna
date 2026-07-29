@@ -12,29 +12,49 @@
         <Card>
           <template #title>{{ $t('receipt_templates') }}</template>
           <template #content>
-            <DataTable :value="templates" stripedRows :loading="isLoading" selectionMode="single"
-              v-model:selection="selectedTemplate" @rowSelect="onTemplateSelect">
+            <DataTable
+              :value="templates"
+              stripedRows
+              :loading="isLoading"
+              selectionMode="single"
+              v-model:selection="selectedTemplate"
+              @rowSelect="onTemplateSelect"
+            >
               <template #empty>{{ $t('no_templates') }}</template>
               <Column field="name" :header="$t('name')">
                 <template #body="slotProps">
                   <div class="flex align-items-center gap-2">
                     <span>{{ slotProps?.data?.name }}</span>
-                    <Tag v-if="slotProps?.data?.is_default" :value="$t('default')" severity="success" />
+                    <Tag
+                      v-if="slotProps?.data?.is_default"
+                      :value="$t('default')"
+                      severity="success"
+                    />
                   </div>
                 </template>
               </Column>
               <Column field="paper_width" :header="$t('paper_width')">
-                <template #body="slotProps">
-                  {{ slotProps?.data?.paper_width || 80 }}mm
-                </template>
+                <template #body="slotProps"> {{ slotProps?.data?.paper_width || 80 }}mm </template>
               </Column>
               <Column :header="$t('actions')">
                 <template #body="slotProps">
                   <div class="flex gap-1">
-                    <Button icon="pi pi-pencil" severity="info" text rounded size="small"
-                      @click="editTemplate(slotProps?.data)" />
-                    <Button icon="pi pi-trash" severity="danger" text rounded size="small"
-                      @click="deleteTemplate(slotProps?.data?.id)" />
+                    <Button
+                      icon="pi pi-pencil"
+                      severity="info"
+                      text
+                      rounded
+                      size="small"
+                      @click="editTemplate(slotProps?.data)"
+                    />
+                    <Button
+                      icon="pi pi-trash"
+                      severity="danger"
+                      text
+                      rounded
+                      size="small"
+                      @click="deleteTemplate(slotProps?.data?.id)"
+                    />
                   </div>
                 </template>
               </Column>
@@ -65,7 +85,12 @@
                 <label>{{ $t('auto_print') }}</label>
               </div>
               <Divider />
-              <Button :label="$t('save_settings')" icon="pi pi-save" @click="savePrintSettings" :loading="isSaving" />
+              <Button
+                :label="$t('save_settings')"
+                icon="pi pi-save"
+                @click="savePrintSettings"
+                :loading="isSaving"
+              />
             </div>
           </template>
         </Card>
@@ -96,8 +121,12 @@
                   </div>
                   <div class="flex flex-column gap-2">
                     <label>{{ $t('paper_width') }}</label>
-                    <Dropdown v-model="selectedTemplate.paper_width" :options="paperWidths" optionLabel="label"
-                      optionValue="value" />
+                    <Dropdown
+                      v-model="selectedTemplate.paper_width"
+                      :options="paperWidths"
+                      optionLabel="label"
+                      optionValue="value"
+                    />
                   </div>
                 </div>
               </div>
@@ -138,15 +167,30 @@
             </div>
             <Divider />
             <div class="flex gap-2">
-              <Button :label="$t('save_template')" icon="pi pi-save" @click="saveTemplate" :loading="isSaving" />
-              <Button :label="$t('preview')" icon="pi pi-eye" severity="secondary" @click="previewTemplate" />
+              <Button
+                :label="$t('save_template')"
+                icon="pi pi-save"
+                @click="saveTemplate"
+                :loading="isSaving"
+              />
+              <Button
+                :label="$t('preview')"
+                icon="pi pi-eye"
+                severity="secondary"
+                @click="previewTemplate"
+              />
             </div>
           </template>
         </Card>
       </div>
     </div>
 
-    <Dialog v-model:visible="addDialog" modal :header="$t('add_template')" :style="{ width: '30rem' }">
+    <Dialog
+      v-model:visible="addDialog"
+      modal
+      :header="$t('add_template')"
+      :style="{ width: '30rem' }"
+    >
       <div class="flex flex-column gap-2">
         <label>{{ $t('name') }}</label>
         <InputText v-model="newTemplateName" />
@@ -157,8 +201,24 @@
       </template>
     </Dialog>
 
-    <Dialog v-model:visible="previewDialog" modal :header="$t('receipt_preview')" :style="{ width: '350px' }">
-      <div class="receipt-preview p-3" style="font-family: monospace; font-size: 12px; white-space: pre-wrap; background: white; color: black; border: 1px solid #ddd; border-radius: 4px;">
+    <Dialog
+      v-model:visible="previewDialog"
+      modal
+      :header="$t('receipt_preview')"
+      :style="{ width: '350px' }"
+    >
+      <div
+        class="receipt-preview p-3"
+        style="
+          font-family: monospace;
+          font-size: 12px;
+          white-space: pre-wrap;
+          background: white;
+          color: black;
+          border: 1px solid #ddd;
+          border-radius: 4px;
+        "
+      >
         {{ previewContent }}
       </div>
       <template #footer>
@@ -222,7 +282,13 @@ interface PrintSettings {
 const templates = ref<ReceiptTemplate[]>([])
 const selectedTemplate = ref<ReceiptTemplate | null>(null)
 const printSettings = ref<PrintSettings>({
-  id: '', printer_name: '', printer_ip: '', auto_print: true, print_copies: 1, template_id: '', connected: false
+  id: '',
+  printer_name: '',
+  printer_ip: '',
+  auto_print: true,
+  print_copies: 1,
+  template_id: '',
+  connected: false,
 })
 const isLoading = ref(false)
 const isSaving = ref(false)
@@ -256,13 +322,25 @@ const createTemplate = async () => {
     await axios.post(
       `http://${import.meta.env.VITE_APP_BACKEND_HOST}/receipt/api/templates`,
       { name: newTemplateName.value, paper_width: 80, show_logo: true, show_tax_id: true },
-      { headers: { Authorization: `Bearer ${auth.accessToken.value}` } }
+      { headers: { Authorization: `Bearer ${auth.accessToken.value}` } },
     )
-    toast.add({ severity: 'success', summary: t('success'), detail: t('template_created'), group: 'br', life: 3000 })
+    toast.add({
+      severity: 'success',
+      summary: t('success'),
+      detail: t('template_created'),
+      group: 'br',
+      life: 3000,
+    })
     addDialog.value = false
     loadTemplates()
   } catch {
-    toast.add({ severity: 'error', summary: t('failed'), detail: t('save_failed'), group: 'br', life: 3000 })
+    toast.add({
+      severity: 'error',
+      summary: t('failed'),
+      detail: t('save_failed'),
+      group: 'br',
+      life: 3000,
+    })
   } finally {
     isSaving.value = false
   }
@@ -275,12 +353,24 @@ const saveTemplate = async () => {
     await axios.post(
       `http://${import.meta.env.VITE_APP_BACKEND_HOST}/receipt/api/templates`,
       selectedTemplate.value,
-      { headers: { Authorization: `Bearer ${auth.accessToken.value}` } }
+      { headers: { Authorization: `Bearer ${auth.accessToken.value}` } },
     )
-    toast.add({ severity: 'success', summary: t('success'), detail: t('template_saved'), group: 'br', life: 3000 })
+    toast.add({
+      severity: 'success',
+      summary: t('success'),
+      detail: t('template_saved'),
+      group: 'br',
+      life: 3000,
+    })
     loadTemplates()
   } catch {
-    toast.add({ severity: 'error', summary: t('failed'), detail: t('save_failed'), group: 'br', life: 3000 })
+    toast.add({
+      severity: 'error',
+      summary: t('failed'),
+      detail: t('save_failed'),
+      group: 'br',
+      life: 3000,
+    })
   } finally {
     isSaving.value = false
   }
@@ -290,13 +380,25 @@ const deleteTemplate = async (id: string) => {
   try {
     await axios.delete(
       `http://${import.meta.env.VITE_APP_BACKEND_HOST}/receipt/api/templates/${id}`,
-      { headers: { Authorization: `Bearer ${auth.accessToken.value}` } }
+      { headers: { Authorization: `Bearer ${auth.accessToken.value}` } },
     )
-    toast.add({ severity: 'success', summary: t('success'), detail: t('template_deleted'), group: 'br', life: 3000 })
+    toast.add({
+      severity: 'success',
+      summary: t('success'),
+      detail: t('template_deleted'),
+      group: 'br',
+      life: 3000,
+    })
     if (selectedTemplate.value?.id === id) selectedTemplate.value = null
     loadTemplates()
   } catch {
-    toast.add({ severity: 'error', summary: t('failed'), detail: t('delete_failed'), group: 'br', life: 3000 })
+    toast.add({
+      severity: 'error',
+      summary: t('failed'),
+      detail: t('delete_failed'),
+      group: 'br',
+      life: 3000,
+    })
   }
 }
 
@@ -326,11 +428,23 @@ const savePrintSettings = async () => {
     await axios.post(
       `http://${import.meta.env.VITE_APP_BACKEND_HOST}/receipt/api/print-settings`,
       printSettings.value,
-      { headers: { Authorization: `Bearer ${auth.accessToken.value}` } }
+      { headers: { Authorization: `Bearer ${auth.accessToken.value}` } },
     )
-    toast.add({ severity: 'success', summary: t('success'), detail: t('settings_saved'), group: 'br', life: 3000 })
+    toast.add({
+      severity: 'success',
+      summary: t('success'),
+      detail: t('settings_saved'),
+      group: 'br',
+      life: 3000,
+    })
   } catch {
-    toast.add({ severity: 'error', summary: t('failed'), detail: t('save_failed'), group: 'br', life: 3000 })
+    toast.add({
+      severity: 'error',
+      summary: t('failed'),
+      detail: t('save_failed'),
+      group: 'br',
+      life: 3000,
+    })
   } finally {
     isSaving.value = false
   }
@@ -341,11 +455,17 @@ const loadTemplates = async () => {
   try {
     const response = await axios.get(
       `http://${import.meta.env.VITE_APP_BACKEND_HOST}/receipt/api/templates`,
-      { headers: { Authorization: `Bearer ${auth.accessToken.value}` } }
+      { headers: { Authorization: `Bearer ${auth.accessToken.value}` } },
     )
     templates.value = response.data.data || []
   } catch {
-    toast.add({ severity: 'error', summary: t('failed'), detail: t('load_failed'), group: 'br', life: 3000 })
+    toast.add({
+      severity: 'error',
+      summary: t('failed'),
+      detail: t('load_failed'),
+      group: 'br',
+      life: 3000,
+    })
   } finally {
     isLoading.value = false
   }
@@ -355,7 +475,7 @@ const loadPrintSettings = async () => {
   try {
     const response = await axios.get(
       `http://${import.meta.env.VITE_APP_BACKEND_HOST}/receipt/api/print-settings`,
-      { headers: { Authorization: `Bearer ${auth.accessToken.value}` } }
+      { headers: { Authorization: `Bearer ${auth.accessToken.value}` } },
     )
     printSettings.value = response.data.data
   } catch {

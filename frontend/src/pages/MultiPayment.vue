@@ -7,7 +7,12 @@
           <div class="flex gap-2">
             <Calendar v-model="startDate" :placeholder="$t('start_date')" dateFormat="yy-mm-dd" />
             <Calendar v-model="endDate" :placeholder="$t('end_date')" dateFormat="yy-mm-dd" />
-            <Button icon="pi pi-refresh" severity="secondary" @click="loadData" :loading="isLoading" />
+            <Button
+              icon="pi pi-refresh"
+              severity="secondary"
+              @click="loadData"
+              :loading="isLoading"
+            />
           </div>
         </div>
       </div>
@@ -19,7 +24,9 @@
             <div class="grid">
               <div class="col-12 md:col-2">
                 <div class="text-center">
-                  <div class="text-4xl font-bold text-green-500">{{ formatCurrency(grandTotal) }}</div>
+                  <div class="text-4xl font-bold text-green-500">
+                    {{ formatCurrency(grandTotal) }}
+                  </div>
                   <div class="text-500">{{ $t('grand_total') }}</div>
                 </div>
               </div>
@@ -88,7 +95,9 @@
               </Column>
               <Column field="grand_total" :header="$t('total')">
                 <template #body="slotProps">
-                  <span class="font-bold">{{ formatCurrency(slotProps?.data?.grand_total || 0) }}</span>
+                  <span class="font-bold">{{
+                    formatCurrency(slotProps?.data?.grand_total || 0)
+                  }}</span>
                 </template>
               </Column>
             </DataTable>
@@ -134,12 +143,24 @@ const formatCurrency = (amount: number) => {
   return new Intl.NumberFormat('sl-SI', { style: 'currency', currency: 'EUR' }).format(amount)
 }
 
-const grandTotal = computed(() => dailyPayments.value.reduce((sum, d) => sum + (d.grand_total || 0), 0))
-const totalCash = computed(() => formatCurrency(dailyPayments.value.reduce((sum, d) => sum + (d.total_cash || 0), 0)))
-const totalCard = computed(() => formatCurrency(dailyPayments.value.reduce((sum, d) => sum + (d.total_card || 0), 0)))
-const totalVoucher = computed(() => formatCurrency(dailyPayments.value.reduce((sum, d) => sum + (d.total_voucher || 0), 0)))
-const totalMobile = computed(() => formatCurrency(dailyPayments.value.reduce((sum, d) => sum + (d.total_mobile || 0), 0)))
-const totalGift = computed(() => formatCurrency(dailyPayments.value.reduce((sum, d) => sum + (d.total_gift_card || 0), 0)))
+const grandTotal = computed(() =>
+  dailyPayments.value.reduce((sum, d) => sum + (d.grand_total || 0), 0),
+)
+const totalCash = computed(() =>
+  formatCurrency(dailyPayments.value.reduce((sum, d) => sum + (d.total_cash || 0), 0)),
+)
+const totalCard = computed(() =>
+  formatCurrency(dailyPayments.value.reduce((sum, d) => sum + (d.total_card || 0), 0)),
+)
+const totalVoucher = computed(() =>
+  formatCurrency(dailyPayments.value.reduce((sum, d) => sum + (d.total_voucher || 0), 0)),
+)
+const totalMobile = computed(() =>
+  formatCurrency(dailyPayments.value.reduce((sum, d) => sum + (d.total_mobile || 0), 0)),
+)
+const totalGift = computed(() =>
+  formatCurrency(dailyPayments.value.reduce((sum, d) => sum + (d.total_gift_card || 0), 0)),
+)
 
 const loadData = async () => {
   isLoading.value = true
@@ -150,11 +171,17 @@ const loadData = async () => {
 
     const response = await axios.get(
       `http://${import.meta.env.VITE_APP_BACKEND_HOST}/multipayment/api/daily`,
-      { headers: { Authorization: `Bearer ${auth.accessToken.value}` }, params }
+      { headers: { Authorization: `Bearer ${auth.accessToken.value}` }, params },
     )
     dailyPayments.value = response.data.data || []
   } catch {
-    toast.add({ severity: 'error', summary: t('failed'), detail: t('load_failed'), group: 'br', life: 3000 })
+    toast.add({
+      severity: 'error',
+      summary: t('failed'),
+      detail: t('load_failed'),
+      group: 'br',
+      life: 3000,
+    })
   } finally {
     isLoading.value = false
   }

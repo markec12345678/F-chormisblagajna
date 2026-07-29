@@ -17,22 +17,38 @@
           <Column field="phone" :header="$t('phone')"></Column>
           <Column field="is_active" :header="$t('status')">
             <template #body="slotProps">
-              <Tag :value="slotProps?.data?.is_active ? $t('active') : $t('inactive')" :severity="slotProps?.data?.is_active ? 'success' : 'danger'" />
+              <Tag
+                :value="slotProps?.data?.is_active ? $t('active') : $t('inactive')"
+                :severity="slotProps?.data?.is_active ? 'success' : 'danger'"
+              />
             </template>
           </Column>
           <Column :header="$t('actions')">
             <template #body="slotProps">
               <ButtonGroup>
                 <Button icon="pi pi-eye" severity="info" @click="viewSupplier(slotProps?.data)" />
-                <Button icon="pi pi-pencil" severity="secondary" @click="editSupplier(slotProps?.data)" />
-                <Button icon="pi pi-trash" severity="danger" @click="deleteSupplier(slotProps?.data?.id)" />
+                <Button
+                  icon="pi pi-pencil"
+                  severity="secondary"
+                  @click="editSupplier(slotProps?.data)"
+                />
+                <Button
+                  icon="pi pi-trash"
+                  severity="danger"
+                  @click="deleteSupplier(slotProps?.data?.id)"
+                />
               </ButtonGroup>
             </template>
           </Column>
         </DataTable>
       </div>
 
-      <Dialog v-model:visible="supplierDialog" modal :header="editingSupplier ? $t('edit_supplier') : $t('add_supplier')" :style="{ width: '50rem' }">
+      <Dialog
+        v-model:visible="supplierDialog"
+        modal
+        :header="editingSupplier ? $t('edit_supplier') : $t('add_supplier')"
+        :style="{ width: '50rem' }"
+      >
         <div class="grid">
           <div class="col-12 md:col-6">
             <div class="flex flex-column gap-2">
@@ -83,7 +99,12 @@
         </template>
       </Dialog>
 
-      <Dialog v-model:visible="ordersDialog" modal :header="$t('supplier_orders')" :style="{ width: '70rem' }">
+      <Dialog
+        v-model:visible="ordersDialog"
+        modal
+        :header="$t('supplier_orders')"
+        :style="{ width: '70rem' }"
+      >
         <DataTable :value="supplierOrders" stripedRows>
           <template #empty>{{ $t('no_orders') }}</template>
           <Column field="order_date" :header="$t('date')">
@@ -98,7 +119,10 @@
           </Column>
           <Column field="status" :header="$t('status')">
             <template #body="slotProps">
-              <Tag :value="slotProps?.data?.status" :severity="getStatusSeverity(slotProps?.data?.status)" />
+              <Tag
+                :value="slotProps?.data?.status"
+                :severity="getStatusSeverity(slotProps?.data?.status)"
+              />
             </template>
           </Column>
         </DataTable>
@@ -187,12 +211,18 @@ const viewSupplier = async (supplier: Supplier) => {
   try {
     const response = await axios.get(
       `http://${import.meta.env.VITE_APP_BACKEND_HOST}/supplier/api/suppliers/${supplier.id}/orders`,
-      { headers: { Authorization: `Bearer ${auth.accessToken.value}` } }
+      { headers: { Authorization: `Bearer ${auth.accessToken.value}` } },
     )
     supplierOrders.value = response.data.data || []
     ordersDialog.value = true
   } catch {
-    toast.add({ severity: 'error', summary: t('failed'), detail: t('load_failed'), group: 'br', life: 3000 })
+    toast.add({
+      severity: 'error',
+      summary: t('failed'),
+      detail: t('load_failed'),
+      group: 'br',
+      life: 3000,
+    })
   }
 }
 
@@ -203,20 +233,32 @@ const saveSupplier = async () => {
       await axios.put(
         `http://${import.meta.env.VITE_APP_BACKEND_HOST}/supplier/api/suppliers/${currentSupplier.value.id}`,
         currentSupplier.value,
-        { headers: { Authorization: `Bearer ${auth.accessToken.value}` } }
+        { headers: { Authorization: `Bearer ${auth.accessToken.value}` } },
       )
     } else {
       await axios.post(
         `http://${import.meta.env.VITE_APP_BACKEND_HOST}/supplier/api/suppliers`,
         currentSupplier.value,
-        { headers: { Authorization: `Bearer ${auth.accessToken.value}` } }
+        { headers: { Authorization: `Bearer ${auth.accessToken.value}` } },
       )
     }
-    toast.add({ severity: 'success', summary: t('success'), detail: t('supplier_saved'), group: 'br', life: 3000 })
+    toast.add({
+      severity: 'success',
+      summary: t('success'),
+      detail: t('supplier_saved'),
+      group: 'br',
+      life: 3000,
+    })
     supplierDialog.value = false
     loadSuppliers()
   } catch {
-    toast.add({ severity: 'error', summary: t('failed'), detail: t('save_failed'), group: 'br', life: 3000 })
+    toast.add({
+      severity: 'error',
+      summary: t('failed'),
+      detail: t('save_failed'),
+      group: 'br',
+      life: 3000,
+    })
   } finally {
     isSaving.value = false
   }
@@ -226,12 +268,24 @@ const deleteSupplier = async (id: string) => {
   try {
     await axios.delete(
       `http://${import.meta.env.VITE_APP_BACKEND_HOST}/supplier/api/suppliers/${id}`,
-      { headers: { Authorization: `Bearer ${auth.accessToken.value}` } }
+      { headers: { Authorization: `Bearer ${auth.accessToken.value}` } },
     )
-    toast.add({ severity: 'success', summary: t('success'), detail: t('supplier_deleted'), group: 'br', life: 3000 })
+    toast.add({
+      severity: 'success',
+      summary: t('success'),
+      detail: t('supplier_deleted'),
+      group: 'br',
+      life: 3000,
+    })
     loadSuppliers()
   } catch {
-    toast.add({ severity: 'error', summary: t('failed'), detail: t('delete_failed'), group: 'br', life: 3000 })
+    toast.add({
+      severity: 'error',
+      summary: t('failed'),
+      detail: t('delete_failed'),
+      group: 'br',
+      life: 3000,
+    })
   }
 }
 
@@ -240,11 +294,17 @@ const loadSuppliers = async () => {
   try {
     const response = await axios.get(
       `http://${import.meta.env.VITE_APP_BACKEND_HOST}/supplier/api/suppliers`,
-      { headers: { Authorization: `Bearer ${auth.accessToken.value}` } }
+      { headers: { Authorization: `Bearer ${auth.accessToken.value}` } },
     )
     suppliers.value = response.data.data || []
   } catch {
-    toast.add({ severity: 'error', summary: t('failed'), detail: t('load_failed'), group: 'br', life: 3000 })
+    toast.add({
+      severity: 'error',
+      summary: t('failed'),
+      detail: t('load_failed'),
+      group: 'br',
+      life: 3000,
+    })
   } finally {
     isLoading.value = false
   }

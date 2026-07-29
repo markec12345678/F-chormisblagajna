@@ -6,7 +6,11 @@
     </div>
 
     <div class="menu-items px-3" v-if="products.length > 0">
-      <div v-for="product in products" :key="product.id" class="menu-card flex align-items-center justify-content-between p-3 border-bottom-1 surface-border">
+      <div
+        v-for="product in products"
+        :key="product.id"
+        class="menu-card flex align-items-center justify-content-between p-3 border-bottom-1 surface-border"
+      >
         <div>
           <div class="font-bold">{{ product.name }}</div>
           <div class="text-sm text-500">{{ product.description }}</div>
@@ -14,7 +18,12 @@
         </div>
         <div class="flex align-items-center gap-2">
           <InputNumber v-model="quantities[product.id]" :min="0" :max="99" class="w-4rem" />
-          <Button icon="pi pi-plus" size="small" @click="addToCart(product)" :disabled="!quantities[product.id] || quantities[product.id] < 1" />
+          <Button
+            icon="pi pi-plus"
+            size="small"
+            @click="addToCart(product)"
+            :disabled="!quantities[product.id] || quantities[product.id] < 1"
+          />
         </div>
       </div>
     </div>
@@ -25,27 +34,48 @@
 
     <div v-if="cart.length > 0" class="cart-section p-3 surface-section">
       <h3>{{ $t('your_cart') }} ({{ cart.length }})</h3>
-      <div v-for="(item, idx) in cart" :key="idx" class="flex justify-content-between align-items-center py-2">
+      <div
+        v-for="(item, idx) in cart"
+        :key="idx"
+        class="flex justify-content-between align-items-center py-2"
+      >
         <div>
           <div class="font-medium">{{ item.name }}</div>
           <div class="text-sm">{{ item.qty }}x {{ formatCurrency(item.price) }}</div>
         </div>
         <div class="flex align-items-center gap-2">
           <span class="font-bold">{{ formatCurrency(item.qty * item.price) }}</span>
-          <Button icon="pi pi-trash" severity="danger" size="small" text @click="removeFromCart(idx)" />
+          <Button
+            icon="pi pi-trash"
+            severity="danger"
+            size="small"
+            text
+            @click="removeFromCart(idx)"
+          />
         </div>
       </div>
-      <div class="flex justify-content-between font-bold text-lg py-2 border-top-1 surface-border mt-2">
+      <div
+        class="flex justify-content-between font-bold text-lg py-2 border-top-1 surface-border mt-2"
+      >
         <span>{{ $t('total') }}</span>
         <span>{{ formatCurrency(cartTotal) }}</span>
       </div>
-      <Button :label="$t('place_order')" class="w-full mt-2" @click="placeOrder" :loading="ordering" />
+      <Button
+        :label="$t('place_order')"
+        class="w-full mt-2"
+        @click="placeOrder"
+        :loading="ordering"
+      />
     </div>
 
     <Dialog v-model:visible="orderPlaced" :header="$t('order_placed')" :style="{ width: '350px' }">
       <p>{{ $t('order_placed_message') }}</p>
       <template #footer>
-        <Button :label="$t('close')" severity="secondary" @click="orderPlaced = false; cart = []; loadSession()" />
+        <Button
+          :label="$t('close')"
+          severity="secondary"
+          @click="orderPlaced = false; cart = []; loadSession()"
+        />
       </template>
     </Dialog>
   </div>
@@ -113,7 +143,7 @@ const loadSession = async () => {
   try {
     const token = route.params.token as string
     await axios.get(
-      `http://${import.meta.env.VITE_APP_BACKEND_HOST}/tableside/api/menu/${token}/orders`
+      `http://${import.meta.env.VITE_APP_BACKEND_HOST}/tableside/api/menu/${token}/orders`,
     )
   } catch {
     // silently fail
@@ -136,7 +166,7 @@ const placeOrder = async () => {
 
     await axios.post(
       `http://${import.meta.env.VITE_APP_BACKEND_HOST}/tableside/api/menu/place-order`,
-      { session_id: session.value.id, items }
+      { session_id: session.value.id, items },
     )
     orderPlaced.value = true
   } catch {
@@ -150,7 +180,9 @@ onMounted(async () => {
   loading.value = true
   try {
     const token = route.params.token as string
-    const sessResponse = await axios.get(`http://${import.meta.env.VITE_APP_BACKEND_HOST}/core/api/products`)
+    const sessResponse = await axios.get(
+      `http://${import.meta.env.VITE_APP_BACKEND_HOST}/core/api/products`,
+    )
     products.value = sessResponse.data.data || []
 
     const tokenParts = token.split('_')

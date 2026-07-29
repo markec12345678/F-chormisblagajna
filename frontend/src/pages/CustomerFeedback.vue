@@ -11,7 +11,9 @@
             <Card>
               <template #content>
                 <div class="text-center">
-                  <div class="text-4xl font-bold text-primary">{{ summary.average_rating?.toFixed(1) }}</div>
+                  <div class="text-4xl font-bold text-primary">
+                    {{ summary.average_rating?.toFixed(1) }}
+                  </div>
                   <div class="text-500">{{ $t('avg_rating') }}</div>
                   <div class="mt-1">{{ renderStars(summary.average_rating) }}</div>
                 </div>
@@ -42,7 +44,9 @@
             <Card>
               <template #content>
                 <div class="text-center">
-                  <div class="text-2xl font-bold text-orange-500">{{ getCategoryAvg('service') }}</div>
+                  <div class="text-2xl font-bold text-orange-500">
+                    {{ getCategoryAvg('service') }}
+                  </div>
                   <div class="text-500">{{ $t('service_rating') }}</div>
                 </div>
               </template>
@@ -68,7 +72,13 @@
               <Column field="comment" :header="$t('comment')" style="min-width: 200px"></Column>
               <Column field="anonymous" :header="$t('anonymous')">
                 <template #body="slotProps">
-                  <i :class="slotProps?.data?.anonymous ? 'pi pi-check text-green-500' : 'pi pi-times text-300'"></i>
+                  <i
+                    :class="
+                      slotProps?.data?.anonymous
+                        ? 'pi pi-check text-green-500'
+                        : 'pi pi-times text-300'
+                    "
+                  ></i>
                 </template>
               </Column>
               <Column field="responded" :header="$t('responded')">
@@ -80,9 +90,19 @@
               </Column>
               <Column :header="$t('actions')">
                 <template #body="slotProps">
-                  <Button v-if="!slotProps.data.responded" icon="pi pi-reply" severity="info" class="mr-1"
-                    @click="openRespondDialog(slotProps.data)" v-tooltip.left="$t('respond')" />
-                  <Button icon="pi pi-trash" severity="danger" @click="deleteFeedback(slotProps.data)" />
+                  <Button
+                    v-if="!slotProps.data.responded"
+                    icon="pi pi-reply"
+                    severity="info"
+                    class="mr-1"
+                    @click="openRespondDialog(slotProps.data)"
+                    v-tooltip.left="$t('respond')"
+                  />
+                  <Button
+                    icon="pi pi-trash"
+                    severity="danger"
+                    @click="deleteFeedback(slotProps.data)"
+                  />
                 </template>
               </Column>
             </DataTable>
@@ -91,7 +111,11 @@
       </div>
     </div>
 
-    <Dialog v-model:visible="respondDialogVisible" :header="$t('respond_to_feedback')" :style="{ width: '500px' }">
+    <Dialog
+      v-model:visible="respondDialogVisible"
+      :header="$t('respond_to_feedback')"
+      :style="{ width: '500px' }"
+    >
       <div class="grid">
         <div class="col-12">
           <label>{{ $t('comment') }}</label>
@@ -178,7 +202,7 @@ const doRespond = async () => {
     await axios.post(
       `http://${import.meta.env.VITE_APP_BACKEND_HOST}/feedback/api/${selectedFeedback.value.id}/respond`,
       { response: responseText.value },
-      { headers: { Authorization: `Bearer ${auth.accessToken.value}` } }
+      { headers: { Authorization: `Bearer ${auth.accessToken.value}` } },
     )
     toast.add({ severity: 'success', summary: t('saved'), group: 'br', life: 2000 })
     respondDialogVisible.value = false
@@ -192,10 +216,9 @@ const doRespond = async () => {
 
 const deleteFeedback = async (fb: Feedback) => {
   try {
-    await axios.delete(
-      `http://${import.meta.env.VITE_APP_BACKEND_HOST}/feedback/api/${fb.id}`,
-      { headers: { Authorization: `Bearer ${auth.accessToken.value}` } }
-    )
+    await axios.delete(`http://${import.meta.env.VITE_APP_BACKEND_HOST}/feedback/api/${fb.id}`, {
+      headers: { Authorization: `Bearer ${auth.accessToken.value}` },
+    })
     toast.add({ severity: 'success', summary: t('deleted'), group: 'br', life: 2000 })
     await loadData()
   } catch {
@@ -207,10 +230,12 @@ const loadData = async () => {
   isLoading.value = true
   try {
     const [listRes, summaryRes] = await Promise.all([
-      axios.get(`http://${import.meta.env.VITE_APP_BACKEND_HOST}/feedback/api/list`,
-        { headers: { Authorization: `Bearer ${auth.accessToken.value}` } }),
-      axios.get(`http://${import.meta.env.VITE_APP_BACKEND_HOST}/feedback/api/summary`,
-        { headers: { Authorization: `Bearer ${auth.accessToken.value}` } }),
+      axios.get(`http://${import.meta.env.VITE_APP_BACKEND_HOST}/feedback/api/list`, {
+        headers: { Authorization: `Bearer ${auth.accessToken.value}` },
+      }),
+      axios.get(`http://${import.meta.env.VITE_APP_BACKEND_HOST}/feedback/api/summary`, {
+        headers: { Authorization: `Bearer ${auth.accessToken.value}` },
+      }),
     ])
     feedbacks.value = listRes.data.data || []
     summary.value = summaryRes.data.data

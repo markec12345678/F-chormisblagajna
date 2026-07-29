@@ -7,7 +7,12 @@
           <div class="flex gap-2">
             <Calendar v-model="startDate" :placeholder="$t('start_date')" dateFormat="yy-mm-dd" />
             <Calendar v-model="endDate" :placeholder="$t('end_date')" dateFormat="yy-mm-dd" />
-            <Button :label="$t('analyze')" icon="pi pi-chart-bar" @click="loadAnalysis" :loading="isLoading" />
+            <Button
+              :label="$t('analyze')"
+              icon="pi pi-chart-bar"
+              @click="loadAnalysis"
+              :loading="isLoading"
+            />
           </div>
         </div>
       </div>
@@ -26,7 +31,9 @@
             <Card>
               <template #title>{{ $t('total_revenue') }}</template>
               <template #content>
-                <div class="text-4xl font-bold text-green-500">{{ formatCurrency(summary.total_revenue) }}</div>
+                <div class="text-4xl font-bold text-green-500">
+                  {{ formatCurrency(summary.total_revenue) }}
+                </div>
               </template>
             </Card>
           </div>
@@ -34,7 +41,9 @@
             <Card>
               <template #title>{{ $t('avg_profit') }}</template>
               <template #content>
-                <div class="text-4xl font-bold text-blue-500">{{ formatCurrency(summary.avg_profit) }}</div>
+                <div class="text-4xl font-bold text-blue-500">
+                  {{ formatCurrency(summary.avg_profit) }}
+                </div>
               </template>
             </Card>
           </div>
@@ -44,16 +53,32 @@
               <template #content>
                 <div class="grid text-center">
                   <div class="col-6">
-                    <Tag :value="`${summary.top_stars?.length || 0} ${$t('stars')}`" severity="success" class="w-full" />
+                    <Tag
+                      :value="`${summary.top_stars?.length || 0} ${$t('stars')}`"
+                      severity="success"
+                      class="w-full"
+                    />
                   </div>
                   <div class="col-6">
-                    <Tag :value="`${summary.top_plowhorses?.length || 0} ${$t('plowhorses')}`" severity="warn" class="w-full" />
+                    <Tag
+                      :value="`${summary.top_plowhorses?.length || 0} ${$t('plowhorses')}`"
+                      severity="warn"
+                      class="w-full"
+                    />
                   </div>
                   <div class="col-6">
-                    <Tag :value="`${summary.top_puzzles?.length || 0} ${$t('puzzles')}`" severity="info" class="w-full" />
+                    <Tag
+                      :value="`${summary.top_puzzles?.length || 0} ${$t('puzzles')}`"
+                      severity="info"
+                      class="w-full"
+                    />
                   </div>
                   <div class="col-6">
-                    <Tag :value="`${summary.top_dogs?.length || 0} ${$t('dogs')}`" severity="danger" class="w-full" />
+                    <Tag
+                      :value="`${summary.top_dogs?.length || 0} ${$t('dogs')}`"
+                      severity="danger"
+                      class="w-full"
+                    />
                   </div>
                 </div>
               </template>
@@ -67,7 +92,8 @@
           <div class="col-12 md:col-6">
             <Card>
               <template #title>
-                <span class="text-green-500">{{ $t('stars') }}</span> - {{ $t('stars_description') }}
+                <span class="text-green-500">{{ $t('stars') }}</span> -
+                {{ $t('stars_description') }}
               </template>
               <template #content>
                 <DataTable :value="summary.top_stars" stripedRows>
@@ -91,7 +117,8 @@
           <div class="col-12 md:col-6">
             <Card>
               <template #title>
-                <span class="text-yellow-500">{{ $t('plowhorses') }}</span> - {{ $t('plowhorses_description') }}
+                <span class="text-yellow-500">{{ $t('plowhorses') }}</span> -
+                {{ $t('plowhorses_description') }}
               </template>
               <template #content>
                 <DataTable :value="summary.top_plowhorses" stripedRows>
@@ -115,7 +142,8 @@
           <div class="col-12 md:col-6">
             <Card>
               <template #title>
-                <span class="text-blue-500">{{ $t('puzzles') }}</span> - {{ $t('puzzles_description') }}
+                <span class="text-blue-500">{{ $t('puzzles') }}</span> -
+                {{ $t('puzzles_description') }}
               </template>
               <template #content>
                 <DataTable :value="summary.top_puzzles" stripedRows>
@@ -237,7 +265,7 @@ const loadAnalysis = async () => {
 
     const response = await axios.get(
       `http://${import.meta.env.VITE_APP_BACKEND_HOST}/menuengineering/api/analysis?${params.toString()}`,
-      { headers: { Authorization: `Bearer ${auth.accessToken.value}` } }
+      { headers: { Authorization: `Bearer ${auth.accessToken.value}` } },
     )
     summary.value = response.data.data
   } catch {

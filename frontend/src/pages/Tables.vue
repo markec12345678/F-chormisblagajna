@@ -63,12 +63,18 @@
               <Column sortable field="capacity" :header="$t('table_capacity')"></Column>
               <Column sortable field="zone" :header="$t('table_zone')">
                 <template #body="slotProps">
-                  <Tag :value="slotProps.data.zone" :severity="getZoneSeverity(slotProps.data.zone)" />
+                  <Tag
+                    :value="slotProps.data.zone"
+                    :severity="getZoneSeverity(slotProps.data.zone)"
+                  />
                 </template>
               </Column>
               <Column sortable field="status" :header="$t('table_status')">
                 <template #body="slotProps">
-                  <Tag :value="slotProps.data.status" :severity="getStatusSeverity(slotProps.data.status)" />
+                  <Tag
+                    :value="slotProps.data.status"
+                    :severity="getStatusSeverity(slotProps.data.status)"
+                  />
                 </template>
               </Column>
               <Column :header="$t('qr_code')">
@@ -168,7 +174,11 @@
               </div>
               <template #footer>
                 <ButtonGroup>
-                  <Button :label="$t('cancel')" severity="secondary" @click="tableAddDialog = false" />
+                  <Button
+                    :label="$t('cancel')"
+                    severity="secondary"
+                    @click="tableAddDialog = false"
+                  />
                   <Button
                     class="ml-2"
                     severity="primary"
@@ -245,7 +255,11 @@
               </div>
               <template #footer>
                 <ButtonGroup>
-                  <Button :label="$t('cancel')" severity="secondary" @click="tableEditDialog = false" />
+                  <Button
+                    :label="$t('cancel')"
+                    severity="secondary"
+                    @click="tableEditDialog = false"
+                  />
                   <Button
                     class="ml-2"
                     severity="primary"
@@ -438,7 +452,8 @@ const submitTable = () => {
   newTableErrors.value.name = newTable.value.name?.trim() ? '' : t('validation_required')
   newTableErrors.value.capacity = newTable.value.capacity ? '' : t('validation_required')
 
-  if (newTableErrors.value.number || newTableErrors.value.name || newTableErrors.value.capacity) return
+  if (newTableErrors.value.number || newTableErrors.value.name || newTableErrors.value.capacity)
+    return
 
   isSubmitting.value = true
 
@@ -485,7 +500,8 @@ const updateTable = () => {
   editTableErrors.value.name = tableToEdit.value.name?.trim() ? '' : t('validation_required')
   editTableErrors.value.capacity = tableToEdit.value.capacity ? '' : t('validation_required')
 
-  if (editTableErrors.value.number || editTableErrors.value.name || editTableErrors.value.capacity) return
+  if (editTableErrors.value.number || editTableErrors.value.name || editTableErrors.value.capacity)
+    return
 
   isSubmitting.value = true
 

@@ -5,11 +5,28 @@
         <div class="flex justify-content-between align-items-center">
           <h3>{{ $t('audit_log') }}</h3>
           <div class="flex gap-2">
-            <Dropdown v-model="actionFilter" :options="actionOptions" optionLabel="label" optionValue="value"
-              :placeholder="$t('all_actions')" class="w-10rem" />
-            <Dropdown v-model="resourceFilter" :options="resourceOptions" optionLabel="label" optionValue="value"
-              :placeholder="$t('all_resources')" class="w-10rem" />
-            <Button icon="pi pi-refresh" severity="secondary" @click="loadData" :loading="isLoading" />
+            <Dropdown
+              v-model="actionFilter"
+              :options="actionOptions"
+              optionLabel="label"
+              optionValue="value"
+              :placeholder="$t('all_actions')"
+              class="w-10rem"
+            />
+            <Dropdown
+              v-model="resourceFilter"
+              :options="resourceOptions"
+              optionLabel="label"
+              optionValue="value"
+              :placeholder="$t('all_resources')"
+              class="w-10rem"
+            />
+            <Button
+              icon="pi pi-refresh"
+              severity="secondary"
+              @click="loadData"
+              :loading="isLoading"
+            />
           </div>
         </div>
       </div>
@@ -29,7 +46,11 @@
               <template #title>{{ $t('by_action') }}</template>
               <template #content>
                 <div class="flex flex-column gap-1">
-                  <div v-for="a in summary.by_action" :key="a.action" class="flex justify-content-between">
+                  <div
+                    v-for="a in summary.by_action"
+                    :key="a.action"
+                    class="flex justify-content-between"
+                  >
                     <Tag :value="a.action" :severity="getActionSeverity(a.action)" />
                     <span class="font-bold">{{ a.count }}</span>
                   </div>
@@ -42,7 +63,11 @@
               <template #title>{{ $t('by_resource') }}</template>
               <template #content>
                 <div class="flex flex-column gap-1">
-                  <div v-for="r in summary.by_resource" :key="r.resource" class="flex justify-content-between">
+                  <div
+                    v-for="r in summary.by_resource"
+                    :key="r.resource"
+                    class="flex justify-content-between"
+                  >
                     <span>{{ r.resource }}</span>
                     <span class="font-bold">{{ r.count }}</span>
                   </div>
@@ -55,7 +80,11 @@
               <template #title>{{ $t('by_user') }}</template>
               <template #content>
                 <div class="flex flex-column gap-1">
-                  <div v-for="u in summary.by_user" :key="u.user_id" class="flex justify-content-between">
+                  <div
+                    v-for="u in summary.by_user"
+                    :key="u.user_id"
+                    class="flex justify-content-between"
+                  >
                     <span>{{ u.username || u.user_id }}</span>
                     <span class="font-bold">{{ u.count }}</span>
                   </div>
@@ -70,7 +99,13 @@
         <Card>
           <template #title>{{ $t('audit_entries') }}</template>
           <template #content>
-            <DataTable :value="entries" stripedRows :loading="isLoading" :rows="20" :paginator="true">
+            <DataTable
+              :value="entries"
+              stripedRows
+              :loading="isLoading"
+              :rows="20"
+              :paginator="true"
+            >
               <template #empty>{{ $t('no_audit_entries') }}</template>
               <Column field="created_at" :header="$t('timestamp')">
                 <template #body="slotProps">
@@ -79,7 +114,10 @@
               </Column>
               <Column field="action" :header="$t('action')">
                 <template #body="slotProps">
-                  <Tag :value="slotProps?.data?.action" :severity="getActionSeverity(slotProps?.data?.action)" />
+                  <Tag
+                    :value="slotProps?.data?.action"
+                    :severity="getActionSeverity(slotProps?.data?.action)"
+                  />
                 </template>
               </Column>
               <Column field="resource" :header="$t('resource')"></Column>
@@ -92,8 +130,12 @@
               <Column field="ip_address" :header="$t('ip_address')"></Column>
               <Column field="details" :header="$t('details')">
                 <template #body="slotProps">
-                  <span v-if="slotProps?.data?.details && Object.keys(slotProps.data.details).length > 0"
-                    class="text-sm">
+                  <span
+                    v-if="
+                      slotProps?.data?.details && Object.keys(slotProps.data.details).length > 0
+                    "
+                    class="text-sm"
+                  >
                     {{ formatDetails(slotProps?.data?.details) }}
                   </span>
                   <span v-else class="text-400">-</span>
@@ -192,13 +234,20 @@ const formatDateTime = (date: string) => {
 
 const getActionSeverity = (action: string) => {
   switch (action) {
-    case 'create': return 'success'
-    case 'update': return 'info'
-    case 'delete': return 'danger'
-    case 'login': return 'success'
-    case 'logout': return 'warn'
-    case 'fiscalize': return 'secondary'
-    default: return 'secondary'
+    case 'create':
+      return 'success'
+    case 'update':
+      return 'info'
+    case 'delete':
+      return 'danger'
+    case 'login':
+      return 'success'
+    case 'logout':
+      return 'warn'
+    case 'fiscalize':
+      return 'secondary'
+    default:
+      return 'secondary'
   }
 }
 
@@ -219,16 +268,22 @@ const loadData = async () => {
     const [logsRes, summaryRes] = await Promise.all([
       axios.get(`http://${import.meta.env.VITE_APP_BACKEND_HOST}/auditlog/api/logs`, {
         headers: { Authorization: `Bearer ${auth.accessToken.value}` },
-        params
+        params,
       }),
       axios.get(`http://${import.meta.env.VITE_APP_BACKEND_HOST}/auditlog/api/summary`, {
-        headers: { Authorization: `Bearer ${auth.accessToken.value}` }
-      })
+        headers: { Authorization: `Bearer ${auth.accessToken.value}` },
+      }),
     ])
     entries.value = logsRes.data.data || []
     summary.value = summaryRes.data.data
   } catch {
-    toast.add({ severity: 'error', summary: t('failed'), detail: t('load_failed'), group: 'br', life: 3000 })
+    toast.add({
+      severity: 'error',
+      summary: t('failed'),
+      detail: t('load_failed'),
+      group: 'br',
+      life: 3000,
+    })
   } finally {
     isLoading.value = false
   }

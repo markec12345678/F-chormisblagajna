@@ -175,7 +175,11 @@
                   </div>
                   <div class="flex align-items-center gap-2">
                     <label class="w-8rem">{{ $t('fiscal_software_supplier_tn') }}</label>
-                    <InputNumber v-model="fiscal_software_supplier_tn" :min="0" class="w-full md:w-4" />
+                    <InputNumber
+                      v-model="fiscal_software_supplier_tn"
+                      :min="0"
+                      class="w-full md:w-4"
+                    />
                   </div>
                   <div class="flex align-items-center gap-2">
                     <label class="w-8rem">{{ $t('fiscal_certificate_path') }}</label>
@@ -183,7 +187,11 @@
                   </div>
                   <div class="flex align-items-center gap-2">
                     <label class="w-8rem">{{ $t('fiscal_certificate_password') }}</label>
-                    <InputText v-model="fiscal_certificate_password" type="password" class="w-full md:w-4" />
+                    <InputText
+                      v-model="fiscal_certificate_password"
+                      type="password"
+                      class="w-full md:w-4"
+                    />
                   </div>
                   <div class="flex align-items-center gap-2">
                     <label class="w-8rem">{{ $t('fiscal_invoice_number') }}</label>
@@ -248,11 +256,19 @@
                   </div>
                   <div class="flex align-items-center gap-2">
                     <label class="w-8rem">{{ $t('fiscal_hr_certificate_password') }}</label>
-                    <InputText v-model="fiscal_hr_certificate_password" type="password" class="w-full md:w-4" />
+                    <InputText
+                      v-model="fiscal_hr_certificate_password"
+                      type="password"
+                      class="w-full md:w-4"
+                    />
                   </div>
                   <div class="flex align-items-center gap-2">
                     <label class="w-8rem">{{ $t('fiscal_hr_invoice_number') }}</label>
-                    <InputNumber v-model="fiscal_hr_invoice_number" :min="1" class="w-full md:w-4" />
+                    <InputNumber
+                      v-model="fiscal_hr_invoice_number"
+                      :min="1"
+                      class="w-full md:w-4"
+                    />
                   </div>
                   <Button
                     :label="$t('fiscal_hr_test_connection')"

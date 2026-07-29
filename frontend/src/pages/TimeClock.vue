@@ -12,7 +12,12 @@
             <div class="flex flex-column gap-3">
               <div class="flex flex-column gap-2">
                 <label>{{ $t('employee') }}</label>
-                <Dropdown v-model="selectedEmployee" :options="employees" optionLabel="name" :placeholder="$t('select_employee')" />
+                <Dropdown
+                  v-model="selectedEmployee"
+                  :options="employees"
+                  optionLabel="name"
+                  :placeholder="$t('select_employee')"
+                />
               </div>
               <div class="flex flex-column gap-2">
                 <label>{{ $t('notes') }}</label>
@@ -60,7 +65,12 @@
               </Column>
               <Column :header="$t('actions')">
                 <template #body="slotProps">
-                  <Button :label="$t('clock_out')" severity="danger" size="small" @click="clockOutEntry(slotProps?.data?.id)" />
+                  <Button
+                    :label="$t('clock_out')"
+                    severity="danger"
+                    size="small"
+                    @click="clockOutEntry(slotProps?.data?.id)"
+                  />
                 </template>
               </Column>
             </DataTable>
@@ -88,7 +98,11 @@
               </Column>
               <Column field="overtime_hours" :header="$t('overtime')">
                 <template #body="slotProps">
-                  <Tag v-if="(slotProps?.data?.overtime_hours || 0) > 0" :value="`${(slotProps?.data?.overtime_hours || 0).toFixed(1)}h`" severity="warn" />
+                  <Tag
+                    v-if="(slotProps?.data?.overtime_hours || 0) > 0"
+                    :value="`${(slotProps?.data?.overtime_hours || 0).toFixed(1)}h`"
+                    severity="warn"
+                  />
                   <span v-else>-</span>
                 </template>
               </Column>
@@ -155,9 +169,11 @@ const employees = [
 
 const isCurrentlyClockedIn = computed(() => {
   if (!selectedEmployee.value) return false
-  return dashboard.value?.currently_clocked_in?.some(
-    (e) => e.employee_id === selectedEmployee.value?.id
-  ) || false
+  return (
+    dashboard.value?.currently_clocked_in?.some(
+      (e) => e.employee_id === selectedEmployee.value?.id,
+    ) || false
+  )
 })
 
 const formatTime = (dateStr: string) => {
@@ -173,7 +189,13 @@ const calculateHours = (clockIn: string) => {
 
 const clockIn = async () => {
   if (!selectedEmployee.value) {
-    toast.add({ severity: 'warn', summary: t('warning'), detail: t('select_employee'), group: 'br', life: 3000 })
+    toast.add({
+      severity: 'warn',
+      summary: t('warning'),
+      detail: t('select_employee'),
+      group: 'br',
+      life: 3000,
+    })
     return
   }
 
@@ -186,13 +208,25 @@ const clockIn = async () => {
         employee_name: selectedEmployee.value.name,
         notes: clockNotes.value,
       },
-      { headers: { Authorization: `Bearer ${auth.accessToken.value}` } }
+      { headers: { Authorization: `Bearer ${auth.accessToken.value}` } },
     )
-    toast.add({ severity: 'success', summary: t('success'), detail: t('clocked_in'), group: 'br', life: 3000 })
+    toast.add({
+      severity: 'success',
+      summary: t('success'),
+      detail: t('clocked_in'),
+      group: 'br',
+      life: 3000,
+    })
     clockNotes.value = ''
     loadDashboard()
   } catch {
-    toast.add({ severity: 'error', summary: t('failed'), detail: t('clock_in_failed'), group: 'br', life: 3000 })
+    toast.add({
+      severity: 'error',
+      summary: t('failed'),
+      detail: t('clock_in_failed'),
+      group: 'br',
+      life: 3000,
+    })
   } finally {
     isClocking.value = false
   }
@@ -202,7 +236,7 @@ const clockOut = async () => {
   if (!selectedEmployee.value) return
 
   const entry = dashboard.value?.currently_clocked_in?.find(
-    (e) => e.employee_id === selectedEmployee.value?.id
+    (e) => e.employee_id === selectedEmployee.value?.id,
   )
   if (!entry) return
 
@@ -211,12 +245,24 @@ const clockOut = async () => {
     await axios.post(
       `http://${import.meta.env.VITE_APP_BACKEND_HOST}/timeclock/api/clock-out/${entry.id}`,
       {},
-      { headers: { Authorization: `Bearer ${auth.accessToken.value}` } }
+      { headers: { Authorization: `Bearer ${auth.accessToken.value}` } },
     )
-    toast.add({ severity: 'success', summary: t('success'), detail: t('clocked_out'), group: 'br', life: 3000 })
+    toast.add({
+      severity: 'success',
+      summary: t('success'),
+      detail: t('clocked_out'),
+      group: 'br',
+      life: 3000,
+    })
     loadDashboard()
   } catch {
-    toast.add({ severity: 'error', summary: t('failed'), detail: t('clock_out_failed'), group: 'br', life: 3000 })
+    toast.add({
+      severity: 'error',
+      summary: t('failed'),
+      detail: t('clock_out_failed'),
+      group: 'br',
+      life: 3000,
+    })
   } finally {
     isClocking.value = false
   }
@@ -227,12 +273,24 @@ const clockOutEntry = async (entryId: string) => {
     await axios.post(
       `http://${import.meta.env.VITE_APP_BACKEND_HOST}/timeclock/api/clock-out/${entryId}`,
       {},
-      { headers: { Authorization: `Bearer ${auth.accessToken.value}` } }
+      { headers: { Authorization: `Bearer ${auth.accessToken.value}` } },
     )
-    toast.add({ severity: 'success', summary: t('success'), detail: t('clocked_out'), group: 'br', life: 3000 })
+    toast.add({
+      severity: 'success',
+      summary: t('success'),
+      detail: t('clocked_out'),
+      group: 'br',
+      life: 3000,
+    })
     loadDashboard()
   } catch {
-    toast.add({ severity: 'error', summary: t('failed'), detail: t('clock_out_failed'), group: 'br', life: 3000 })
+    toast.add({
+      severity: 'error',
+      summary: t('failed'),
+      detail: t('clock_out_failed'),
+      group: 'br',
+      life: 3000,
+    })
   }
 }
 
@@ -241,11 +299,17 @@ const loadDashboard = async () => {
   try {
     const response = await axios.get(
       `http://${import.meta.env.VITE_APP_BACKEND_HOST}/timeclock/api/dashboard`,
-      { headers: { Authorization: `Bearer ${auth.accessToken.value}` } }
+      { headers: { Authorization: `Bearer ${auth.accessToken.value}` } },
     )
     dashboard.value = response.data.data
   } catch {
-    toast.add({ severity: 'error', summary: t('failed'), detail: t('load_failed'), group: 'br', life: 3000 })
+    toast.add({
+      severity: 'error',
+      summary: t('failed'),
+      detail: t('load_failed'),
+      group: 'br',
+      life: 3000,
+    })
   } finally {
     isLoading.value = false
   }

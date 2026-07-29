@@ -30,9 +30,22 @@
               <Column field="theme" :header="$t('theme')"></Column>
               <Column :header="$t('actions')">
                 <template #body="slotProps">
-                  <Button icon="pi pi-eye" severity="info" class="mr-1" @click="previewDisplay(slotProps.data)" />
-                  <Button icon="pi pi-pencil" class="mr-1" @click="openEditDialog(slotProps.data)" />
-                  <Button icon="pi pi-trash" severity="danger" @click="confirmDelete(slotProps.data)" />
+                  <Button
+                    icon="pi pi-eye"
+                    severity="info"
+                    class="mr-1"
+                    @click="previewDisplay(slotProps.data)"
+                  />
+                  <Button
+                    icon="pi pi-pencil"
+                    class="mr-1"
+                    @click="openEditDialog(slotProps.data)"
+                  />
+                  <Button
+                    icon="pi pi-trash"
+                    severity="danger"
+                    @click="confirmDelete(slotProps.data)"
+                  />
                 </template>
               </Column>
             </DataTable>
@@ -41,7 +54,11 @@
       </div>
     </div>
 
-    <Dialog v-model:visible="dialogVisible" :header="editing ? $t('edit_display') : $t('add_display')" :style="{ width: '500px' }">
+    <Dialog
+      v-model:visible="dialogVisible"
+      :header="editing ? $t('edit_display') : $t('add_display')"
+      :style="{ width: '500px' }"
+    >
       <div class="grid">
         <div class="col-12">
           <label>{{ $t('display_name') }}</label>
@@ -96,7 +113,11 @@
       </template>
     </Dialog>
 
-    <Dialog v-model:visible="deleteDialogVisible" :header="$t('confirm_delete')" :style="{ width: '400px' }">
+    <Dialog
+      v-model:visible="deleteDialogVisible"
+      :header="$t('confirm_delete')"
+      :style="{ width: '400px' }"
+    >
       <p>{{ $t('delete_display_confirm') }}</p>
       <template #footer>
         <Button :label="$t('cancel')" severity="secondary" @click="deleteDialogVisible = false" />
@@ -201,13 +222,19 @@ const saveConfig = async () => {
     await axios.post(
       `http://${import.meta.env.VITE_APP_BACKEND_HOST}/customerdisplay/api/configs`,
       form,
-      { headers: { Authorization: `Bearer ${auth.accessToken.value}` } }
+      { headers: { Authorization: `Bearer ${auth.accessToken.value}` } },
     )
     toast.add({ severity: 'success', summary: t('saved'), group: 'br', life: 2000 })
     dialogVisible.value = false
     await loadConfigs()
   } catch {
-    toast.add({ severity: 'error', summary: t('failed'), detail: t('save_failed'), group: 'br', life: 3000 })
+    toast.add({
+      severity: 'error',
+      summary: t('failed'),
+      detail: t('save_failed'),
+      group: 'br',
+      life: 3000,
+    })
   } finally {
     saving.value = false
   }
@@ -224,13 +251,19 @@ const deleteConfig = async () => {
   try {
     await axios.delete(
       `http://${import.meta.env.VITE_APP_BACKEND_HOST}/customerdisplay/api/configs/${selectedConfig.value.id}`,
-      { headers: { Authorization: `Bearer ${auth.accessToken.value}` } }
+      { headers: { Authorization: `Bearer ${auth.accessToken.value}` } },
     )
     toast.add({ severity: 'success', summary: t('deleted'), group: 'br', life: 2000 })
     deleteDialogVisible.value = false
     await loadConfigs()
   } catch {
-    toast.add({ severity: 'error', summary: t('failed'), detail: t('delete_failed'), group: 'br', life: 3000 })
+    toast.add({
+      severity: 'error',
+      summary: t('failed'),
+      detail: t('delete_failed'),
+      group: 'br',
+      life: 3000,
+    })
   } finally {
     deleting.value = false
   }
@@ -245,11 +278,17 @@ const loadConfigs = async () => {
   try {
     const response = await axios.get(
       `http://${import.meta.env.VITE_APP_BACKEND_HOST}/customerdisplay/api/configs`,
-      { headers: { Authorization: `Bearer ${auth.accessToken.value}` } }
+      { headers: { Authorization: `Bearer ${auth.accessToken.value}` } },
     )
     configs.value = response.data.data || []
   } catch {
-    toast.add({ severity: 'error', summary: t('failed'), detail: t('load_failed'), group: 'br', life: 3000 })
+    toast.add({
+      severity: 'error',
+      summary: t('failed'),
+      detail: t('load_failed'),
+      group: 'br',
+      life: 3000,
+    })
   } finally {
     isLoading.value = false
   }

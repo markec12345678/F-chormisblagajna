@@ -26,15 +26,35 @@
               </Column>
               <Column field="opened_at" :header="$t('opened')">
                 <template #body="slotProps">
-                  {{ slotProps?.data?.opened_at ? new Date(slotProps.data.opened_at).toLocaleString() : '-' }}
+                  {{
+                    slotProps?.data?.opened_at
+                      ? new Date(slotProps.data.opened_at).toLocaleString()
+                      : '-'
+                  }}
                 </template>
               </Column>
               <Column :header="$t('actions')">
                 <template #body="slotProps">
-                  <Button icon="pi pi-qrcode" severity="info" class="mr-1" @click="showQr(slotProps.data)" v-tooltip.left="$t('qr_code')" />
-                  <Button icon="pi pi-receipt" class="mr-1" @click="viewOrders(slotProps.data)" v-tooltip.left="$t('view_orders')" />
-                  <Button v-if="slotProps.data.active"
-                    icon="pi pi-times" severity="danger" @click="closeSession(slotProps.data)" v-tooltip.left="$t('close')" />
+                  <Button
+                    icon="pi pi-qrcode"
+                    severity="info"
+                    class="mr-1"
+                    @click="showQr(slotProps.data)"
+                    v-tooltip.left="$t('qr_code')"
+                  />
+                  <Button
+                    icon="pi pi-receipt"
+                    class="mr-1"
+                    @click="viewOrders(slotProps.data)"
+                    v-tooltip.left="$t('view_orders')"
+                  />
+                  <Button
+                    v-if="slotProps.data.active"
+                    icon="pi pi-times"
+                    severity="danger"
+                    @click="closeSession(slotProps.data)"
+                    v-tooltip.left="$t('close')"
+                  />
                 </template>
               </Column>
             </DataTable>
@@ -66,9 +86,23 @@
 
     <Dialog v-model:visible="qrDialogVisible" :header="$t('qr_code')" :style="{ width: '400px' }">
       <div class="text-center" v-if="qrInfo">
-        <p><strong>{{ qrInfo.table_label }}</strong></p>
-        <div class="qr-placeholder my-3" style="width: 200px; height: 200px; background: #f0f0f0; margin: 0 auto; display: flex; align-items: center; justify-content: center; border-radius: 8px;">
-          <i class="pi pi-qrcode" style="font-size: 5rem; color: #666;"></i>
+        <p>
+          <strong>{{ qrInfo.table_label }}</strong>
+        </p>
+        <div
+          class="qr-placeholder my-3"
+          style="
+            width: 200px;
+            height: 200px;
+            background: #f0f0f0;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+          "
+        >
+          <i class="pi pi-qrcode" style="font-size: 5rem; color: #666"></i>
         </div>
         <p class="text-sm">{{ qrInfo.url }}</p>
       </div>
@@ -77,12 +111,18 @@
       </template>
     </Dialog>
 
-    <Dialog v-model:visible="ordersDialogVisible" :header="`${$t('orders')} - ${selectedTable}`" :style="{ width: '600px' }">
+    <Dialog
+      v-model:visible="ordersDialogVisible"
+      :header="`${$t('orders')} - ${selectedTable}`"
+      :style="{ width: '600px' }"
+    >
       <DataTable :value="tableOrders" stripedRows>
         <template #empty>{{ $t('no_orders') }}</template>
         <Column field="status" :header="$t('status')">
           <template #body="slotProps">
-            <Tag :severity="statusSeverity(slotProps?.data?.status)">{{ slotProps?.data?.status }}</Tag>
+            <Tag :severity="statusSeverity(slotProps?.data?.status)">{{
+              slotProps?.data?.status
+            }}</Tag>
           </template>
         </Column>
         <Column field="items" :header="$t('items')">
@@ -97,7 +137,11 @@
         </Column>
         <Column field="placed_at" :header="$t('time')">
           <template #body="slotProps">
-            {{ slotProps?.data?.placed_at ? new Date(slotProps.data.placed_at).toLocaleTimeString() : '-' }}
+            {{
+              slotProps?.data?.placed_at
+                ? new Date(slotProps.data.placed_at).toLocaleTimeString()
+                : '-'
+            }}
           </template>
         </Column>
       </DataTable>
@@ -168,11 +212,16 @@ const formatCurrency = (amount: number) => {
 
 const statusSeverity = (status: string) => {
   switch (status) {
-    case 'pending': return 'warn'
-    case 'preparing': return 'info'
-    case 'ready': return 'success'
-    case 'delivered': return 'secondary'
-    default: return 'info'
+    case 'pending':
+      return 'warn'
+    case 'preparing':
+      return 'info'
+    case 'ready':
+      return 'success'
+    case 'delivered':
+      return 'secondary'
+    default:
+      return 'info'
   }
 }
 
@@ -189,7 +238,7 @@ const createSession = async () => {
     await axios.post(
       `http://${import.meta.env.VITE_APP_BACKEND_HOST}/tableside/api/sessions`,
       form,
-      { headers: { Authorization: `Bearer ${auth.accessToken.value}` } }
+      { headers: { Authorization: `Bearer ${auth.accessToken.value}` } },
     )
     toast.add({ severity: 'success', summary: t('saved'), group: 'br', life: 2000 })
     dialogVisible.value = false
@@ -206,7 +255,7 @@ const showQr = async (session: TableSession) => {
     const host = window.location.origin
     const response = await axios.get(
       `http://${import.meta.env.VITE_APP_BACKEND_HOST}/tableside/api/qr/${session.id}?host=${host}`,
-      { headers: { Authorization: `Bearer ${auth.accessToken.value}` } }
+      { headers: { Authorization: `Bearer ${auth.accessToken.value}` } },
     )
     qrInfo.value = response.data.data
     qrDialogVisible.value = true
@@ -220,7 +269,7 @@ const viewOrders = async (session: TableSession) => {
     selectedTable.value = session.table_label
     const response = await axios.get(
       `http://${import.meta.env.VITE_APP_BACKEND_HOST}/tableside/api/sessions/${session.id}/orders`,
-      { headers: { Authorization: `Bearer ${auth.accessToken.value}` } }
+      { headers: { Authorization: `Bearer ${auth.accessToken.value}` } },
     )
     tableOrders.value = response.data.data || []
     ordersDialogVisible.value = true
@@ -234,7 +283,7 @@ const closeSession = async (session: TableSession) => {
     await axios.post(
       `http://${import.meta.env.VITE_APP_BACKEND_HOST}/tableside/api/sessions/${session.id}/close`,
       {},
-      { headers: { Authorization: `Bearer ${auth.accessToken.value}` } }
+      { headers: { Authorization: `Bearer ${auth.accessToken.value}` } },
     )
     toast.add({ severity: 'success', summary: t('saved'), group: 'br', life: 2000 })
     await loadSessions()
@@ -248,11 +297,17 @@ const loadSessions = async () => {
   try {
     const response = await axios.get(
       `http://${import.meta.env.VITE_APP_BACKEND_HOST}/tableside/api/sessions`,
-      { headers: { Authorization: `Bearer ${auth.accessToken.value}` } }
+      { headers: { Authorization: `Bearer ${auth.accessToken.value}` } },
     )
     sessions.value = response.data.data || []
   } catch {
-    toast.add({ severity: 'error', summary: t('failed'), detail: t('load_failed'), group: 'br', life: 3000 })
+    toast.add({
+      severity: 'error',
+      summary: t('failed'),
+      detail: t('load_failed'),
+      group: 'br',
+      life: 3000,
+    })
   } finally {
     isLoading.value = false
   }

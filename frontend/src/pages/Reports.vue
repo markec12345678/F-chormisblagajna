@@ -9,7 +9,9 @@
         <Card>
           <template #title>{{ $t('today_revenue') }}</template>
           <template #content>
-            <div class="text-3xl font-bold">{{ dashboard?.today_revenue?.toFixed(2) || '0.00' }} EUR</div>
+            <div class="text-3xl font-bold">
+              {{ dashboard?.today_revenue?.toFixed(2) || '0.00' }} EUR
+            </div>
           </template>
         </Card>
       </div>
@@ -25,7 +27,9 @@
         <Card>
           <template #title>{{ $t('average_order') }}</template>
           <template #content>
-            <div class="text-3xl font-bold">{{ dashboard?.average_order?.toFixed(2) || '0.00' }} EUR</div>
+            <div class="text-3xl font-bold">
+              {{ dashboard?.average_order?.toFixed(2) || '0.00' }} EUR
+            </div>
           </template>
         </Card>
       </div>
@@ -37,8 +41,19 @@
         <div class="flex gap-2 mb-4">
           <Calendar v-model="startDate" :placeholder="$t('start_date')" showIcon />
           <Calendar v-model="endDate" :placeholder="$t('end_date')" showIcon />
-          <Button :label="$t('generate')" icon="pi pi-refresh" @click="loadSalesReport" :loading="salesLoading" />
-          <Button v-if="salesReport" label="CSV" icon="pi pi-download" severity="success" @click="exportSalesCSV" />
+          <Button
+            :label="$t('generate')"
+            icon="pi pi-refresh"
+            @click="loadSalesReport"
+            :loading="salesLoading"
+          />
+          <Button
+            v-if="salesReport"
+            label="CSV"
+            icon="pi pi-download"
+            severity="success"
+            @click="exportSalesCSV"
+          />
         </div>
       </div>
 
@@ -49,7 +64,9 @@
             <div class="grid">
               <div class="col-12 md:col-3">
                 <div class="text-sm text-gray-500">{{ $t('total_revenue') }}</div>
-                <div class="text-xl font-bold">{{ salesReport.total_revenue?.toFixed(2) || '0.00' }} EUR</div>
+                <div class="text-xl font-bold">
+                  {{ salesReport.total_revenue?.toFixed(2) || '0.00' }} EUR
+                </div>
               </div>
               <div class="col-12 md:col-3">
                 <div class="text-sm text-gray-500">{{ $t('total_orders') }}</div>
@@ -61,7 +78,9 @@
               </div>
               <div class="col-12 md:col-3">
                 <div class="text-sm text-gray-500">{{ $t('net_revenue') }}</div>
-                <div class="text-xl font-bold text-green-600">{{ salesReport.net_revenue?.toFixed(2) || '0.00' }} EUR</div>
+                <div class="text-xl font-bold text-green-600">
+                  {{ salesReport.net_revenue?.toFixed(2) || '0.00' }} EUR
+                </div>
               </div>
             </div>
 
@@ -84,8 +103,19 @@
       <div class="col-12 mt-4">
         <div class="flex justify-content-between align-items-center">
           <h3>{{ $t('inventory_report') }}</h3>
-          <Button :label="$t('refresh')" icon="pi pi-refresh" @click="loadInventoryReport" :loading="inventoryLoading" />
-          <Button v-if="inventoryReport" label="CSV" icon="pi pi-download" severity="success" @click="exportInventoryCSV" />
+          <Button
+            :label="$t('refresh')"
+            icon="pi pi-refresh"
+            @click="loadInventoryReport"
+            :loading="inventoryLoading"
+          />
+          <Button
+            v-if="inventoryReport"
+            label="CSV"
+            icon="pi pi-download"
+            severity="success"
+            @click="exportInventoryCSV"
+          />
         </div>
       </div>
 
@@ -100,15 +130,21 @@
               </div>
               <div class="col-12 md:col-3">
                 <div class="text-sm text-gray-500">{{ $t('low_stock') }}</div>
-                <div class="text-xl font-bold text-yellow-600">{{ inventoryReport.low_stock_count || 0 }}</div>
+                <div class="text-xl font-bold text-yellow-600">
+                  {{ inventoryReport.low_stock_count || 0 }}
+                </div>
               </div>
               <div class="col-12 md:col-3">
                 <div class="text-sm text-gray-500">{{ $t('out_of_stock') }}</div>
-                <div class="text-xl font-bold text-red-600">{{ inventoryReport.out_of_stock_count || 0 }}</div>
+                <div class="text-xl font-bold text-red-600">
+                  {{ inventoryReport.out_of_stock_count || 0 }}
+                </div>
               </div>
               <div class="col-12 md:col-3">
                 <div class="text-sm text-gray-500">{{ $t('total_value') }}</div>
-                <div class="text-xl font-bold">{{ inventoryReport.total_value?.toFixed(2) || '0.00' }} EUR</div>
+                <div class="text-xl font-bold">
+                  {{ inventoryReport.total_value?.toFixed(2) || '0.00' }} EUR
+                </div>
               </div>
             </div>
 
@@ -162,9 +198,12 @@ const formatDate = (d: Date) => {
 const apiBase = `http://${import.meta.env.VITE_APP_BACKEND_HOST}${import.meta.env.VITE_APP_MODULE_CORE_API_PREFIX}/report/api/reports`
 
 const loadDashboard = () => {
-  axios.get(`${apiBase}/dashboard`).then((res) => {
-    dashboard.value = res.data.data
-  }).catch(() => {})
+  axios
+    .get(`${apiBase}/dashboard`)
+    .then((res) => {
+      dashboard.value = res.data.data
+    })
+    .catch(() => {})
 }
 
 const loadSalesReport = () => {
@@ -172,20 +211,32 @@ const loadSalesReport = () => {
   let url = `${apiBase}/sales?`
   if (startDate.value) url += `start_date=${formatDate(startDate.value)}&`
   if (endDate.value) url += `end_date=${formatDate(endDate.value)}`
-  axios.get(url).then((res) => {
-    salesReport.value = res.data.data
-  }).catch((err) => {
-    toast.add({ severity: 'error', summary: t('error'), detail: err.message, life: 3000 })
-  }).finally(() => { salesLoading.value = false })
+  axios
+    .get(url)
+    .then((res) => {
+      salesReport.value = res.data.data
+    })
+    .catch((err) => {
+      toast.add({ severity: 'error', summary: t('error'), detail: err.message, life: 3000 })
+    })
+    .finally(() => {
+      salesLoading.value = false
+    })
 }
 
 const loadInventoryReport = () => {
   inventoryLoading.value = true
-  axios.get(`${apiBase}/inventory`).then((res) => {
-    inventoryReport.value = res.data.data
-  }).catch((err) => {
-    toast.add({ severity: 'error', summary: t('error'), detail: err.message, life: 3000 })
-  }).finally(() => { inventoryLoading.value = false })
+  axios
+    .get(`${apiBase}/inventory`)
+    .then((res) => {
+      inventoryReport.value = res.data.data
+    })
+    .catch((err) => {
+      toast.add({ severity: 'error', summary: t('error'), detail: err.message, life: 3000 })
+    })
+    .finally(() => {
+      inventoryLoading.value = false
+    })
 }
 
 const exportSalesCSV = () => {

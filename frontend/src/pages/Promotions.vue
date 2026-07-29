@@ -20,7 +20,13 @@
         >
           <template #header>
             <div class="flex justify-between align-items-center">
-              <Button icon="pi pi-plus" :label="$t('add_promotion')" rounded raised @click="openAdd" />
+              <Button
+                icon="pi pi-plus"
+                :label="$t('add_promotion')"
+                rounded
+                raised
+                @click="openAdd"
+              />
             </div>
           </template>
           <template #empty>
@@ -33,26 +39,44 @@
           <Column sortable field="code" :header="$t('code')"></Column>
           <Column sortable field="type" :header="$t('type')">
             <template #body="slotProps">
-              <Tag :value="slotProps.data.type" :severity="slotProps.data.type === 'percentage' ? 'info' : 'success'" />
+              <Tag
+                :value="slotProps.data.type"
+                :severity="slotProps.data.type === 'percentage' ? 'info' : 'success'"
+              />
             </template>
           </Column>
           <Column sortable field="value" :header="$t('value')">
             <template #body="slotProps">
-              {{ slotProps.data.type === 'percentage' ? slotProps.data.value + '%' : slotProps.data.value + ' EUR' }}
+              {{
+                slotProps.data.type === 'percentage'
+                  ? slotProps.data.value + '%'
+                  : slotProps.data.value + ' EUR'
+              }}
             </template>
           </Column>
           <Column sortable field="start_date" :header="$t('start_date')"></Column>
           <Column sortable field="end_date" :header="$t('end_date')"></Column>
           <Column sortable field="is_active" :header="$t('status')">
             <template #body="slotProps">
-              <Tag :value="slotProps.data.is_active ? $t('active') : $t('inactive')" :severity="slotProps.data.is_active ? 'success' : 'danger'" />
+              <Tag
+                :value="slotProps.data.is_active ? $t('active') : $t('inactive')"
+                :severity="slotProps.data.is_active ? 'success' : 'danger'"
+              />
             </template>
           </Column>
           <Column :header="$t('actions')">
             <template #body="slotProps">
               <ButtonGroup>
-                <Button icon="pi pi-pencil" severity="secondary" @click="prepareEdit(slotProps.data)" />
-                <Button icon="pi pi-trash" severity="danger" @click="confirmDelete($event, slotProps.data.id)" />
+                <Button
+                  icon="pi pi-pencil"
+                  severity="secondary"
+                  @click="prepareEdit(slotProps.data)"
+                />
+                <Button
+                  icon="pi pi-trash"
+                  severity="danger"
+                  @click="confirmDelete($event, slotProps.data.id)"
+                />
               </ButtonGroup>
             </template>
           </Column>
@@ -60,7 +84,13 @@
       </div>
     </div>
 
-    <Dialog v-model:visible="addDialog" modal :header="$t('add_promotion')" :style="{ width: '35rem' }" :breakpoints="{ '1199px': '90vw', '575px': '90vw' }">
+    <Dialog
+      v-model:visible="addDialog"
+      modal
+      :header="$t('add_promotion')"
+      :style="{ width: '35rem' }"
+      :breakpoints="{ '1199px': '90vw', '575px': '90vw' }"
+    >
       <div class="flex flex-column gap-4">
         <div class="grid">
           <div class="col-6 flex flex-column gap-2">
@@ -75,7 +105,12 @@
         <div class="grid">
           <div class="col-4 flex flex-column gap-2">
             <label>{{ $t('type') }}</label>
-            <Dropdown v-model="form.type" :options="typeOptions" optionLabel="label" optionValue="value" />
+            <Dropdown
+              v-model="form.type"
+              :options="typeOptions"
+              optionLabel="label"
+              optionValue="value"
+            />
           </div>
           <div class="col-4 flex flex-column gap-2">
             <label>{{ $t('value') }}</label>
@@ -104,12 +139,25 @@
       <template #footer>
         <ButtonGroup>
           <Button :label="$t('cancel')" severity="secondary" @click="addDialog = false" />
-          <Button class="ml-2" severity="primary" @click="submit" :label="$t('save')" :loading="submitting" :disabled="submitting" />
+          <Button
+            class="ml-2"
+            severity="primary"
+            @click="submit"
+            :label="$t('save')"
+            :loading="submitting"
+            :disabled="submitting"
+          />
         </ButtonGroup>
       </template>
     </Dialog>
 
-    <Dialog v-model:visible="editDialog" modal :header="$t('edit_promotion')" :style="{ width: '35rem' }" :breakpoints="{ '1199px': '90vw', '575px': '90vw' }">
+    <Dialog
+      v-model:visible="editDialog"
+      modal
+      :header="$t('edit_promotion')"
+      :style="{ width: '35rem' }"
+      :breakpoints="{ '1199px': '90vw', '575px': '90vw' }"
+    >
       <div class="flex flex-column gap-4">
         <div class="grid">
           <div class="col-6 flex flex-column gap-2">
@@ -143,7 +191,14 @@
       <template #footer>
         <ButtonGroup>
           <Button :label="$t('cancel')" severity="secondary" @click="editDialog = false" />
-          <Button class="ml-2" severity="primary" @click="submitEdit" :label="$t('save')" :loading="submitting" :disabled="submitting" />
+          <Button
+            class="ml-2"
+            severity="primary"
+            @click="submitEdit"
+            :label="$t('save')"
+            :loading="submitting"
+            :disabled="submitting"
+          />
         </ButtonGroup>
       </template>
     </Dialog>
@@ -180,7 +235,16 @@ const submitting = ref(false)
 const addDialog = ref(false)
 const editDialog = ref(false)
 
-const form = ref({ name: '', code: '', type: 'percentage', value: 0, min_order: 0, start_date: '', end_date: '', is_active: true })
+const form = ref({
+  name: '',
+  code: '',
+  type: 'percentage',
+  value: 0,
+  min_order: 0,
+  start_date: '',
+  end_date: '',
+  is_active: true,
+})
 const editForm = ref<any>({})
 const editId = ref('')
 
@@ -200,17 +264,41 @@ const apiBase = `http://${import.meta.env.VITE_APP_BACKEND_HOST}${import.meta.en
 const getPromotions = (offset = 0, limit = 50) => {
   loading.value = true
   const pageNumber = Math.floor(offset / limit) + 1
-  axios.get(`${apiBase}?page_number=${pageNumber}&page_size=${limit}`).then((res) => {
-    promotions.value = res.data.data || []
-    totalRecords.value = res.data.meta?.total_records || 0
-  }).catch((err) => {
-    toast.add({ severity: 'error', summary: t('error'), detail: err.message, life: 3000 })
-  }).finally(() => { loading.value = false })
+  axios
+    .get(`${apiBase}?page_number=${pageNumber}&page_size=${limit}`)
+    .then((res) => {
+      promotions.value = res.data.data || []
+      totalRecords.value = res.data.meta?.total_records || 0
+    })
+    .catch((err) => {
+      toast.add({ severity: 'error', summary: t('error'), detail: err.message, life: 3000 })
+    })
+    .finally(() => {
+      loading.value = false
+    })
 }
 
-const onPage = (event: { first: number; rows: number }) => { getPromotions(event.first, event.rows) }
-const openAdd = () => { form.value = { name: '', code: '', type: 'percentage', value: 0, min_order: 0, start_date: '', end_date: '', is_active: true }; addDialog.value = true }
-const prepareEdit = (p: any) => { editForm.value = JSON.parse(JSON.stringify(p)); editId.value = p.id; editDialog.value = true }
+const onPage = (event: { first: number; rows: number }) => {
+  getPromotions(event.first, event.rows)
+}
+const openAdd = () => {
+  form.value = {
+    name: '',
+    code: '',
+    type: 'percentage',
+    value: 0,
+    min_order: 0,
+    start_date: '',
+    end_date: '',
+    is_active: true,
+  }
+  addDialog.value = true
+}
+const prepareEdit = (p: any) => {
+  editForm.value = JSON.parse(JSON.stringify(p))
+  editId.value = p.id
+  editDialog.value = true
+}
 
 const submit = () => {
   submitting.value = true
@@ -219,22 +307,46 @@ const submit = () => {
     start_date: form.value.start_date ? formatDate(new Date(form.value.start_date)) : '',
     end_date: form.value.end_date ? formatDate(new Date(form.value.end_date)) : '',
   }
-  axios.post(apiBase, payload).then(() => {
-    toast.add({ severity: 'success', summary: t('success'), detail: t('promotion_added'), life: 3000 })
-    addDialog.value = false; getPromotions(0, rowsPerPage.value)
-  }).catch((err) => {
-    toast.add({ severity: 'error', summary: t('error'), detail: err.message, life: 3000 })
-  }).finally(() => { submitting.value = false })
+  axios
+    .post(apiBase, payload)
+    .then(() => {
+      toast.add({
+        severity: 'success',
+        summary: t('success'),
+        detail: t('promotion_added'),
+        life: 3000,
+      })
+      addDialog.value = false
+      getPromotions(0, rowsPerPage.value)
+    })
+    .catch((err) => {
+      toast.add({ severity: 'error', summary: t('error'), detail: err.message, life: 3000 })
+    })
+    .finally(() => {
+      submitting.value = false
+    })
 }
 
 const submitEdit = () => {
   submitting.value = true
-  axios.patch(`${apiBase}/${editId.value}`, editForm.value).then(() => {
-    toast.add({ severity: 'success', summary: t('success'), detail: t('promotion_updated'), life: 3000 })
-    editDialog.value = false; getPromotions(0, rowsPerPage.value)
-  }).catch((err) => {
-    toast.add({ severity: 'error', summary: t('error'), detail: err.message, life: 3000 })
-  }).finally(() => { submitting.value = false })
+  axios
+    .patch(`${apiBase}/${editId.value}`, editForm.value)
+    .then(() => {
+      toast.add({
+        severity: 'success',
+        summary: t('success'),
+        detail: t('promotion_updated'),
+        life: 3000,
+      })
+      editDialog.value = false
+      getPromotions(0, rowsPerPage.value)
+    })
+    .catch((err) => {
+      toast.add({ severity: 'error', summary: t('error'), detail: err.message, life: 3000 })
+    })
+    .finally(() => {
+      submitting.value = false
+    })
 }
 
 const confirmDelete = (event: MouseEvent, id: string) => {
@@ -246,12 +358,20 @@ const confirmDelete = (event: MouseEvent, id: string) => {
     acceptLabel: t('delete'),
     acceptClass: 'p-button-danger',
     accept: () => {
-      axios.delete(`${apiBase}/${id}`).then(() => {
-        toast.add({ severity: 'success', summary: t('success'), detail: t('promotion_deleted'), life: 3000 })
-        getPromotions(0, rowsPerPage.value)
-      }).catch((err) => {
-        toast.add({ severity: 'error', summary: t('error'), detail: err.message, life: 3000 })
-      })
+      axios
+        .delete(`${apiBase}/${id}`)
+        .then(() => {
+          toast.add({
+            severity: 'success',
+            summary: t('success'),
+            detail: t('promotion_deleted'),
+            life: 3000,
+          })
+          getPromotions(0, rowsPerPage.value)
+        })
+        .catch((err) => {
+          toast.add({ severity: 'error', summary: t('error'), detail: err.message, life: 3000 })
+        })
     },
   })
 }

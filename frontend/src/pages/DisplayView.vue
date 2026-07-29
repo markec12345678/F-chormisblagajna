@@ -5,7 +5,12 @@
     </div>
 
     <div class="slides-section">
-      <div v-for="(item, idx) in displayItems" :key="idx" class="slide" v-show="currentSlide === idx">
+      <div
+        v-for="(item, idx) in displayItems"
+        :key="idx"
+        class="slide"
+        v-show="currentSlide === idx"
+      >
         <div v-if="item.type === 'promotions'" class="promotion-slide">
           <i class="pi pi-star" style="font-size: 3rem"></i>
           <h2>{{ $t('promotions') }}</h2>
@@ -31,9 +36,13 @@
     </div>
 
     <div class="indicator-section">
-      <span v-for="(item, idx) in displayItems" :key="idx"
-            class="dot" :class="{ active: currentSlide === idx }"
-            @click="currentSlide = idx">
+      <span
+        v-for="(item, idx) in displayItems"
+        :key="idx"
+        class="dot"
+        :class="{ active: currentSlide === idx }"
+        @click="currentSlide = idx"
+      >
       </span>
     </div>
   </div>
@@ -73,7 +82,7 @@ const loadDisplay = async () => {
   try {
     const id = route.params.id
     const response = await axios.get(
-      `http://${import.meta.env.VITE_APP_BACKEND_HOST}/customerdisplay/api/display/${id}`
+      `http://${import.meta.env.VITE_APP_BACKEND_HOST}/customerdisplay/api/display/${id}`,
     )
     content.value = response.data.data
 
@@ -116,16 +125,66 @@ onUnmounted(stopAutoSlide)
   overflow: hidden;
   font-family: sans-serif;
 }
-.theme-light { background: #f8f9fa; color: #333; }
-.theme-dark { background: #1a1a2e; color: #eee; }
-.theme-colorful { background: linear-gradient(135deg, #667eea, #764ba2); color: #fff; }
-.welcome-section { text-align: center; margin-bottom: 2rem; }
-.slides-section { flex: 1; display: flex; align-items: center; justify-content: center; width: 90%; }
-.slide { text-align: center; animation: fadeIn 0.5s; }
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-.orders-grid { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; }
-.order-card { background: rgba(255,255,255,0.1); padding: 1rem 2rem; border-radius: 8px; }
-.indicator-section { position: fixed; bottom: 2rem; display: flex; gap: 0.5rem; }
-.dot { width: 12px; height: 12px; border-radius: 50%; background: rgba(255,255,255,0.4); cursor: pointer; }
-.dot.active { background: rgba(255,255,255,0.9); }
+.theme-light {
+  background: #f8f9fa;
+  color: #333;
+}
+.theme-dark {
+  background: #1a1a2e;
+  color: #eee;
+}
+.theme-colorful {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: #fff;
+}
+.welcome-section {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+.slides-section {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 90%;
+}
+.slide {
+  text-align: center;
+  animation: fadeIn 0.5s;
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.orders-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+}
+.order-card {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 1rem 2rem;
+  border-radius: 8px;
+}
+.indicator-section {
+  position: fixed;
+  bottom: 2rem;
+  display: flex;
+  gap: 0.5rem;
+}
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.4);
+  cursor: pointer;
+}
+.dot.active {
+  background: rgba(255, 255, 255, 0.9);
+}
 </style>

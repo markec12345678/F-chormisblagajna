@@ -2,7 +2,12 @@
   <div class="p-4">
     <div class="flex justify-content-between align-items-center mb-4">
       <h2 class="m-0">{{ $t('multi_location') }}</h2>
-      <Button :label="$t('refresh')" icon="pi pi-refresh" @click="loadDashboard" :loading="loading" />
+      <Button
+        :label="$t('refresh')"
+        icon="pi pi-refresh"
+        @click="loadDashboard"
+        :loading="loading"
+      />
     </div>
 
     <div v-if="loading" class="flex justify-content-center p-8">
@@ -16,7 +21,9 @@
           <Card class="h-full">
             <template #title>{{ $t('total_branches') }}</template>
             <template #content>
-              <div class="text-4xl font-bold text-primary">{{ dashboard?.total_branches || 0 }}</div>
+              <div class="text-4xl font-bold text-primary">
+                {{ dashboard?.total_branches || 0 }}
+              </div>
             </template>
           </Card>
         </div>
@@ -73,7 +80,10 @@
             </Column>
             <Column field="status" :header="$t('status')" sortable>
               <template #body="{ data }">
-                <Tag :value="data.status" :severity="data.status === 'active' ? 'success' : 'warn'" />
+                <Tag
+                  :value="data.status"
+                  :severity="data.status === 'active' ? 'success' : 'warn'"
+                />
               </template>
             </Column>
           </DataTable>

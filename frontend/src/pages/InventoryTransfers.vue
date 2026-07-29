@@ -28,8 +28,22 @@
         <Column :header="$t('actions')">
           <template #body="{ data }">
             <div class="flex gap-1">
-              <Button v-if="data.status === 'pending'" icon="pi pi-check" severity="success" text rounded @click="completeTransfer(data)" />
-              <Button v-if="data.status === 'pending'" icon="pi pi-times" severity="danger" text rounded @click="cancelTransfer(data)" />
+              <Button
+                v-if="data.status === 'pending'"
+                icon="pi pi-check"
+                severity="success"
+                text
+                rounded
+                @click="completeTransfer(data)"
+              />
+              <Button
+                v-if="data.status === 'pending'"
+                icon="pi pi-times"
+                severity="danger"
+                text
+                rounded
+                @click="cancelTransfer(data)"
+              />
             </div>
           </template>
         </Column>
@@ -37,7 +51,12 @@
     </div>
 
     <!-- Create Dialog -->
-    <Dialog v-model:visible="showCreateDialog" :header="$t('create_transfer')" :style="{ width: '500px' }" modal>
+    <Dialog
+      v-model:visible="showCreateDialog"
+      :header="$t('create_transfer')"
+      :style="{ width: '500px' }"
+      modal
+    >
       <div class="flex flex-column gap-3">
         <div>
           <label class="block mb-1">{{ $t('material') }}</label>
@@ -112,10 +131,14 @@ const apiBase = `http://${import.meta.env.VITE_APP_BACKEND_HOST}${import.meta.en
 
 const getStatusSeverity = (status: string) => {
   switch (status) {
-    case 'pending': return 'warn'
-    case 'completed': return 'success'
-    case 'cancelled': return 'danger'
-    default: return 'secondary'
+    case 'pending':
+      return 'warn'
+    case 'completed':
+      return 'success'
+    case 'cancelled':
+      return 'danger'
+    default:
+      return 'secondary'
   }
 }
 
@@ -135,9 +158,21 @@ const createTransfer = async () => {
   creating.value = true
   try {
     await axios.post(apiBase, newTransfer.value)
-    toast.add({ severity: 'success', summary: t('success'), detail: t('transfer_created'), life: 3000 })
+    toast.add({
+      severity: 'success',
+      summary: t('success'),
+      detail: t('transfer_created'),
+      life: 3000,
+    })
     showCreateDialog.value = false
-    newTransfer.value = { material_name: '', quantity: 0, unit: '', from_branch_name: '', to_branch_name: '', notes: '' }
+    newTransfer.value = {
+      material_name: '',
+      quantity: 0,
+      unit: '',
+      from_branch_name: '',
+      to_branch_name: '',
+      notes: '',
+    }
     loadTransfers()
   } catch {
     toast.add({ severity: 'error', summary: t('error'), detail: t('request_failed'), life: 3000 })
@@ -149,7 +184,12 @@ const createTransfer = async () => {
 const completeTransfer = async (transfer) => {
   try {
     await axios.put(`${apiBase}/${transfer.id}/status`, { status: 'completed' })
-    toast.add({ severity: 'success', summary: t('success'), detail: t('transfer_completed'), life: 3000 })
+    toast.add({
+      severity: 'success',
+      summary: t('success'),
+      detail: t('transfer_completed'),
+      life: 3000,
+    })
     loadTransfers()
   } catch {
     toast.add({ severity: 'error', summary: t('error'), detail: t('request_failed'), life: 3000 })
@@ -159,7 +199,12 @@ const completeTransfer = async (transfer) => {
 const cancelTransfer = async (transfer) => {
   try {
     await axios.put(`${apiBase}/${transfer.id}/status`, { status: 'cancelled' })
-    toast.add({ severity: 'warn', summary: t('warning'), detail: t('transfer_cancelled'), life: 3000 })
+    toast.add({
+      severity: 'warn',
+      summary: t('warning'),
+      detail: t('transfer_cancelled'),
+      life: 3000,
+    })
     loadTransfers()
   } catch {
     toast.add({ severity: 'error', summary: t('error'), detail: t('request_failed'), life: 3000 })

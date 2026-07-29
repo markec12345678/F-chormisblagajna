@@ -5,8 +5,16 @@
         <div class="flex justify-content-between align-items-center">
           <h3>{{ $t('waste_tracking') }}</h3>
           <div class="flex gap-2">
-            <Calendar v-model="summaryStartDate" :placeholder="$t('start_date')" dateFormat="yy-mm-dd" />
-            <Calendar v-model="summaryEndDate" :placeholder="$t('end_date')" dateFormat="yy-mm-dd" />
+            <Calendar
+              v-model="summaryStartDate"
+              :placeholder="$t('start_date')"
+              dateFormat="yy-mm-dd"
+            />
+            <Calendar
+              v-model="summaryEndDate"
+              :placeholder="$t('end_date')"
+              dateFormat="yy-mm-dd"
+            />
             <Button :label="$t('add_waste_entry')" icon="pi pi-plus" @click="showAddDialog" />
           </div>
         </div>
@@ -18,7 +26,9 @@
             <Card>
               <template #title>{{ $t('total_waste_cost') }}</template>
               <template #content>
-                <div class="text-4xl font-bold text-red-500">{{ formatCurrency(summary.total_waste_cost) }}</div>
+                <div class="text-4xl font-bold text-red-500">
+                  {{ formatCurrency(summary.total_waste_cost) }}
+                </div>
               </template>
             </Card>
           </div>
@@ -34,7 +44,9 @@
             <Card>
               <template #title>{{ $t('by_reason') }}</template>
               <template #content>
-                <div class="text-4xl font-bold text-blue-500">{{ summary.by_reason?.length || 0 }}</div>
+                <div class="text-4xl font-bold text-blue-500">
+                  {{ summary.by_reason?.length || 0 }}
+                </div>
               </template>
             </Card>
           </div>
@@ -99,12 +111,16 @@
               <Column field="material_name" :header="$t('material')"></Column>
               <Column field="quantity" :header="$t('quantity')">
                 <template #body="slotProps">
-                  {{ (slotProps?.data?.quantity || 0).toFixed(1) }} {{ slotProps?.data?.unit || '' }}
+                  {{ (slotProps?.data?.quantity || 0).toFixed(1) }}
+                  {{ slotProps?.data?.unit || '' }}
                 </template>
               </Column>
               <Column field="reason" :header="$t('reason')">
                 <template #body="slotProps">
-                  <Tag :value="slotProps?.data?.reason" :severity="getReasonSeverity(slotProps?.data?.reason)" />
+                  <Tag
+                    :value="slotProps?.data?.reason"
+                    :severity="getReasonSeverity(slotProps?.data?.reason)"
+                  />
                 </template>
               </Column>
               <Column field="cost" :header="$t('cost')">
@@ -115,7 +131,13 @@
               <Column field="recorded_by" :header="$t('recorded_by')"></Column>
               <Column :header="$t('actions')">
                 <template #body="slotProps">
-                  <Button icon="pi pi-trash" severity="danger" text rounded @click="deleteEntry(slotProps?.data?.id)" />
+                  <Button
+                    icon="pi pi-trash"
+                    severity="danger"
+                    text
+                    rounded
+                    @click="deleteEntry(slotProps?.data?.id)"
+                  />
                 </template>
               </Column>
             </DataTable>
@@ -123,7 +145,12 @@
         </Card>
       </div>
 
-      <Dialog v-model:visible="addDialog" modal :header="$t('add_waste_entry')" :style="{ width: '50rem' }">
+      <Dialog
+        v-model:visible="addDialog"
+        modal
+        :header="$t('add_waste_entry')"
+        :style="{ width: '50rem' }"
+      >
         <div class="grid">
           <div class="col-12 md:col-6">
             <div class="flex flex-column gap-2">
@@ -152,7 +179,11 @@
           <div class="col-12 md:col-6">
             <div class="flex flex-column gap-2">
               <label>{{ $t('reason') }}</label>
-              <Dropdown v-model="newEntry.reason" :options="reasons" :placeholder="$t('select_reason')" />
+              <Dropdown
+                v-model="newEntry.reason"
+                :options="reasons"
+                :placeholder="$t('select_reason')"
+              />
             </div>
           </div>
           <div class="col-12 md:col-6">
@@ -262,10 +293,14 @@ const formatDate = (date: string) => {
 
 const getReasonSeverity = (reason: string) => {
   switch (reason) {
-    case 'expired': return 'danger'
-    case 'damaged': return 'warn'
-    case 'overcooked': return 'info'
-    default: return 'secondary'
+    case 'expired':
+      return 'danger'
+    case 'damaged':
+      return 'warn'
+    case 'overcooked':
+      return 'info'
+    default:
+      return 'secondary'
   }
 }
 
@@ -280,13 +315,25 @@ const saveEntry = async () => {
     await axios.post(
       `http://${import.meta.env.VITE_APP_BACKEND_HOST}/waste/api/waste`,
       newEntry.value,
-      { headers: { Authorization: `Bearer ${auth.accessToken.value}` } }
+      { headers: { Authorization: `Bearer ${auth.accessToken.value}` } },
     )
-    toast.add({ severity: 'success', summary: t('success'), detail: t('waste_entry_saved'), group: 'br', life: 3000 })
+    toast.add({
+      severity: 'success',
+      summary: t('success'),
+      detail: t('waste_entry_saved'),
+      group: 'br',
+      life: 3000,
+    })
     addDialog.value = false
     loadData()
   } catch {
-    toast.add({ severity: 'error', summary: t('failed'), detail: t('save_failed'), group: 'br', life: 3000 })
+    toast.add({
+      severity: 'error',
+      summary: t('failed'),
+      detail: t('save_failed'),
+      group: 'br',
+      life: 3000,
+    })
   } finally {
     isSaving.value = false
   }
@@ -294,14 +341,25 @@ const saveEntry = async () => {
 
 const deleteEntry = async (id: string) => {
   try {
-    await axios.delete(
-      `http://${import.meta.env.VITE_APP_BACKEND_HOST}/waste/api/waste/${id}`,
-      { headers: { Authorization: `Bearer ${auth.accessToken.value}` } }
-    )
-    toast.add({ severity: 'success', summary: t('success'), detail: t('waste_entry_deleted'), group: 'br', life: 3000 })
+    await axios.delete(`http://${import.meta.env.VITE_APP_BACKEND_HOST}/waste/api/waste/${id}`, {
+      headers: { Authorization: `Bearer ${auth.accessToken.value}` },
+    })
+    toast.add({
+      severity: 'success',
+      summary: t('success'),
+      detail: t('waste_entry_deleted'),
+      group: 'br',
+      life: 3000,
+    })
     loadData()
   } catch {
-    toast.add({ severity: 'error', summary: t('failed'), detail: t('delete_failed'), group: 'br', life: 3000 })
+    toast.add({
+      severity: 'error',
+      summary: t('failed'),
+      detail: t('delete_failed'),
+      group: 'br',
+      life: 3000,
+    })
   }
 }
 
@@ -318,17 +376,23 @@ const loadData = async () => {
 
     const [entriesRes, summaryRes] = await Promise.all([
       axios.get(`http://${import.meta.env.VITE_APP_BACKEND_HOST}/waste/api/waste`, {
-        headers: { Authorization: `Bearer ${auth.accessToken.value}` }
+        headers: { Authorization: `Bearer ${auth.accessToken.value}` },
       }),
       axios.get(`http://${import.meta.env.VITE_APP_BACKEND_HOST}/waste/api/waste/summary`, {
         headers: { Authorization: `Bearer ${auth.accessToken.value}` },
-        params
-      })
+        params,
+      }),
     ])
     entries.value = entriesRes.data.data || []
     summary.value = summaryRes.data.data
   } catch {
-    toast.add({ severity: 'error', summary: t('failed'), detail: t('load_failed'), group: 'br', life: 3000 })
+    toast.add({
+      severity: 'error',
+      summary: t('failed'),
+      detail: t('load_failed'),
+      group: 'br',
+      life: 3000,
+    })
   } finally {
     isLoading.value = false
   }

@@ -108,7 +108,10 @@ const router = createRouter({
         { path: 'tips', component: () => import('@/pages/EmployeeTips.vue') },
         { path: 'accounting', component: () => import('@/pages/Accounting.vue') },
         { path: 'menu-engineering', component: () => import('@/pages/MenuEngineering.vue') },
-        { path: 'employee-performance', component: () => import('@/pages/EmployeePerformance.vue') },
+        {
+          path: 'employee-performance',
+          component: () => import('@/pages/EmployeePerformance.vue'),
+        },
         { path: 'suppliers', component: () => import('@/pages/Suppliers.vue') },
         { path: 'expenses', component: () => import('@/pages/Expenses.vue') },
         { path: 'timeclock', component: () => import('@/pages/TimeClock.vue') },
