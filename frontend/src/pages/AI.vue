@@ -252,17 +252,15 @@ const isRecording = ref(false)
 const voiceTranscript = ref('')
 let mediaRecorder: MediaRecorder | null = null
 let audioChunks: Blob[] = []
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-let speechRecognition: {
+interface SpeechRec {
   start: () => void
   stop: () => void
-  onresult: (event: any) => void
-  onerror: () => void
-  onend: () => void
+  onresult: (event: Event) => void
   continuous: boolean
   interimResults: boolean
   lang: string
-} | null = null
+}
+let speechRecognition: SpeechRec | null = null
 
 const formatPrice = (price: number) => {
   return new Intl.NumberFormat('en-US', {
@@ -314,9 +312,10 @@ const toggleVoiceRecording = () => {
 
 const startRecording = () => {
   if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    /* eslint-disable @typescript-eslint/no-explicit-any */
     const SpeechRecognition =
       (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition
+    /* eslint-enable @typescript-eslint/no-explicit-any */
     speechRecognition = new SpeechRecognition()
     speechRecognition.continuous = false
     speechRecognition.interimResults = true
