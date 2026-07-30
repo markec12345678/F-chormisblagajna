@@ -273,7 +273,10 @@ startWebsocket()
 
 const playBeep = () => {
   try {
-    const audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)()
+    /* eslint-disable @typescript-eslint/no-explicit-any */
+    const AC = window.AudioContext || (window as any).webkitAudioContext
+    /* eslint-enable @typescript-eslint/no-explicit-any */
+    const audioCtx = new AC()
     const oscillator = audioCtx.createOscillator()
     const gainNode = audioCtx.createGain()
     oscillator.connect(gainNode)

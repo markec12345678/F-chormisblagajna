@@ -227,7 +227,9 @@ const { t } = useI18n()
 const toast = useToast()
 const confirm = useConfirm()
 
-const promotions = ref<any[]>([])
+interface Promotion { id: string; name: string; code: string; type: string; value: number; min_order: number; start_date: string; end_date: string; active: boolean; usage_count: number; max_uses: number }
+interface FormData { name: string; code: string; type: string; value: number; min_order: number; start_date: string; end_date: string; max_uses: number }
+const promotions = ref<Promotion[]>([])
 const totalRecords = ref(0)
 const loading = ref(false)
 const rowsPerPage = ref(50)
@@ -235,7 +237,7 @@ const submitting = ref(false)
 const addDialog = ref(false)
 const editDialog = ref(false)
 
-const form = ref({
+const form = ref<FormData>({
   name: '',
   code: '',
   type: 'percentage',
@@ -245,7 +247,7 @@ const form = ref({
   end_date: '',
   is_active: true,
 })
-const editForm = ref<any>({})
+const editForm = ref<Partial<Promotion>>({})
 const editId = ref('')
 
 const typeOptions = [
@@ -294,7 +296,7 @@ const openAdd = () => {
   }
   addDialog.value = true
 }
-const prepareEdit = (p: any) => {
+const prepareEdit = (p: Promotion) => {
   editForm.value = JSON.parse(JSON.stringify(p))
   editId.value = p.id
   editDialog.value = true

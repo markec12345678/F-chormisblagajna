@@ -7,6 +7,7 @@ Cypress.Commands.add('login', (username: string, password: string) => {
   cy.get('button[type="submit"], button').contains(/login|prijava/i).click()
 })
 
+/* eslint-disable @typescript-eslint/no-namespace */
 declare global {
   namespace Cypress {
     interface Chainable {
@@ -14,5 +15,5 @@ declare global {
     }
   }
 }
-
+/* eslint-enable @typescript-eslint/no-namespace */
 export {}

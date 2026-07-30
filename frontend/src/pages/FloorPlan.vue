@@ -70,7 +70,8 @@ import Button from 'primevue/button'
 import InputText from 'primevue/inputtext'
 const { t } = useI18n()
 const toast = useToast()
-const tables = ref<any[]>([])
+interface TablePlan { id: string; label: string; zone: string; capacity: number; shape: string; x: number; y: number; width: number; height: number; status: string }
+const tables = ref<TablePlan[]>([])
 const newLabel = ref('')
 const addTable = async () => {
   if (!newLabel.value) return
@@ -96,7 +97,7 @@ const addTable = async () => {
     toast.add({ severity: 'error', summary: t('failed'), group: 'br', life: 3000 })
   }
 }
-const toggleStatus = async (t: any) => {
+const toggleStatus = async (t: TablePlan) => {
   try {
     await axios.post(
       `http://${import.meta.env.VITE_APP_BACKEND_HOST}/floorplan/api/tables`,

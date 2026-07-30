@@ -182,9 +182,11 @@ import { useToast } from 'primevue/usetoast'
 const { t } = useI18n()
 const toast = useToast()
 
-const dashboard = ref<any>(null)
-const salesReport = ref<any>(null)
-const inventoryReport = ref<any>(null)
+interface DashboardData { today_sales: number; yesterday_sales: number; active_orders: number; pending_orders: number; low_stock_count: number; recent_feedback: { average_rating: number; recent_feedbacks: unknown[] } }
+interface ReportData { total_sales: number; total_orders: number; avg_order: number; data: unknown[] }
+const dashboard = ref<DashboardData | null>(null)
+const salesReport = ref<ReportData | null>(null)
+const inventoryReport = ref<ReportData | null>(null)
 const startDate = ref<Date | null>(null)
 const endDate = ref<Date | null>(null)
 const salesLoading = ref(false)

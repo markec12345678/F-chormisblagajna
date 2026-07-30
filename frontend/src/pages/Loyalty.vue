@@ -185,8 +185,9 @@ import { useToast } from 'primevue/usetoast'
 
 const { t } = useI18n()
 const toast = useToast()
-
-const accounts = ref<any[]>([])
+interface LoyaltyAccount { id: string; customer_name: string; email: string; phone: string; points: number; tier: string; total_spent: number }
+interface Transaction { id: string; type: string; points: number; description: string; created_at: string }
+const accounts = ref<LoyaltyAccount[]>([])
 const totalRecords = ref(0)
 const loading = ref(false)
 const rowsPerPage = ref(50)
@@ -195,11 +196,11 @@ const tierFilter = ref('')
 const earnDialog = ref(false)
 const redeemDialog = ref(false)
 const historyDialog = ref(false)
-const selectedAccount = ref<any>(null)
+const selectedAccount = ref<LoyaltyAccount | null>(null)
 const earnPoints = ref(10)
 const earnDescription = ref('')
 const redeemPoints = ref(10)
-const transactions = ref<any[]>([])
+const transactions = ref<Transaction[]>([])
 
 const tierOptions = [
   { label: 'Bronze', value: 'bronze' },
@@ -248,13 +249,13 @@ const onPage = (event: { first: number; rows: number }) => {
 const openAdd = () => {
   /* TODO: create account dialog */
 }
-const openEarn = (account: any) => {
+const openEarn = (account: LoyaltyAccount) => {
   selectedAccount.value = account
   earnPoints.value = 10
   earnDescription.value = ''
   earnDialog.value = true
 }
-const openRedeem = (account: any) => {
+const openRedeem = (account: LoyaltyAccount) => {
   selectedAccount.value = account
   redeemPoints.value = 10
   redeemDialog.value = true
@@ -313,7 +314,7 @@ const submitRedeem = () => {
     })
 }
 
-const viewHistory = (account: any) => {
+const viewHistory = (account: LoyaltyAccount) => {
   selectedAccount.value = account
   axios
     .get(`${apiBase}/transactions/${account.customer_id}`)

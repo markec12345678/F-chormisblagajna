@@ -195,7 +195,8 @@ const qrDialogVisible = ref(false)
 const ordersDialogVisible = ref(false)
 const saving = ref(false)
 const qrInfo = ref<QrInfo | null>(null)
-const tableOrders = ref<any[]>([])
+interface TableOrder { id: string; table_label: string; items: unknown[]; total: number; status: string }
+const tableOrders = ref<TableOrder[]>([])
 const selectedTable = ref('')
 
 const zoneOptions = ['Main Hall', 'Terrace', 'VIP', 'Bar', 'Garden']

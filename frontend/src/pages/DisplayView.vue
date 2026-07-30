@@ -58,7 +58,7 @@ const route = useRoute()
 
 interface DisplayItem {
   type: string
-  content: any
+  content: string
 }
 
 interface DisplayContent {

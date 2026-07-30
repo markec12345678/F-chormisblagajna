@@ -202,7 +202,8 @@ const { t } = useI18n()
 const toast = useToast()
 const confirm = useConfirm()
 
-const shifts = ref<any[]>([])
+interface Shift { id: string; employee_id: string; employee_name: string; branch_id: string; date: string; start_time: string; end_time: string; role: string; status: string; notes: string }
+const shifts = ref<Shift[]>([])
 const totalRecords = ref(0)
 const loading = ref(false)
 const rowsPerPage = ref(50)
@@ -220,7 +221,7 @@ const form = ref({
   role: 'cashier',
   notes: '',
 })
-const editForm = ref<any>({})
+const editForm = ref<Partial<Shift>>({})
 const editId = ref('')
 
 const roleOptions = [
@@ -299,7 +300,7 @@ const openAdd = () => {
   }
   addDialog.value = true
 }
-const prepareEdit = (shift: any) => {
+const prepareEdit = (shift: Shift) => {
   editForm.value = JSON.parse(JSON.stringify(shift))
   editId.value = shift.id
   editDialog.value = true

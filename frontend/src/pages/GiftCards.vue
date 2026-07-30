@@ -77,7 +77,8 @@ import InputNumber from 'primevue/inputnumber'
 import Calendar from 'primevue/calendar'
 const { t } = useI18n()
 const toast = useToast()
-const cards = ref<any[]>([])
+interface GiftCard { id: string; issued_to: string; initial_amt: number; balance: number; issued_at: string; expires_at: string; active: boolean }
+const cards = ref<GiftCard[]>([])
 const loading = ref(false)
 const issuing = ref(false)
 const formExp = ref<Date | null>(null)

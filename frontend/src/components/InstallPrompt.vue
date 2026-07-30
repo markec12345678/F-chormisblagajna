@@ -19,7 +19,7 @@ import Button from 'primevue/button'
 
 const { t } = useI18n()
 const showInstall = ref(false)
-let deferredPrompt: any = null
+let deferredPrompt: BeforeInstallPromptEvent | null = null
 
 onMounted(() => {
   if (localStorage.getItem('pwa-install-dismissed') === 'true') return

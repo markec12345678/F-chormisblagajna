@@ -117,7 +117,8 @@ import Tag from 'primevue/tag'
 
 const { t } = useI18n()
 const toast = useToast()
-const list = ref<any[]>([])
+interface Reservation { id: string; customer_name: string; customer_phone: string; customer_email: string; guest_count: number; reservation_date: string; reservation_time: string; status: string; table_id: string; notes: string }
+const list = ref<Reservation[]>([])
 const loading = ref(false)
 const dialog = ref(false)
 const saving = ref(false)
@@ -171,7 +172,7 @@ const doSave = async () => {
   }
 }
 
-const confirmRes = (r: any) => {
+const confirmRes = (r: Reservation) => {
   assignId.value = r.id
   assignTable.value = ''
   assignDialog.value = true
@@ -195,7 +196,7 @@ const doAssign = async () => {
   }
 }
 
-const doDelete = async (r: any) => {
+const doDelete = async (r: Reservation) => {
   try {
     await axios.delete(
       `http://${import.meta.env.VITE_APP_BACKEND_HOST}/reservations/api/reservations/${r.id}`,

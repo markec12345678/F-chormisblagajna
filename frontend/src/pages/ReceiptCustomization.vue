@@ -307,7 +307,7 @@ const showAddDialog = () => {
   addDialog.value = true
 }
 
-const onTemplateSelect = (event: any) => {
+const onTemplateSelect = (event: { data: ReceiptTemplate }) => {
   selectedTemplate.value = { ...event.data }
 }
 
