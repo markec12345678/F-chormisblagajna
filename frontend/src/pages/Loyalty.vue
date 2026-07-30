@@ -165,6 +165,40 @@
         <Column field="created_at" :header="$t('date')"></Column>
       </DataTable>
     </Dialog>
+
+    <Dialog
+      v-model:visible="addDialog"
+      modal
+      :header="$t('add_account')"
+      :style="{ width: '25rem' }"
+    >
+      <div class="flex flex-column gap-4">
+        <div class="flex flex-column gap-2">
+          <label>{{ $t('customer_name') }}</label>
+          <InputText v-model="addForm.customer_name" />
+        </div>
+        <div class="flex flex-column gap-2">
+          <label>{{ $t('email') }}</label>
+          <InputText v-model="addForm.email" />
+        </div>
+        <div class="flex flex-column gap-2">
+          <label>{{ $t('phone') }}</label>
+          <InputText v-model="addForm.phone" />
+        </div>
+      </div>
+      <template #footer>
+        <ButtonGroup>
+          <Button :label="$t('cancel')" severity="secondary" @click="addDialog = false" />
+          <Button
+            class="ml-2"
+            severity="success"
+            @click="submitAccount"
+            :label="$t('save')"
+            :loading="submitting"
+          />
+        </ButtonGroup>
+      </template>
+    </Dialog>
   </div>
 </template>
 
@@ -179,7 +213,7 @@ import ButtonGroup from 'primevue/buttongroup'
 import Tag from 'primevue/tag'
 import Dropdown from 'primevue/dropdown'
 import axios from 'axios'
-import { ref } from 'vue'
+import { ref, reactive } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useToast } from 'primevue/usetoast'
 
@@ -196,6 +230,7 @@ const tierFilter = ref('')
 const earnDialog = ref(false)
 const redeemDialog = ref(false)
 const historyDialog = ref(false)
+const addDialog = ref(false)
 const selectedAccount = ref<LoyaltyAccount | null>(null)
 const earnPoints = ref(10)
 const earnDescription = ref('')
@@ -247,7 +282,24 @@ const onPage = (event: { first: number; rows: number }) => {
   getAccounts(event.first, event.rows)
 }
 const openAdd = () => {
-  /* TODO: create account dialog */
+  addForm.customer_name = ''
+  addForm.email = ''
+  addForm.phone = ''
+  addDialog.value = true
+}
+const addForm = reactive({ customer_name: '', email: '', phone: '' })
+const submitAccount = async () => {
+  submitting.value = true
+  try {
+    await axios.post(`${apiBase}/accounts`, addForm)
+    toast.add({ severity: 'success', summary: t('saved'), group: 'br', life: 2000 })
+    addDialog.value = false
+    await getAccounts()
+  } catch {
+    toast.add({ severity: 'error', summary: t('failed'), group: 'br', life: 3000 })
+  } finally {
+    submitting.value = false
+  }
 }
 const openEarn = (account: LoyaltyAccount) => {
   selectedAccount.value = account
