@@ -14,8 +14,7 @@ type TimeClockModule struct {
 	Config config.Config
 }
 
-func (m *TimeClockModule) RegisterHttpHandlers(router *mux.Router) *TimeClockModule {
-	prefix := "/timeclock"
+func (m *TimeClockModule) RegisterHttpHandlers(router *mux.Router, prefix string) {
 
 	jwtUtil := auth_mw.NewJWTUtil(m.Config.Auth.JWTSecret, m.Config.Auth.JWTExpireHrs)
 	auth_svc := auth_mw.NewInternalAuth(m.Config, jwtUtil)
@@ -24,7 +23,6 @@ func (m *TimeClockModule) RegisterHttpHandlers(router *mux.Router) *TimeClockMod
 	router.Handle(prefix+"/api/clock-out/{id}", core_middlewares.AllowCors(auth_svc.AllowAnyOfRoles(handlers.ClockOut(m.Config, m.Logger), "admin", "cashier", "chef"))).Methods("POST", "OPTIONS")
 	router.Handle(prefix+"/api/active", core_middlewares.AllowCors(auth_svc.AllowAnyOfRoles(handlers.GetActiveEntries(m.Config, m.Logger), "admin"))).Methods("GET", "OPTIONS")
 	router.Handle(prefix+"/api/dashboard", core_middlewares.AllowCors(auth_svc.AllowAnyOfRoles(handlers.GetDashboard(m.Config, m.Logger), "admin"))).Methods("GET", "OPTIONS")
-	return m
 }
 
 func (m *TimeClockModule) OnStart() func() error {

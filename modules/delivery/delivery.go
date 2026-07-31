@@ -14,19 +14,17 @@ type DeliveryModule struct {
 	Config config.Config
 }
 
-func (m *DeliveryModule) RegisterHttpHandlers(router *mux.Router) *DeliveryModule {
-	p := "/delivery"
+func (m *DeliveryModule) RegisterHttpHandlers(router *mux.Router, prefix string) {
 	jwtUtil := auth_mw.NewJWTUtil(m.Config.Auth.JWTSecret, m.Config.Auth.JWTExpireHrs)
 	auth := auth_mw.NewInternalAuth(m.Config, jwtUtil)
 
-	router.Handle(p+"/api/zones", core_middlewares.AllowCors(auth.AllowAnyOfRoles(handlers.GetZones(m.Config, m.Logger), "admin"))).Methods("GET", "OPTIONS")
-	router.Handle(p+"/api/zones", core_middlewares.AllowCors(auth.AllowAnyOfRoles(handlers.SaveZone(m.Config, m.Logger), "admin"))).Methods("POST", "OPTIONS")
-	router.Handle(p+"/api/zones/{id}", core_middlewares.AllowCors(auth.AllowAnyOfRoles(handlers.DeleteZone(m.Config, m.Logger), "admin"))).Methods("DELETE", "OPTIONS")
-	router.Handle(p+"/api/orders", core_middlewares.AllowCors(auth.AllowAnyOfRoles(handlers.GetDeliveryOrders(m.Config, m.Logger), "admin"))).Methods("GET", "OPTIONS")
-	router.Handle(p+"/api/orders", core_middlewares.AllowCors(auth.AllowAnyOfRoles(handlers.CreateDeliveryOrder(m.Config, m.Logger), "admin"))).Methods("POST", "OPTIONS")
-	router.Handle(p+"/api/orders/{id}/status", core_middlewares.AllowCors(auth.AllowAnyOfRoles(handlers.UpdateDeliveryStatus(m.Config, m.Logger), "admin"))).Methods("PUT", "OPTIONS")
+	router.Handle(prefix+"/api/zones", core_middlewares.AllowCors(auth.AllowAnyOfRoles(handlers.GetZones(m.Config, m.Logger), "admin"))).Methods("GET", "OPTIONS")
+	router.Handle(prefix+"/api/zones", core_middlewares.AllowCors(auth.AllowAnyOfRoles(handlers.SaveZone(m.Config, m.Logger), "admin"))).Methods("POST", "OPTIONS")
+	router.Handle(prefix+"/api/zones/{id}", core_middlewares.AllowCors(auth.AllowAnyOfRoles(handlers.DeleteZone(m.Config, m.Logger), "admin"))).Methods("DELETE", "OPTIONS")
+	router.Handle(prefix+"/api/orders", core_middlewares.AllowCors(auth.AllowAnyOfRoles(handlers.GetDeliveryOrders(m.Config, m.Logger), "admin"))).Methods("GET", "OPTIONS")
+	router.Handle(prefix+"/api/orders", core_middlewares.AllowCors(auth.AllowAnyOfRoles(handlers.CreateDeliveryOrder(m.Config, m.Logger), "admin"))).Methods("POST", "OPTIONS")
+	router.Handle(prefix+"/api/orders/{id}/status", core_middlewares.AllowCors(auth.AllowAnyOfRoles(handlers.UpdateDeliveryStatus(m.Config, m.Logger), "admin"))).Methods("PUT", "OPTIONS")
 
-	return m
 }
 
 func (m *DeliveryModule) OnStart() func() error {

@@ -238,10 +238,10 @@ func (c *Core) RegisterHttpHandlers(router *mux.Router, prefix string) {
 	router.Handle(prefix+"/api/languages", core_middlewares.AllowCors(handlers.GetAvailableLanguages(c.Config, c.Logger))).Methods("GET", "OPTIONS")
 	router.Handle(prefix+"/api/languages/{code}", core_middlewares.AllowCors(handlers.GetLanguage(c.Config, c.Logger))).Methods("GET", "OPTIONS")
 	router.Handle(prefix+"/api/disposals/{id}", core_middlewares.AllowCors(auth_svc.AllowAnyOfRoles(handlers.GetDisposal(c.Config, c.Logger), "admin"))).Methods("GET", "OPTIONS")
-	router.Handle(prefix+"/api/disposals/{id}", core_middlewares.AllowCors(auth_svc.AllowAnyOfRoles(handlers.DeleteProduct(c.Config, c.Logger), "admin"))).Methods("DELETE", "OPTIONS")
-	router.Handle(prefix+"/api/disposals/{id}", core_middlewares.AllowCors(auth_svc.AllowAnyOfRoles(handlers.UpdateProduct(c.Config, c.Logger), "admin"))).Methods("PATCH", "OPTIONS")
+	router.Handle(prefix+"/api/disposals/{id}", core_middlewares.AllowCors(auth_svc.AllowAnyOfRoles(handlers.DeleteDisposal(c.Config, c.Logger), "admin"))).Methods("DELETE", "OPTIONS")
+	router.Handle(prefix+"/api/disposals/{id}", core_middlewares.AllowCors(auth_svc.AllowAnyOfRoles(handlers.UpdateDisposal(c.Config, c.Logger), "admin"))).Methods("PATCH", "OPTIONS")
 	router.Handle(prefix+"/api/disposals", core_middlewares.AllowCors(auth_svc.AllowAnyOfRoles(handlers.GetDisposals(c.Config, c.Logger), "admin", "cashier"))).Methods("GET", "OPTIONS")
-	router.Handle(prefix+"/api/disposals", core_middlewares.AllowCors(auth_svc.AllowAnyOfRoles(handlers.InsertNewProduct(c.Config, c.Logger), "admin"))).Methods("POST", "OPTIONS")
+	router.Handle(prefix+"/api/disposals", core_middlewares.AllowCors(auth_svc.AllowAnyOfRoles(handlers.InsertDisposal(c.Config, c.Logger), "admin"))).Methods("POST", "OPTIONS")
 
 	if c.NotificationSvc == nil {
 		notification_service, err := services.SpawnNotificationSingletonSvc("melody", c.Logger, c.Config)

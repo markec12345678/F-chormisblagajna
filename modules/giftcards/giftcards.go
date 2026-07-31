@@ -14,17 +14,15 @@ type GiftCardModule struct {
 	Config config.Config
 }
 
-func (m *GiftCardModule) RegisterHttpHandlers(router *mux.Router) *GiftCardModule {
-	p := "/giftcards"
+func (m *GiftCardModule) RegisterHttpHandlers(router *mux.Router, prefix string) {
 	jwtUtil := auth_mw.NewJWTUtil(m.Config.Auth.JWTSecret, m.Config.Auth.JWTExpireHrs)
 	auth := auth_mw.NewInternalAuth(m.Config, jwtUtil)
 
-	router.Handle(p+"/api/cards", core_middlewares.AllowCors(auth.AllowAnyOfRoles(handlers.GetAllCards(m.Config, m.Logger), "admin", "cashier"))).Methods("GET", "OPTIONS")
-	router.Handle(p+"/api/cards", core_middlewares.AllowCors(auth.AllowAnyOfRoles(handlers.IssueCard(m.Config, m.Logger), "admin"))).Methods("POST", "OPTIONS")
-	router.Handle(p+"/api/redeem", core_middlewares.AllowCors(auth.AllowAnyOfRoles(handlers.RedeemCard(m.Config, m.Logger), "admin", "cashier"))).Methods("POST", "OPTIONS")
-	router.Handle(p+"/api/cards/{id}/deactivate", core_middlewares.AllowCors(auth.AllowAnyOfRoles(handlers.DeactivateCard(m.Config, m.Logger), "admin"))).Methods("POST", "OPTIONS")
+	router.Handle(prefix+"/api/cards", core_middlewares.AllowCors(auth.AllowAnyOfRoles(handlers.GetAllCards(m.Config, m.Logger), "admin", "cashier"))).Methods("GET", "OPTIONS")
+	router.Handle(prefix+"/api/cards", core_middlewares.AllowCors(auth.AllowAnyOfRoles(handlers.IssueCard(m.Config, m.Logger), "admin"))).Methods("POST", "OPTIONS")
+	router.Handle(prefix+"/api/redeem", core_middlewares.AllowCors(auth.AllowAnyOfRoles(handlers.RedeemCard(m.Config, m.Logger), "admin", "cashier"))).Methods("POST", "OPTIONS")
+	router.Handle(prefix+"/api/cards/{id}/deactivate", core_middlewares.AllowCors(auth.AllowAnyOfRoles(handlers.DeactivateCard(m.Config, m.Logger), "admin"))).Methods("POST", "OPTIONS")
 
-	return m
 }
 func (m *GiftCardModule) OnStart() func() error { return func() error { m.Logger.Info("GiftCards module started"); return nil } }
 func (m *GiftCardModule) OnEnd() func() { return func() { m.Logger.Info("GiftCards module stopped") } }

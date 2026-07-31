@@ -14,14 +14,12 @@ type MenuEngineeringModule struct {
 	Config config.Config
 }
 
-func (m *MenuEngineeringModule) RegisterHttpHandlers(router *mux.Router) *MenuEngineeringModule {
-	prefix := "/menuengineering"
+func (m *MenuEngineeringModule) RegisterHttpHandlers(router *mux.Router, prefix string) {
 
 	jwtUtil := auth_mw.NewJWTUtil(m.Config.Auth.JWTSecret, m.Config.Auth.JWTExpireHrs)
 	auth_svc := auth_mw.NewInternalAuth(m.Config, jwtUtil)
 
 	router.Handle(prefix+"/api/analysis", core_middlewares.AllowCors(auth_svc.AllowAnyOfRoles(handlers.GetMenuAnalysis(m.Config, m.Logger), "admin"))).Methods("GET", "OPTIONS")
-	return m
 }
 
 func (m *MenuEngineeringModule) OnStart() func() error {

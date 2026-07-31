@@ -14,8 +14,7 @@ type SupplierModule struct {
 	Config config.Config
 }
 
-func (m *SupplierModule) RegisterHttpHandlers(router *mux.Router) *SupplierModule {
-	prefix := "/supplier"
+func (m *SupplierModule) RegisterHttpHandlers(router *mux.Router, prefix string) {
 
 	jwtUtil := auth_mw.NewJWTUtil(m.Config.Auth.JWTSecret, m.Config.Auth.JWTExpireHrs)
 	auth_svc := auth_mw.NewInternalAuth(m.Config, jwtUtil)
@@ -28,7 +27,6 @@ func (m *SupplierModule) RegisterHttpHandlers(router *mux.Router) *SupplierModul
 	router.Handle(prefix+"/api/suppliers/{supplier_id}/orders", core_middlewares.AllowCors(auth_svc.AllowAnyOfRoles(handlers.GetSupplierOrders(m.Config, m.Logger), "admin"))).Methods("GET", "OPTIONS")
 	router.Handle(prefix+"/api/supplier-orders", core_middlewares.AllowCors(auth_svc.AllowAnyOfRoles(handlers.CreateSupplierOrder(m.Config, m.Logger), "admin"))).Methods("POST", "OPTIONS")
 	router.Handle(prefix+"/api/supplier-orders/{id}/status", core_middlewares.AllowCors(auth_svc.AllowAnyOfRoles(handlers.UpdateSupplierOrderStatus(m.Config, m.Logger), "admin"))).Methods("PUT", "OPTIONS")
-	return m
 }
 
 func (m *SupplierModule) OnStart() func() error {

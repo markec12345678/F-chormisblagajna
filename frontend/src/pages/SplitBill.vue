@@ -371,7 +371,7 @@ const submitSplitBill = () => {
   isSubmitting.value = true
   axios
     .post(
-      `http://${import.meta.env.VITE_APP_BACKEND_HOST}${import.meta.env.VITE_APP_MODULE_CORE_API_PREFIX}/splitbill/api/split-bills`,
+      `http://${import.meta.env.VITE_APP_BACKEND_HOST}/splitbill/api/split-bills`,
       newSplitBill.value,
     )
     .then(() => {
@@ -398,7 +398,7 @@ const submitPayPart = () => {
   isSubmitting.value = true
   axios
     .post(
-      `http://${import.meta.env.VITE_APP_BACKEND_HOST}${import.meta.env.VITE_APP_MODULE_CORE_API_PREFIX}/splitbill/api/split-bills/${selectedSplitBill.value.id}/pay`,
+      `http://${import.meta.env.VITE_APP_BACKEND_HOST}/splitbill/api/split-bills/${selectedSplitBill.value.id}/pay`,
       { part_id: payPartId.value, payment_method: payMethod.value, amount: 0 },
     )
     .then(() => {
@@ -424,7 +424,7 @@ const getSplitBills = (offset = 0, limit = 50) => {
   const pageNumber = Math.floor(offset / limit) + 1
   axios
     .get(
-      `http://${import.meta.env.VITE_APP_BACKEND_HOST}${import.meta.env.VITE_APP_MODULE_CORE_API_PREFIX}/splitbill/api/split-bills?page_number=${pageNumber}&page_size=${limit}`,
+      `http://${import.meta.env.VITE_APP_BACKEND_HOST}/splitbill/api/split-bills?page_number=${pageNumber}&page_size=${limit}`,
     )
     .then((res) => {
       splitBills.value = res.data.data || []

@@ -1,4 +1,5 @@
 .DS_Store
+pos.exe
 node_modules
 /dist
 zitadel-key.json

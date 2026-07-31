@@ -14,8 +14,7 @@ type CustomerDisplayModule struct {
 	Config config.Config
 }
 
-func (m *CustomerDisplayModule) RegisterHttpHandlers(router *mux.Router) *CustomerDisplayModule {
-	prefix := "/customerdisplay"
+func (m *CustomerDisplayModule) RegisterHttpHandlers(router *mux.Router, prefix string) {
 
 	jwtUtil := auth_mw.NewJWTUtil(m.Config.Auth.JWTSecret, m.Config.Auth.JWTExpireHrs)
 	auth_svc := auth_mw.NewInternalAuth(m.Config, jwtUtil)
@@ -26,7 +25,6 @@ func (m *CustomerDisplayModule) RegisterHttpHandlers(router *mux.Router) *Custom
 	router.Handle(prefix+"/api/configs/{id}", core_middlewares.AllowCors(auth_svc.AllowAnyOfRoles(handlers.DeleteConfig(m.Config, m.Logger), "admin"))).Methods("DELETE", "OPTIONS")
 	router.Handle(prefix+"/api/display/{id}", core_middlewares.AllowCors(handlers.GetDisplayContent(m.Config, m.Logger))).Methods("GET", "OPTIONS")
 
-	return m
 }
 
 func (m *CustomerDisplayModule) OnStart() func() error {

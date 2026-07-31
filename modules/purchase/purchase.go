@@ -14,17 +14,15 @@ type PurchaseModule struct {
 	Config config.Config
 }
 
-func (m *PurchaseModule) RegisterHttpHandlers(router *mux.Router) *PurchaseModule {
-	p := "/purchase"
+func (m *PurchaseModule) RegisterHttpHandlers(router *mux.Router, prefix string) {
 	jwtUtil := auth_mw.NewJWTUtil(m.Config.Auth.JWTSecret, m.Config.Auth.JWTExpireHrs)
 	auth := auth_mw.NewInternalAuth(m.Config, jwtUtil)
 
-	router.Handle(p+"/api/orders", core_middlewares.AllowCors(auth.AllowAnyOfRoles(handlers.GetAllPOs(m.Config, m.Logger), "admin"))).Methods("GET", "OPTIONS")
-	router.Handle(p+"/api/orders", core_middlewares.AllowCors(auth.AllowAnyOfRoles(handlers.CreatePO(m.Config, m.Logger), "admin"))).Methods("POST", "OPTIONS")
-	router.Handle(p+"/api/orders/{id}/receive", core_middlewares.AllowCors(auth.AllowAnyOfRoles(handlers.MarkReceived(m.Config, m.Logger), "admin"))).Methods("POST", "OPTIONS")
-	router.Handle(p+"/api/orders/{id}/cancel", core_middlewares.AllowCors(auth.AllowAnyOfRoles(handlers.CancelPO(m.Config, m.Logger), "admin"))).Methods("POST", "OPTIONS")
+	router.Handle(prefix+"/api/orders", core_middlewares.AllowCors(auth.AllowAnyOfRoles(handlers.GetAllPOs(m.Config, m.Logger), "admin"))).Methods("GET", "OPTIONS")
+	router.Handle(prefix+"/api/orders", core_middlewares.AllowCors(auth.AllowAnyOfRoles(handlers.CreatePO(m.Config, m.Logger), "admin"))).Methods("POST", "OPTIONS")
+	router.Handle(prefix+"/api/orders/{id}/receive", core_middlewares.AllowCors(auth.AllowAnyOfRoles(handlers.MarkReceived(m.Config, m.Logger), "admin"))).Methods("POST", "OPTIONS")
+	router.Handle(prefix+"/api/orders/{id}/cancel", core_middlewares.AllowCors(auth.AllowAnyOfRoles(handlers.CancelPO(m.Config, m.Logger), "admin"))).Methods("POST", "OPTIONS")
 
-	return m
 }
 func (m *PurchaseModule) OnStart() func() error { return func() error { m.Logger.Info("Purchase module started"); return nil } }
 func (m *PurchaseModule) OnEnd() func() { return func() { m.Logger.Info("Purchase module stopped") } }

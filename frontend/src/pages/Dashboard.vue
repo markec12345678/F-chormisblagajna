@@ -206,7 +206,7 @@ async function loadAll() {
     const [salesRes, ordersRes, feedbackRes] = await Promise.allSettled([
       axios.get(`${API}${CORE}/api/logs/salesperday`, { params: { page: 1, size: 50 } }),
       axios.get(`${API}${CORE}/api/orders`, { params: { page: 1, size: 100 } }),
-      axios.get(`${API}/feedback/api/feedback/summary`),
+      axios.get(`${API}/feedback/api/summary`),
     ])
 
     if (salesRes.status === 'fulfilled') {

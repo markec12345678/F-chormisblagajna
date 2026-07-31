@@ -113,7 +113,7 @@ const endDate = ref<Date | null>(null)
 
 const today = new Date().toISOString().split('T')[0]
 
-const apiBase = `http://${import.meta.env.VITE_APP_BACKEND_HOST}${import.meta.env.VITE_APP_MODULE_FISCAL_API_PREFIX}/fiscal/api/fiscal`
+const apiBase = `http://${import.meta.env.VITE_APP_BACKEND_HOST}${import.meta.env.VITE_APP_MODULE_FISCAL_API_PREFIX}/api/fiscal`
 
 const formatCurrency = (value: number) => {
   return new Intl.NumberFormat('sl-SI', { style: 'currency', currency: 'EUR' }).format(value)

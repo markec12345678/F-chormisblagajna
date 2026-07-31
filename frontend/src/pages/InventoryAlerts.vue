@@ -256,7 +256,7 @@ const saveRule = async () => {
   isSaving.value = true
   try {
     await axios.post(
-      `http://${import.meta.env.VITE_APP_BACKEND_HOST}/inventory-alerts/api/rules`,
+      `http://${import.meta.env.VITE_APP_BACKEND_HOST}/inventoryalerts/api/rules`,
       newRule.value,
       { headers: { Authorization: `Bearer ${auth.accessToken.value}` } },
     )
@@ -291,7 +291,7 @@ const saveRule = async () => {
 const deleteRule = async (id: string) => {
   try {
     await axios.delete(
-      `http://${import.meta.env.VITE_APP_BACKEND_HOST}/inventory-alerts/api/rules/${id}`,
+      `http://${import.meta.env.VITE_APP_BACKEND_HOST}/inventoryalerts/api/rules/${id}`,
       { headers: { Authorization: `Bearer ${auth.accessToken.value}` } },
     )
     toast.add({
@@ -316,7 +316,7 @@ const deleteRule = async (id: string) => {
 const markAsRead = async (id: string) => {
   try {
     await axios.put(
-      `http://${import.meta.env.VITE_APP_BACKEND_HOST}/inventory-alerts/api/alerts/${id}/read`,
+      `http://${import.meta.env.VITE_APP_BACKEND_HOST}/inventoryalerts/api/alerts/${id}/read`,
       {},
       { headers: { Authorization: `Bearer ${auth.accessToken.value}` } },
     )
@@ -330,13 +330,13 @@ const loadData = async () => {
   isLoading.value = true
   try {
     const [rulesRes, alertsRes, summaryRes] = await Promise.all([
-      axios.get(`http://${import.meta.env.VITE_APP_BACKEND_HOST}/inventory-alerts/api/rules`, {
+      axios.get(`http://${import.meta.env.VITE_APP_BACKEND_HOST}/inventoryalerts/api/rules`, {
         headers: { Authorization: `Bearer ${auth.accessToken.value}` },
       }),
-      axios.get(`http://${import.meta.env.VITE_APP_BACKEND_HOST}/inventory-alerts/api/alerts`, {
+      axios.get(`http://${import.meta.env.VITE_APP_BACKEND_HOST}/inventoryalerts/api/alerts`, {
         headers: { Authorization: `Bearer ${auth.accessToken.value}` },
       }),
-      axios.get(`http://${import.meta.env.VITE_APP_BACKEND_HOST}/inventory-alerts/api/summary`, {
+      axios.get(`http://${import.meta.env.VITE_APP_BACKEND_HOST}/inventoryalerts/api/summary`, {
         headers: { Authorization: `Bearer ${auth.accessToken.value}` },
       }),
     ])

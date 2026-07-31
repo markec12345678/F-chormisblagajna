@@ -261,7 +261,7 @@ const submitBranch = () => {
   isSubmitting.value = true
   axios
     .post(
-      `http://${import.meta.env.VITE_APP_BACKEND_HOST}${import.meta.env.VITE_APP_MODULE_CORE_API_PREFIX}/branch/api/branches`,
+      `http://${import.meta.env.VITE_APP_BACKEND_HOST}/branch/api/branches`,
       newBranch.value,
     )
     .then(() => {
@@ -289,7 +289,7 @@ const updateBranch = () => {
   isSubmitting.value = true
   axios
     .patch(
-      `http://${import.meta.env.VITE_APP_BACKEND_HOST}${import.meta.env.VITE_APP_MODULE_CORE_API_PREFIX}/branch/api/branches/${branchToEdit.value.id}`,
+      `http://${import.meta.env.VITE_APP_BACKEND_HOST}/branch/api/branches/${branchToEdit.value.id}`,
       branchToEdit.value,
     )
     .then(() => {
@@ -322,7 +322,7 @@ const confirmDeleteBranch = (event: MouseEvent, id: string) => {
     accept: () => {
       axios
         .delete(
-          `http://${import.meta.env.VITE_APP_BACKEND_HOST}${import.meta.env.VITE_APP_MODULE_CORE_API_PREFIX}/branch/api/branches/${id}`,
+          `http://${import.meta.env.VITE_APP_BACKEND_HOST}/branch/api/branches/${id}`,
         )
         .then(() => {
           toast.add({
@@ -345,7 +345,7 @@ const getBranches = (offset = 0, limit = 50) => {
   const pageNumber = Math.floor(offset / limit) + 1
   axios
     .get(
-      `http://${import.meta.env.VITE_APP_BACKEND_HOST}${import.meta.env.VITE_APP_MODULE_CORE_API_PREFIX}/branch/api/branches?page_number=${pageNumber}&page_size=${limit}`,
+      `http://${import.meta.env.VITE_APP_BACKEND_HOST}/branch/api/branches?page_number=${pageNumber}&page_size=${limit}`,
     )
     .then((res) => {
       branches.value = res.data.data || []

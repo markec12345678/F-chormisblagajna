@@ -14,8 +14,7 @@ type AuditLogModule struct {
 	Config config.Config
 }
 
-func (m *AuditLogModule) RegisterHttpHandlers(router *mux.Router) *AuditLogModule {
-	prefix := "/auditlog"
+func (m *AuditLogModule) RegisterHttpHandlers(router *mux.Router, prefix string) {
 
 	jwtUtil := auth_mw.NewJWTUtil(m.Config.Auth.JWTSecret, m.Config.Auth.JWTExpireHrs)
 	auth_svc := auth_mw.NewInternalAuth(m.Config, jwtUtil)
@@ -24,7 +23,6 @@ func (m *AuditLogModule) RegisterHttpHandlers(router *mux.Router) *AuditLogModul
 	router.Handle(prefix+"/api/logs", core_middlewares.AllowCors(auth_svc.AllowAnyOfRoles(handlers.Create(m.Config, m.Logger), "admin"))).Methods("POST", "OPTIONS")
 	router.Handle(prefix+"/api/summary", core_middlewares.AllowCors(auth_svc.AllowAnyOfRoles(handlers.GetSummary(m.Config, m.Logger), "admin"))).Methods("GET", "OPTIONS")
 
-	return m
 }
 
 func (m *AuditLogModule) OnStart() func() error {

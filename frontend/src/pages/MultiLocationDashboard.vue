@@ -139,7 +139,7 @@ const loading = ref(true)
 const dashboard = ref(null)
 const comparison = ref([])
 
-const apiBase = `http://${import.meta.env.VITE_APP_BACKEND_HOST}${import.meta.env.VITE_APP_MODULE_CORE_API_PREFIX}/multilocation/api/multilocation`
+const apiBase = `http://${import.meta.env.VITE_APP_BACKEND_HOST}/multilocation/api/multilocation`
 
 const formatCurrency = (value: number) => {
   return new Intl.NumberFormat('sl-SI', { style: 'currency', currency: 'EUR' }).format(value)

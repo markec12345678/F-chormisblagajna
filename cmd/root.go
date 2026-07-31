@@ -26,7 +26,6 @@ import (
 	"github.com/nutrixpos/pos/modules/branch"
 	"github.com/nutrixpos/pos/modules/fiscal"
 	"github.com/nutrixpos/pos/modules/fiscal_hr"
-	"github.com/nutrixpos/pos/modules/giftcard"
 	"github.com/nutrixpos/pos/modules/hubsync"
 	"github.com/nutrixpos/pos/modules/inventorytransfer"
 	"github.com/nutrixpos/pos/modules/kitchen"
@@ -59,7 +58,6 @@ import (
 	"github.com/nutrixpos/pos/modules/multipayment"
 	"github.com/nutrixpos/pos/modules/notification"
 	"github.com/nutrixpos/pos/modules/report"
-	"github.com/nutrixpos/pos/modules/reservation"
 	"github.com/nutrixpos/pos/modules/scheduling"
 	"github.com/nutrixpos/pos/modules/splitbill"
 	"github.com/nutrixpos/pos/modules/tips"
@@ -415,11 +413,6 @@ func (root *RootProcess) Execute() error {
 		Config: root.Config,
 	}, "scheduling").RegisterHttpHandlers(root.Router).Save()
 
-	appmanager.LoadModule(&reservation.ReservationModule{
-		Logger: root.Logger,
-		Config: root.Config,
-	}, "reservation").RegisterHttpHandlers(root.Router).Save()
-
 	appmanager.LoadModule(&promotion.PromotionModule{
 		Logger: root.Logger,
 		Config: root.Config,
@@ -439,11 +432,6 @@ func (root *RootProcess) Execute() error {
 		Logger: root.Logger,
 		Config: root.Config,
 	}, "multilocation").RegisterHttpHandlers(root.Router).Save()
-
-	appmanager.LoadModule(&giftcard.GiftCardModule{
-		Logger: root.Logger,
-		Config: root.Config,
-	}, "giftcard").RegisterHttpHandlers(root.Router).Save()
 
 	appmanager.LoadModule(&inventorytransfer.InventoryTransferModule{
 		Logger: root.Logger,

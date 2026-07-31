@@ -14,8 +14,7 @@ type FeedbackModule struct {
 	Config config.Config
 }
 
-func (m *FeedbackModule) RegisterHttpHandlers(router *mux.Router) *FeedbackModule {
-	prefix := "/feedback"
+func (m *FeedbackModule) RegisterHttpHandlers(router *mux.Router, prefix string) {
 
 	jwtUtil := auth_mw.NewJWTUtil(m.Config.Auth.JWTSecret, m.Config.Auth.JWTExpireHrs)
 	auth_svc := auth_mw.NewInternalAuth(m.Config, jwtUtil)
@@ -26,7 +25,6 @@ func (m *FeedbackModule) RegisterHttpHandlers(router *mux.Router) *FeedbackModul
 	router.Handle(prefix+"/api/{id}/respond", core_middlewares.AllowCors(auth_svc.AllowAnyOfRoles(handlers.RespondToFeedback(m.Config, m.Logger), "admin"))).Methods("POST", "OPTIONS")
 	router.Handle(prefix+"/api/{id}", core_middlewares.AllowCors(auth_svc.AllowAnyOfRoles(handlers.DeleteFeedback(m.Config, m.Logger), "admin"))).Methods("DELETE", "OPTIONS")
 
-	return m
 }
 
 func (m *FeedbackModule) OnStart() func() error {

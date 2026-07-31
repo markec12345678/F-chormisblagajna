@@ -14,8 +14,7 @@ type MultiPaymentModule struct {
 	Config config.Config
 }
 
-func (m *MultiPaymentModule) RegisterHttpHandlers(router *mux.Router) *MultiPaymentModule {
-	prefix := "/multipayment"
+func (m *MultiPaymentModule) RegisterHttpHandlers(router *mux.Router, prefix string) {
 
 	jwtUtil := auth_mw.NewJWTUtil(m.Config.Auth.JWTSecret, m.Config.Auth.JWTExpireHrs)
 	auth_svc := auth_mw.NewInternalAuth(m.Config, jwtUtil)
@@ -27,7 +26,6 @@ func (m *MultiPaymentModule) RegisterHttpHandlers(router *mux.Router) *MultiPaym
 	router.Handle(prefix+"/api/orders/{orderId}/settle", core_middlewares.AllowCors(auth_svc.AllowAnyOfRoles(handlers.SettleOrder(m.Config, m.Logger), "admin", "cashier"))).Methods("POST", "OPTIONS")
 	router.Handle(prefix+"/api/payments/{id}/refund", core_middlewares.AllowCors(auth_svc.AllowAnyOfRoles(handlers.RefundPayment(m.Config, m.Logger), "admin"))).Methods("DELETE", "OPTIONS")
 
-	return m
 }
 
 func (m *MultiPaymentModule) OnStart() func() error {

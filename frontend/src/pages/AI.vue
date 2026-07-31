@@ -277,7 +277,7 @@ const performSearch = () => {
 
   axios
     .get(
-      `http://${import.meta.env.VITE_APP_BACKEND_HOST}${import.meta.env.VITE_APP_MODULE_CORE_API_PREFIX}/ai/api/ai/search`,
+      `http://${import.meta.env.VITE_APP_BACKEND_HOST}/ai/api/ai/search`,
       {
         params: { q: searchQuery.value },
         headers: {
@@ -401,7 +401,7 @@ const performVoiceSearch = (transcript: string) => {
 
   axios
     .post(
-      `http://${import.meta.env.VITE_APP_BACKEND_HOST}${import.meta.env.VITE_APP_MODULE_CORE_API_PREFIX}/ai/api/ai/voice`,
+      `http://${import.meta.env.VITE_APP_BACKEND_HOST}/ai/api/ai/voice`,
       { transcript },
       {
         headers: {
@@ -434,7 +434,7 @@ const sendVoiceToServer = (audioBlob: Blob) => {
 
   axios
     .post(
-      `http://${import.meta.env.VITE_APP_BACKEND_HOST}${import.meta.env.VITE_APP_MODULE_CORE_API_PREFIX}/ai/api/ai/voice`,
+      `http://${import.meta.env.VITE_APP_BACKEND_HOST}/ai/api/ai/voice`,
       formData,
       {
         headers: {
@@ -468,7 +468,7 @@ const loadSuggestions = () => {
 
   axios
     .get(
-      `http://${import.meta.env.VITE_APP_BACKEND_HOST}${import.meta.env.VITE_APP_MODULE_CORE_API_PREFIX}/ai/api/ai/suggestions`,
+      `http://${import.meta.env.VITE_APP_BACKEND_HOST}/ai/api/ai/suggestions`,
       {
         headers: {
           Authorization: `Bearer ${auth.accessToken.value}`,

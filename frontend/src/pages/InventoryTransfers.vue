@@ -127,7 +127,7 @@ const newTransfer = ref({
   notes: '',
 })
 
-const apiBase = `http://${import.meta.env.VITE_APP_BACKEND_HOST}${import.meta.env.VITE_APP_MODULE_CORE_API_PREFIX}/inventorytransfer/api/transfers`
+const apiBase = `http://${import.meta.env.VITE_APP_BACKEND_HOST}/inventorytransfer/api/transfers`
 
 const getStatusSeverity = (status: string) => {
   switch (status) {

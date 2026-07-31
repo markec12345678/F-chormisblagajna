@@ -197,7 +197,7 @@ const formatDate = (d: Date) => {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
 }
 
-const apiBase = `http://${import.meta.env.VITE_APP_BACKEND_HOST}${import.meta.env.VITE_APP_MODULE_CORE_API_PREFIX}/report/api/reports`
+const apiBase = `http://${import.meta.env.VITE_APP_BACKEND_HOST}/report/api/reports`
 
 const loadDashboard = () => {
   axios

@@ -14,8 +14,7 @@ type TablesideModule struct {
 	Config config.Config
 }
 
-func (m *TablesideModule) RegisterHttpHandlers(router *mux.Router) *TablesideModule {
-	prefix := "/tableside"
+func (m *TablesideModule) RegisterHttpHandlers(router *mux.Router, prefix string) {
 
 	jwtUtil := auth_mw.NewJWTUtil(m.Config.Auth.JWTSecret, m.Config.Auth.JWTExpireHrs)
 	auth_svc := auth_mw.NewInternalAuth(m.Config, jwtUtil)
@@ -32,7 +31,6 @@ func (m *TablesideModule) RegisterHttpHandlers(router *mux.Router) *TablesideMod
 	router.Handle(prefix+"/api/menu/place-order", core_middlewares.AllowCors(noAuth.AllowAnyOfRoles(handlers.PlaceOrder(m.Config, m.Logger)))).Methods("POST", "OPTIONS")
 	router.Handle(prefix+"/api/menu/{sessionId}/orders", core_middlewares.AllowCors(noAuth.AllowAnyOfRoles(handlers.GetOrdersBySession(m.Config, m.Logger)))).Methods("GET", "OPTIONS")
 
-	return m
 }
 
 func (m *TablesideModule) OnStart() func() error {

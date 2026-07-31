@@ -210,7 +210,7 @@ const paymentMethods = [
   { label: 'Card', value: 'card' },
 ]
 
-const apiBase = `http://${import.meta.env.VITE_APP_BACKEND_HOST}${import.meta.env.VITE_APP_MODULE_CORE_API_PREFIX}/tips/api/tips`
+const apiBase = `http://${import.meta.env.VITE_APP_BACKEND_HOST}/tips/api/tips`
 
 const formatCurrency = (value: number) => {
   return new Intl.NumberFormat('sl-SI', { style: 'currency', currency: 'EUR' }).format(value || 0)

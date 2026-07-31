@@ -261,7 +261,7 @@ const formatDate = (d: Date) => {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
 }
 
-const apiBase = `http://${import.meta.env.VITE_APP_BACKEND_HOST}${import.meta.env.VITE_APP_MODULE_CORE_API_PREFIX}/promotion/api/promotions`
+const apiBase = `http://${import.meta.env.VITE_APP_BACKEND_HOST}/promotion/api/promotions`
 
 const getPromotions = (offset = 0, limit = 50) => {
   loading.value = true

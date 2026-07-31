@@ -459,7 +459,7 @@ const submitTable = () => {
 
   axios
     .post(
-      `http://${import.meta.env.VITE_APP_BACKEND_HOST}${import.meta.env.VITE_APP_MODULE_CORE_API_PREFIX}/table/api/tables`,
+      `http://${import.meta.env.VITE_APP_BACKEND_HOST}/table/api/tables`,
       {
         data: newTable.value,
       },
@@ -507,7 +507,7 @@ const updateTable = () => {
 
   axios
     .patch(
-      `http://${import.meta.env.VITE_APP_BACKEND_HOST}${import.meta.env.VITE_APP_MODULE_CORE_API_PREFIX}/table/api/tables/${tableToEdit.value.id}`,
+      `http://${import.meta.env.VITE_APP_BACKEND_HOST}/table/api/tables/${tableToEdit.value.id}`,
       {
         data: tableToEdit.value,
       },
@@ -543,7 +543,7 @@ const updateTable = () => {
 const deleteTable = (table_id: string) => {
   axios
     .delete(
-      `http://${import.meta.env.VITE_APP_BACKEND_HOST}${import.meta.env.VITE_APP_MODULE_CORE_API_PREFIX}/table/api/tables/${table_id}`,
+      `http://${import.meta.env.VITE_APP_BACKEND_HOST}/table/api/tables/${table_id}`,
       {
         headers: {
           Authorization: `Bearer ${auth.accessToken.value}`,
@@ -604,7 +604,7 @@ const generateQRCode = () => {
 
   axios
     .post(
-      `http://${import.meta.env.VITE_APP_BACKEND_HOST}${import.meta.env.VITE_APP_MODULE_CORE_API_PREFIX}/table/api/tables/${qrTableData.value.id}/qr`,
+      `http://${import.meta.env.VITE_APP_BACKEND_HOST}/table/api/tables/${qrTableData.value.id}/qr`,
       {},
       {
         headers: {
@@ -646,7 +646,7 @@ const getTables = (first = 0, rows = tablesTableRowsPerPage.value) => {
 
   axios
     .get(
-      `http://${import.meta.env.VITE_APP_BACKEND_HOST}${import.meta.env.VITE_APP_MODULE_CORE_API_PREFIX}/table/api/tables?page[number]=${page_number}&page[size]=${rows}`,
+      `http://${import.meta.env.VITE_APP_BACKEND_HOST}/table/api/tables?page[number]=${page_number}&page[size]=${rows}`,
       {
         headers: {
           Authorization: `Bearer ${auth.accessToken.value}`,

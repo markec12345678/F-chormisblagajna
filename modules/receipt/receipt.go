@@ -14,8 +14,7 @@ type ReceiptModule struct {
 	Config config.Config
 }
 
-func (m *ReceiptModule) RegisterHttpHandlers(router *mux.Router) *ReceiptModule {
-	prefix := "/receipt"
+func (m *ReceiptModule) RegisterHttpHandlers(router *mux.Router, prefix string) {
 
 	jwtUtil := auth_mw.NewJWTUtil(m.Config.Auth.JWTSecret, m.Config.Auth.JWTExpireHrs)
 	auth_svc := auth_mw.NewInternalAuth(m.Config, jwtUtil)
@@ -27,7 +26,6 @@ func (m *ReceiptModule) RegisterHttpHandlers(router *mux.Router) *ReceiptModule 
 	router.Handle(prefix+"/api/print-settings", core_middlewares.AllowCors(auth_svc.AllowAnyOfRoles(handlers.GetPrintSettings(m.Config, m.Logger), "admin"))).Methods("GET", "OPTIONS")
 	router.Handle(prefix+"/api/print-settings", core_middlewares.AllowCors(auth_svc.AllowAnyOfRoles(handlers.SavePrintSettings(m.Config, m.Logger), "admin"))).Methods("POST", "OPTIONS")
 
-	return m
 }
 
 func (m *ReceiptModule) OnStart() func() error {

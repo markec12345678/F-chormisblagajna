@@ -14,8 +14,7 @@ type WasteModule struct {
 	Config config.Config
 }
 
-func (m *WasteModule) RegisterHttpHandlers(router *mux.Router) *WasteModule {
-	prefix := "/waste"
+func (m *WasteModule) RegisterHttpHandlers(router *mux.Router, prefix string) {
 
 	jwtUtil := auth_mw.NewJWTUtil(m.Config.Auth.JWTSecret, m.Config.Auth.JWTExpireHrs)
 	auth_svc := auth_mw.NewInternalAuth(m.Config, jwtUtil)
@@ -24,7 +23,6 @@ func (m *WasteModule) RegisterHttpHandlers(router *mux.Router) *WasteModule {
 	router.Handle(prefix+"/api/waste", core_middlewares.AllowCors(auth_svc.AllowAnyOfRoles(handlers.CreateWaste(m.Config, m.Logger), "admin", "chef"))).Methods("POST", "OPTIONS")
 	router.Handle(prefix+"/api/waste/{id}", core_middlewares.AllowCors(auth_svc.AllowAnyOfRoles(handlers.DeleteWaste(m.Config, m.Logger), "admin"))).Methods("DELETE", "OPTIONS")
 	router.Handle(prefix+"/api/waste/summary", core_middlewares.AllowCors(auth_svc.AllowAnyOfRoles(handlers.GetWasteSummary(m.Config, m.Logger), "admin"))).Methods("GET", "OPTIONS")
-	return m
 }
 
 func (m *WasteModule) OnStart() func() error {

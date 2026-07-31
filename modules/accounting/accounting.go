@@ -14,15 +14,13 @@ type AccountingModule struct {
 	Config config.Config
 }
 
-func (m *AccountingModule) RegisterHttpHandlers(router *mux.Router) *AccountingModule {
-	prefix := "/accounting"
+func (m *AccountingModule) RegisterHttpHandlers(router *mux.Router, prefix string) {
 
 	jwtUtil := auth_mw.NewJWTUtil(m.Config.Auth.JWTSecret, m.Config.Auth.JWTExpireHrs)
 	auth_svc := auth_mw.NewInternalAuth(m.Config, jwtUtil)
 
 	router.Handle(prefix+"/api/export/quickbooks", core_middlewares.AllowCors(auth_svc.AllowAnyOfRoles(handlers.ExportQuickBooksCSV(m.Config, m.Logger), "admin"))).Methods("GET", "OPTIONS")
 	router.Handle(prefix+"/api/export/xero", core_middlewares.AllowCors(auth_svc.AllowAnyOfRoles(handlers.ExportXeroCSV(m.Config, m.Logger), "admin"))).Methods("GET", "OPTIONS")
-	return m
 }
 
 func (m *AccountingModule) OnStart() func() error {

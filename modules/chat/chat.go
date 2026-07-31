@@ -14,8 +14,7 @@ type ChatModule struct {
 	Config config.Config
 }
 
-func (m *ChatModule) RegisterHttpHandlers(router *mux.Router) *ChatModule {
-	prefix := "/chat"
+func (m *ChatModule) RegisterHttpHandlers(router *mux.Router, prefix string) {
 
 	jwtUtil := auth_mw.NewJWTUtil(m.Config.Auth.JWTSecret, m.Config.Auth.JWTExpireHrs)
 	auth_svc := auth_mw.NewInternalAuth(m.Config, jwtUtil)
@@ -25,7 +24,6 @@ func (m *ChatModule) RegisterHttpHandlers(router *mux.Router) *ChatModule {
 	router.Handle(prefix+"/api/messages", core_middlewares.AllowCors(auth_svc.AllowAnyOfRoles(handlers.GetMessages(m.Config, m.Logger), "admin", "superuser", "chef", "cashier"))).Methods("GET", "OPTIONS")
 	router.Handle(prefix+"/api/messages", core_middlewares.AllowCors(auth_svc.AllowAnyOfRoles(handlers.SendMessage(m.Config, m.Logger), "admin", "superuser", "chef", "cashier"))).Methods("POST", "OPTIONS")
 
-	return m
 }
 
 func (m *ChatModule) OnStart() func() error {

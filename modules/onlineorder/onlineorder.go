@@ -14,8 +14,7 @@ type OnlineOrderModule struct {
 	Config config.Config
 }
 
-func (m *OnlineOrderModule) RegisterHttpHandlers(router *mux.Router) *OnlineOrderModule {
-	prefix := "/onlineorder"
+func (m *OnlineOrderModule) RegisterHttpHandlers(router *mux.Router, prefix string) {
 
 	jwtUtil := auth_mw.NewJWTUtil(m.Config.Auth.JWTSecret, m.Config.Auth.JWTExpireHrs)
 	auth_svc := auth_mw.NewNoAuth(m.Config)
@@ -30,7 +29,6 @@ func (m *OnlineOrderModule) RegisterHttpHandlers(router *mux.Router) *OnlineOrde
 	router.Handle(prefix+"/api/orders", core_middlewares.AllowCors(admin_auth.AllowAnyOfRoles(handlers.GetAllOrders(m.Config, m.Logger), "admin"))).Methods("GET", "OPTIONS")
 	router.Handle(prefix+"/api/orders/{id}/status", core_middlewares.AllowCors(admin_auth.AllowAnyOfRoles(handlers.UpdateOrderStatus(m.Config, m.Logger), "admin"))).Methods("PUT", "OPTIONS")
 
-	return m
 }
 
 func (m *OnlineOrderModule) OnStart() func() error {

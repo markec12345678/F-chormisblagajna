@@ -14,8 +14,7 @@ type InventoryAlertsModule struct {
 	Config config.Config
 }
 
-func (m *InventoryAlertsModule) RegisterHttpHandlers(router *mux.Router) *InventoryAlertsModule {
-	prefix := "/inventory-alerts"
+func (m *InventoryAlertsModule) RegisterHttpHandlers(router *mux.Router, prefix string) {
 
 	jwtUtil := auth_mw.NewJWTUtil(m.Config.Auth.JWTSecret, m.Config.Auth.JWTExpireHrs)
 	auth_svc := auth_mw.NewInternalAuth(m.Config, jwtUtil)
@@ -28,7 +27,6 @@ func (m *InventoryAlertsModule) RegisterHttpHandlers(router *mux.Router) *Invent
 	router.Handle(prefix+"/api/alerts/{id}/read", core_middlewares.AllowCors(auth_svc.AllowAnyOfRoles(handlers.MarkAsRead(m.Config, m.Logger), "admin"))).Methods("PUT", "OPTIONS")
 	router.Handle(prefix+"/api/summary", core_middlewares.AllowCors(auth_svc.AllowAnyOfRoles(handlers.GetSummary(m.Config, m.Logger), "admin"))).Methods("GET", "OPTIONS")
 
-	return m
 }
 
 func (m *InventoryAlertsModule) OnStart() func() error {

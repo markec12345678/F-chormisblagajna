@@ -14,8 +14,7 @@ type ExpenseModule struct {
 	Config config.Config
 }
 
-func (m *ExpenseModule) RegisterHttpHandlers(router *mux.Router) *ExpenseModule {
-	prefix := "/expense"
+func (m *ExpenseModule) RegisterHttpHandlers(router *mux.Router, prefix string) {
 
 	jwtUtil := auth_mw.NewJWTUtil(m.Config.Auth.JWTSecret, m.Config.Auth.JWTExpireHrs)
 	auth_svc := auth_mw.NewInternalAuth(m.Config, jwtUtil)
@@ -25,7 +24,6 @@ func (m *ExpenseModule) RegisterHttpHandlers(router *mux.Router) *ExpenseModule 
 	router.Handle(prefix+"/api/expenses/{id}", core_middlewares.AllowCors(auth_svc.AllowAnyOfRoles(handlers.UpdateExpense(m.Config, m.Logger), "admin"))).Methods("PUT", "OPTIONS")
 	router.Handle(prefix+"/api/expenses/{id}", core_middlewares.AllowCors(auth_svc.AllowAnyOfRoles(handlers.DeleteExpense(m.Config, m.Logger), "admin"))).Methods("DELETE", "OPTIONS")
 	router.Handle(prefix+"/api/expenses/summary", core_middlewares.AllowCors(auth_svc.AllowAnyOfRoles(handlers.GetExpenseSummary(m.Config, m.Logger), "admin"))).Methods("GET", "OPTIONS")
-	return m
 }
 
 func (m *ExpenseModule) OnStart() func() error {

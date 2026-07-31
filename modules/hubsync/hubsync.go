@@ -43,13 +43,26 @@ func (hs *HubSyncModule) OnEnd() func() {
 
 func (c *HubSyncModule) RegisterHttpHandlers(router *mux.Router, prefix string) {
 
-	auth_svc, err := auth_mw.NewZitadelAuth(c.Config)
-	if err != nil {
-		c.Logger.Error(fmt.Sprintf("Failed to initialize Zitadel auth: %s", err.Error()))
-		return
-	}
+	var auth_svc auth_mw.IAuthService
 
-	c.Logger.Info("Successfully conntected to Zitadel")
+	if c.Config.Auth.Enabled {
+		jwtUtil := auth_mw.NewJWTUtil(c.Config.Auth.JWTSecret, c.Config.Auth.JWTExpireHrs)
+		auth_svc = auth_mw.NewInternalAuth(c.Config, jwtUtil)
+		c.Logger.Info("Using internal JWT authentication")
+	} else if c.Config.Zitadel.Enabled {
+		var err error
+		auth_svc, err = auth_mw.NewZitadelAuth(c.Config)
+		if err != nil {
+			c.Logger.Error(fmt.Sprintf("Failed to initialize Zitadel auth: %s", err.Error()))
+			c.Logger.Info("Falling back to no-auth mode")
+			auth_svc = auth_mw.NewNoAuth(c.Config)
+		} else {
+			c.Logger.Info("Successfully connected to Zitadel")
+		}
+	} else {
+		auth_svc = auth_mw.NewNoAuth(c.Config)
+		c.Logger.Info("Authentication disabled")
+	}
 
 	router.Handle(prefix+"/api/settings", middlewares.AllowCors(auth_svc.AllowAnyOfRoles(handlers.PatchSettings(c.Config, c.Logger), "superuser"))).Methods("PATCH", "OPTIONS")
 	router.Handle(prefix+"/api/settings", middlewares.AllowCors(auth_svc.AllowAnyOfRoles(handlers.GetSettings(c.Config, c.Logger), "superuser"))).Methods("GET", "OPTIONS")

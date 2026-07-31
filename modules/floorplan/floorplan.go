@@ -14,18 +14,16 @@ type FloorplanModule struct {
 	Config config.Config
 }
 
-func (m *FloorplanModule) RegisterHttpHandlers(router *mux.Router) *FloorplanModule {
-	p := "/floorplan"
+func (m *FloorplanModule) RegisterHttpHandlers(router *mux.Router, prefix string) {
 	jwtUtil := auth_mw.NewJWTUtil(m.Config.Auth.JWTSecret, m.Config.Auth.JWTExpireHrs)
 	auth := auth_mw.NewInternalAuth(m.Config, jwtUtil)
 
-	router.Handle(p+"/api/tables", core_middlewares.AllowCors(auth.AllowAnyOfRoles(handlers.GetTables(m.Config, m.Logger), "admin"))).Methods("GET", "OPTIONS")
-	router.Handle(p+"/api/tables", core_middlewares.AllowCors(auth.AllowAnyOfRoles(handlers.SaveTable(m.Config, m.Logger), "admin"))).Methods("POST", "OPTIONS")
-	router.Handle(p+"/api/tables/{id}", core_middlewares.AllowCors(auth.AllowAnyOfRoles(handlers.DeleteTable(m.Config, m.Logger), "admin"))).Methods("DELETE", "OPTIONS")
-	router.Handle(p+"/api/zones", core_middlewares.AllowCors(auth.AllowAnyOfRoles(handlers.GetZones(m.Config, m.Logger), "admin"))).Methods("GET", "OPTIONS")
-	router.Handle(p+"/api/zones", core_middlewares.AllowCors(auth.AllowAnyOfRoles(handlers.SaveZone(m.Config, m.Logger), "admin"))).Methods("POST", "OPTIONS")
+	router.Handle(prefix+"/api/tables", core_middlewares.AllowCors(auth.AllowAnyOfRoles(handlers.GetTables(m.Config, m.Logger), "admin"))).Methods("GET", "OPTIONS")
+	router.Handle(prefix+"/api/tables", core_middlewares.AllowCors(auth.AllowAnyOfRoles(handlers.SaveTable(m.Config, m.Logger), "admin"))).Methods("POST", "OPTIONS")
+	router.Handle(prefix+"/api/tables/{id}", core_middlewares.AllowCors(auth.AllowAnyOfRoles(handlers.DeleteTable(m.Config, m.Logger), "admin"))).Methods("DELETE", "OPTIONS")
+	router.Handle(prefix+"/api/zones", core_middlewares.AllowCors(auth.AllowAnyOfRoles(handlers.GetZones(m.Config, m.Logger), "admin"))).Methods("GET", "OPTIONS")
+	router.Handle(prefix+"/api/zones", core_middlewares.AllowCors(auth.AllowAnyOfRoles(handlers.SaveZone(m.Config, m.Logger), "admin"))).Methods("POST", "OPTIONS")
 
-	return m
 }
 func (m *FloorplanModule) OnStart() func() error { return func() error { m.Logger.Info("Floorplan module started"); return nil } }
 func (m *FloorplanModule) OnEnd() func() { return func() { m.Logger.Info("Floorplan module stopped") } }
